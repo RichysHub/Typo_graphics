@@ -3,3 +3,8 @@ __pycache__/
 
 # Junk
 .idea/
+
+# Working directories
+Input/
+Output/
+Fonts/
