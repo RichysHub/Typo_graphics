@@ -1,4 +1,4 @@
-from glyph import glyph
+from glyph import Glyph
 from collections import namedtuple
 import functools
 import itertools
@@ -14,33 +14,33 @@ from skimage import exposure
 tree_set = namedtuple('tree_set', ['glyph_set', 'tree', 'centroid',
                                    'mean_square_from_centroid', 'stack_size'])
 
+# TODO dump list
+# Support for transparent images, with any glyph as background
+# Enhanced image production for single glyph stacking
+# --> could be an issue of rescale_intensity params
+# support for loading glyphs in from other sources
+# --> directory with name_map
+# --> Sprite sheet style format with {offsets, glyph sizes} specified
 
-class art_typing():
-    # ~~tunable params~~
-    # clip_limit for adapthist
-    # cutoff for matching
-    # samples
-    # output size
-    # glyphs
-    # --> directory
-    # --> full sheet
-    # image resize method
+
+class ArtTyping:
 
     # going with the glyphs being passed as a dict with {name:image}
-    def __init__(self, glyph_images, samples=(3,3), glyph_depth=2):
+    def __init__(self, glyph_images, samples=(3, 3), glyph_depth=2):
         self.samples = samples
         self.sample_x, self.sample_y = samples
         self.glyphs = {}
         for name, image in glyph_images.items():
-            glyph_ = glyph(name, image, samples=samples)
+            glyph_ = Glyph(name, image, samples=samples)
             # TODO perhaps we no longer need this dict format
             self.glyphs.update({glyph_.name: glyph_})
 
         # TODO ugly, would be cleaner if glyphs were in a sequence
         self.glyph_width, self.glyph_height = list(self.glyphs.values())[0].image.size
-
-        self.tree_sets = self.calculate_trees(glyphs=self.glyphs, glyph_depth=glyph_depth)
-        self.value_extrema = self.glyph_value_extrema(self.tree_sets)
+        self.glyph_depth = glyph_depth
+        self.tree_sets = self.calculate_trees()
+        self.average_values = self.average_glyph_values()
+        self.value_extrema = self.glyph_value_extrema()
 
     # We will have some option:
     # call for JUST output image
@@ -52,17 +52,17 @@ class art_typing():
     def load_glyphs(self, directory):
         glyphs = {}
         for filename in os.listdir(directory):
-            # TODO extend to support other filetypes
+            # TODO extend to support other file types
             if filename.endswith(".png"):
-                glyph_ = glyph.from_file(filename)
+                glyph_ = Glyph.from_file(filename)
                 glyphs.update({glyph_.name: glyph_})
         return glyphs
 
-    def calculate_trees(self, glyphs, glyph_depth):
+    def calculate_trees(self):
         tree_sets = []
 
-        for stack_size in range(1, glyph_depth + 1):
-            glyph_set = list(self.combine_glyphs(glyphs, stack_size).values())
+        for stack_size in range(1, self.glyph_depth + 1):
+            glyph_set = list(self.combine_glyphs(stack_size).values())
             glyph_data = [list(glyph.fingerprint.getdata()) for glyph in glyph_set]
             tree = cKDTree(glyph_data)
             centroid = np.mean(glyph_data, axis=0)
@@ -74,41 +74,41 @@ class art_typing():
 
         return tree_sets
 
-    def combine_glyphs(self, glyphs, depth):
-        glyph_combinations = itertools.combinations(iter(glyphs.values()), depth)
+    def combine_glyphs(self, depth):
+        glyph_combinations = itertools.combinations(iter(self.glyphs.values()), depth)
         output = {}
         for combination in glyph_combinations:
             new = functools.reduce(operator.add, combination)
             output.update({new.name: new})
         return output
 
-    def average_glyph_value(self, tree_sets):
+    def average_glyph_values(self):
         average_values = []
-        for tree_set in tree_sets:
+        for tree_set in self.tree_sets:
             for glyph in tree_set.glyph_set:
                 vals = list(glyph.fingerprint.getdata())
                 average_value = sum(vals) / len(vals)
                 average_values.append(average_value)
         return average_values
 
-    def glyph_value_extrema(self, tree_sets):
-        average_vals = self.average_glyph_value(tree_sets)
-        return min(average_vals), max(average_vals)
+    def glyph_value_extrema(self):
+        return min(self.average_values), max(self.average_values)
 
     # ~~ IMAGE PROCESSING ~~
 
-    def chunk(self, list_, width, chunk_width, chunk_height):
+    def chunk(self, list_, width):
         chunks = []
-        height = len(list_) // (width * chunk_height * chunk_width)
+        height = len(list_) // (width * self.sample_y * self.sample_x)
         for y in range(height):
-            rows = range(chunk_height * y, chunk_height * (y + 1))
+            rows = range(self.sample_y * y, self.sample_y * (y + 1))
             for x in range(width):
-                columns = range(chunk_width * x, chunk_width * (x + 1))
-                chunk = [list_[column + row * width * chunk_width] for row in rows for column in columns]
+                columns = range(self.sample_x * x, self.sample_x * (x + 1))
+                chunk = [list_[column + row * width * self.sample_x] for row in rows for column in columns]
                 chunks.append(chunk)
         return chunks
 
-    def fit_to_aspect(self, image, aspect_ratio):
+    @staticmethod
+    def fit_to_aspect(image, aspect_ratio):
         current_aspect = image.width / image.height
         if current_aspect < aspect_ratio:  # Image too tall
             perfect_height = image.width / aspect_ratio
@@ -121,11 +121,12 @@ class art_typing():
 
         return image
 
-    def equalize_glyphs(self, image, average_vals, mask=None):
+    # Could be split in 2, if wanted to. perform the histogram once, then apply on func call
+    def equalize_glyphs(self, image, mask=None):
         h = image.histogram(mask)
         target_indices = []
         for i in range(256):
-            count = average_vals.count(i)
+            count = self.average_values.count(i)
             if count:
                 target_indices.extend([i] * count)
 
@@ -143,12 +144,12 @@ class art_typing():
 
     # ~~ OUTPUT CREATION ~~
 
-    def find_closest_glyph(self, target, tree_sets, cutoff=0.3):
+    def find_closest_glyph(self, target, cutoff=0.3):
 
         # TODO: may want to easy out if we're at glyph depth of 1?
 
         neighbours = []
-        for tree_set in tree_sets:
+        for tree_set in self.tree_sets:
             tree = tree_set.tree
             distance, index = tree.query(target)
             neighbours.append((tree_set, distance, index,))
@@ -169,23 +170,19 @@ class art_typing():
         return best_tree_set.glyph_set[best_index]
 
     def compose_calculation(self, result, target_width, target_height):
-        calculation = Image.new("L", (target_width * 25, target_height * 48))
+        calculation = Image.new("L", (target_width * self.glyph_width, target_height * self.glyph_height))
         for i, glyph_ in enumerate(result):
-            w = 25
-            h = 48
-            x = w * (i % target_width)
-            y = h * (i // target_width)
-            calculation.paste(glyph_.fingerprint_display, (x, y, x + w, y + h))
+            x = self.glyph_width * (i % target_width)
+            y = self.glyph_height * (i // target_width)
+            calculation.paste(glyph_.fingerprint_display, (x, y, x + self.glyph_width, y + self.glyph_height))
         return calculation
 
     def compose_output(self, result, target_width, target_height):
-        output = Image.new("L", (target_width * 25, target_height * 48))
+        output = Image.new("L", (target_width * self.glyph_width, target_height * self.glyph_height))
         for i, glyph_ in enumerate(result):
-            w = 25
-            h = 48
-            x = w * (i % target_width)
-            y = h * (i // target_width)
-            output.paste(glyph_.image, (x, y, x + w, y + h))
+            x = self.glyph_width * (i % target_width)
+            y = self.glyph_height * (i // target_width)
+            output.paste(glyph_.image, (x, y, x + self.glyph_width, y + self.glyph_height))
         return output
 
     def instructions(self, result_glyphs, spacer, target_width, target_height, trailing_spacer=False):
@@ -244,13 +241,15 @@ class art_typing():
 
     # Both of these are sort of generic, perhaps pushable into a utils.py
 
-    def root_mean_distance(self, point, tree_set):
+    @staticmethod
+    def root_mean_distance(point, tree_set):
         centroid = tree_set.centroid
         mean_square_from_centroid = tree_set.mean_square_from_centroid
         square_distance_from_centroid = ((np.array(point) - centroid) ** 2).sum()
         return np.sqrt(square_distance_from_centroid + mean_square_from_centroid)
 
-    def iter_all_strings(self):
+    @staticmethod
+    def iter_all_strings():
         size = 1
         while True:
             for s in itertools.product(string.ascii_lowercase, repeat=size):
@@ -261,7 +260,7 @@ class art_typing():
 
         target_width, target_height = target_size
 
-        desired_aspect = (25 * target_width) / (48 * target_height)
+        desired_aspect = (self.glyph_width * target_width) / (self.glyph_height * target_height)
 
         image = self.fit_to_aspect(image, desired_aspect)
 
@@ -270,24 +269,25 @@ class art_typing():
 
         sized_picture = exposure.equalize_adapthist(np.asarray(sized_picture), clip_limit=clip_limit)
 
+        # TODO Something is screwy with the current contrast methods, need to investigate
         self.value_extrema = (150, 250)
 
         sized_picture = exposure.rescale_intensity(sized_picture, out_range=self.value_extrema)
         sized_picture = Image.fromarray(sized_picture.astype("uint8"))
 
-        target_parts = self.chunk(list(sized_picture.getdata()), width=target_width, chunk_width=self.sample_x, chunk_height=self.sample_y)
+        image_data = list(sized_picture.getdata())
+        target_parts = self.chunk(image_data, width=target_width)
 
         result = []
         for section in target_parts:
-            result.append(self.find_closest_glyph(section, self.tree_sets, cutoff=cutoff))
+            result.append(self.find_closest_glyph(section, cutoff=cutoff))
 
         calculation = self.compose_calculation(result, target_width, target_height)
         output = self.compose_output(result, target_width, target_height)
 
         blank = Image.new("L", (25, 48), 'white')
-        space = glyph(name='sp', image=blank)
+        space = Glyph(name='sp', image=blank)
 
         instruction_string = '\n'.join(self.instructions(result, space, target_width, target_height))
 
         return calculation, output, instruction_string
-
