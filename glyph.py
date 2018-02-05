@@ -7,6 +7,7 @@ class glyph:
     def __init__(self, name=None, image=None, components=None, samples=(3, 3)):
         self.name = name
         self.image = image
+        self.samples = samples
         self.fingerprint = self.image.convert("L") \
             .resize(samples, Image.BOX)
         self.fingerprint_display = self.fingerprint.resize(self.image.size)
