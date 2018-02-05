@@ -3,11 +3,12 @@ from contextlib import suppress
 import os
 import json
 from PIL import Image
+from random import sample
 
 glyph_directory = './Glyphs'
 
 with suppress(FileNotFoundError):
-    with open(os.path.join(glyph_directory, 'name_map.json'), 'r') as fp:
+    with open(os.path.join(glyph_directory, 'name_map.json'), 'r', encoding="utf-8") as fp:
         glyph_names = json.load(fp)
 
 glyphs = {}
@@ -20,11 +21,17 @@ for filename in os.listdir(glyph_directory):
         image = Image.open(path)
         glyphs.update({name: image})
 
-art = art_typing.art_typing(glyphs, glyph_depth=2)
+
+# glyph_list = list(glyphs.items())
+# glyph_list = sample(glyph_list, 10)
+# glyphs = dict(glyph_list)
+# desired_characters = '.:+=_-/"()'
+# glyphs = {k: v for k, v in glyphs.items() if k in desired_characters}
+
+art = art_typing.ArtTyping(glyphs, glyph_depth=2)
 
 target = Image.open('./dog.png')
 
-calc, out, ins = art.image_to_text(target, )
-
+calc, out, ins = art.image_to_text(target, cutoff=0.3)
 out.show()
-print(ins)
+# print(ins)

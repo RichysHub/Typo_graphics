@@ -3,13 +3,14 @@ from contextlib import suppress
 import json
 import os
 
-class glyph:
+
+class Glyph:
     def __init__(self, name=None, image=None, components=None, samples=(3, 3)):
         self.name = name
         self.image = image
+        # print(self.image.convert)
         self.samples = samples
-        self.fingerprint = self.image.convert("L") \
-            .resize(samples, Image.BOX)
+        self.fingerprint = self.image.convert("L").resize(samples, Image.BOX)
         self.fingerprint_display = self.fingerprint.resize(self.image.size)
 
         if components:
@@ -26,7 +27,7 @@ class glyph:
         name = os.path.splitext(filename)[0]
         # looks for name map, and any name alias
         # TODO: probably better in whatever will be making the glyphs
-        # --> perhaps an extra override_name arguement that defaults to None
+        # --> perhaps an extra override_name argument that defaults to None
         with suppress(FileNotFoundError):
             with open(os.path.join(GLYPH_DIR, 'name_map.json'), 'r') as fp:
                 glyph_names = json.load(fp)
@@ -35,7 +36,7 @@ class glyph:
         return cls(name=name, image=image, **kwargs)
 
     def __add__(self, other):
-        if not isinstance(other, glyph):
+        if not isinstance(other, Glyph):
             raise TypeError('can only combine glyph (not "{}") with glyph'.format(type(other)))
 
         if self.samples != other.samples:
@@ -44,7 +45,7 @@ class glyph:
         name = self.name + ' ' + other.name
         composite = ImageChops.darker(self.image, other.image)
         components = sorted(self.components + other.components, key=lambda g: g.name)
-        return glyph(name=name, image=composite, components=components)
+        return Glyph(name=name, image=composite, components=components)
 
     def __str__(self):
         return self.name
