@@ -16,7 +16,7 @@ tree_set = namedtuple('tree_set', ['glyph_set', 'tree', 'centroid',
 
 
 class art_typing():
-    # tunable params
+    # ~~tunable params~~
     # clip_limit for adapthist
     # cutoff for matching
     # samples
@@ -26,12 +26,21 @@ class art_typing():
     # --> full sheet
     # image resize method
 
-    def __init__(self, samples=(3,3), glyph_depth=2):
+    # going with the glyphs being passed as a dict with {name:image}
+    def __init__(self, glyph_images, samples=(3,3), glyph_depth=2):
         self.samples = samples
         self.sample_x, self.sample_y = samples
+        self.glyphs = {}
+        for name, image in glyph_images.items():
+            glyph_ = glyph(name, image, samples=samples)
+            # TODO perhaps we no longer need this dict format
+            self.glyphs.update({glyph_.name: glyph_})
 
-        self.tree_sets = self.calculate_trees(glyphs=glyphs, glyph_depth=glyph_depth)
+        # TODO ugly, would be cleaner if glyphs were in a sequence
+        self.glyph_width, self.glyph_height = list(self.glyphs.values())[0].image.size
 
+        self.tree_sets = self.calculate_trees(glyphs=self.glyphs, glyph_depth=glyph_depth)
+        self.value_extrema = self.glyph_value_extrema(self.tree_sets)
 
     # We will have some option:
     # call for JUST output image
@@ -82,6 +91,10 @@ class art_typing():
                 average_values.append(average_value)
         return average_values
 
+    def glyph_value_extrema(self, tree_sets):
+        average_vals = self.average_glyph_value(tree_sets)
+        return min(average_vals), max(average_vals)
+
     # ~~ IMAGE PROCESSING ~~
 
     def chunk(self, list_, width, chunk_width, chunk_height):
@@ -131,6 +144,9 @@ class art_typing():
     # ~~ OUTPUT CREATION ~~
 
     def find_closest_glyph(self, target, tree_sets, cutoff=0.3):
+
+        # TODO: may want to easy out if we're at glyph depth of 1?
+
         neighbours = []
         for tree_set in tree_sets:
             tree = tree_set.tree
@@ -141,13 +157,13 @@ class art_typing():
 
         max_stack_size = best_tree_set.stack_size
 
-        for tree_set, distance, index in neighbours[:max_stack_size]:
+        for tree_set, distance, index in neighbours[:max_stack_size-1]:
 
             distance_diff = distance - best_distance
             stack_size_diff = best_tree_set.stack_size - tree_set.stack_size
             rmd = self.root_mean_distance(target, tree_set)
 
-            if (distance_diff / stack_size_diff * rmd) < cutoff:
+            if (distance_diff / (stack_size_diff * rmd)) < cutoff:
                 return tree_set.glyph_set[index]
 
         return best_tree_set.glyph_set[best_index]
@@ -159,7 +175,7 @@ class art_typing():
             h = 48
             x = w * (i % target_width)
             y = h * (i // target_width)
-            calculation.paste(glyph_.fingerdisplay, (x, y, x + w, y + h))
+            calculation.paste(glyph_.fingerprint_display, (x, y, x + w, y + h))
         return calculation
 
     def compose_output(self, result, target_width, target_height):
@@ -241,7 +257,7 @@ class art_typing():
                 yield "".join(s)
             size += 1
 
-    def image_to_text(self, image, target_size=None, resize_mode=Image.LANCZOS, clip_limit=0.02):
+    def image_to_text(self, image, target_size=(60, 60), resize_mode=Image.LANCZOS, clip_limit=0.02, cutoff=0.3):
 
         target_width, target_height = target_size
 
@@ -254,27 +270,24 @@ class art_typing():
 
         sized_picture = exposure.equalize_adapthist(np.asarray(sized_picture), clip_limit=clip_limit)
 
-        average_vals = self.average_glyph_value(self.tree_sets)
-        lightest_value = max(average_vals)
-        darkest_value = min(average_vals)
+        self.value_extrema = (150, 250)
 
-        sized_picture = exposure.rescale_intensity(sized_picture, out_range=(darkest_value, lightest_value))
-        if exposure.is_low_contrast(sized_picture):
-            print('LOW CONTRAST WARNING')
-        sized_picture = Image.fromarray((sized_picture).astype('uint8'))
+        sized_picture = exposure.rescale_intensity(sized_picture, out_range=self.value_extrema)
+        sized_picture = Image.fromarray(sized_picture.astype("uint8"))
+
         target_parts = self.chunk(list(sized_picture.getdata()), width=target_width, chunk_width=self.sample_x, chunk_height=self.sample_y)
 
         result = []
         for section in target_parts:
-            result.append(self.find_closest_glyph(section, self.tree_sets, cutoff=0))
+            result.append(self.find_closest_glyph(section, self.tree_sets, cutoff=cutoff))
 
-        calculation = self.compose_calculation(result)
-        output = self.compose_output(result)
+        calculation = self.compose_calculation(result, target_width, target_height)
+        output = self.compose_output(result, target_width, target_height)
 
         blank = Image.new("L", (25, 48), 'white')
         space = glyph(name='sp', image=blank)
 
         instruction_string = '\n'.join(self.instructions(result, space, target_width, target_height))
 
-        return (calculation, output, instruction_string)
+        return calculation, output, instruction_string
 
