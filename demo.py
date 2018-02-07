@@ -3,6 +3,7 @@ from contextlib import suppress
 import os
 import json
 from PIL import Image
+from PIL import ImageChops
 from random import sample
 
 glyph_directory = './Glyphs'
@@ -32,6 +33,6 @@ art = art_typing.ArtTyping(glyphs, glyph_depth=2)
 
 target = Image.open('./dog.png')
 
-calc, out, ins = art.image_to_text(target, cutoff=0.3)
+calc, out, ins = art.image_to_text(target, cutoff=0)
 out.show()
 # print(ins)

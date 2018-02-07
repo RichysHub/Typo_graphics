@@ -45,7 +45,7 @@ class Glyph:
         name = self.name + ' ' + other.name
         composite = ImageChops.darker(self.image, other.image)
         components = sorted(self.components + other.components, key=lambda g: g.name)
-        return Glyph(name=name, image=composite, components=components)
+        return Glyph(name=name, image=composite, components=components, samples=self.samples)
 
     def __str__(self):
         return self.name

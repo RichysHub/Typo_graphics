@@ -96,14 +96,14 @@ class ArtTyping:
 
     # ~~ IMAGE PROCESSING ~~
 
-    def chunk(self, list_, width):
+    def chunk(self, image_data, target_width):
         chunks = []
-        height = len(list_) // (width * self.sample_y * self.sample_x)
+        height = len(image_data) // (target_width * self.sample_y * self.sample_x)
         for y in range(height):
             rows = range(self.sample_y * y, self.sample_y * (y + 1))
-            for x in range(width):
+            for x in range(target_width):
                 columns = range(self.sample_x * x, self.sample_x * (x + 1))
-                chunk = [list_[column + row * width * self.sample_x] for row in rows for column in columns]
+                chunk = [image_data[column + row * target_width * self.sample_x] for row in rows for column in columns]
                 chunks.append(chunk)
         return chunks
 
@@ -259,15 +259,14 @@ class ArtTyping:
     def image_to_text(self, image, target_size=(60, 60), resize_mode=Image.LANCZOS, clip_limit=0.02, cutoff=0.3):
 
         target_width, target_height = target_size
-
         desired_aspect = (self.glyph_width * target_width) / (self.glyph_height * target_height)
-
         image = self.fit_to_aspect(image, desired_aspect)
 
         sized_picture = image.resize((target_width * self.sample_x, target_height * self.sample_y), resize_mode)
-        sized_picture = sized_picture.convert("L")
+        sized_picture = np.asarray(sized_picture.convert("L"))
 
-        sized_picture = exposure.equalize_adapthist(np.asarray(sized_picture), clip_limit=clip_limit)
+        if min(target_size) > 1:
+            sized_picture = exposure.equalize_adapthist(sized_picture, clip_limit=clip_limit)
 
         # TODO Something is screwy with the current contrast methods, need to investigate
         self.value_extrema = (150, 250)
@@ -276,7 +275,7 @@ class ArtTyping:
         sized_picture = Image.fromarray(sized_picture.astype("uint8"))
 
         image_data = list(sized_picture.getdata())
-        target_parts = self.chunk(image_data, width=target_width)
+        target_parts = self.chunk(image_data, target_width=target_width)
 
         result = []
         for section in target_parts:
