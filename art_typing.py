@@ -17,7 +17,7 @@ tree_set = namedtuple('tree_set', ['glyph_set', 'tree', 'centroid',
 # TODO dump list
 # Support for transparent images, with any glyph as background
 # Enhanced image production for single glyph stacking
-# --> could be an issue of rescale_intensity params
+# --> looks to be issue with how we calculate self.value_extrema
 # support for loading glyphs in from other sources
 # --> directory with name_map
 # --> Sprite sheet style format with {offsets, glyph sizes} specified
@@ -41,11 +41,6 @@ class ArtTyping:
         self.tree_sets = self.calculate_trees()
         self.average_values = self.average_glyph_values()
         self.value_extrema = self.glyph_value_extrema()
-
-    # We will have some option:
-    # call for JUST output image
-    # call for JUST instructions
-    # call for both (should this be encapsulated in something, or just a tuple?)
 
     # ~~ GLYPH WORK ON INIT ~~
 
@@ -122,6 +117,34 @@ class ArtTyping:
         return image
 
     # Could be split in 2, if wanted to. perform the histogram once, then apply on func call
+    def preprocess(self, image, target_size=(60, 60), resize_mode=Image.LANCZOS, clip_limit=0.02,
+                   use_clahe=True, rescale_intensity=True):
+
+        target_width, target_height = target_size
+        desired_aspect = (self.glyph_width * target_width) / (self.glyph_height * target_height)
+        image = self.fit_to_aspect(image, desired_aspect)
+
+        sized_picture = image.resize((target_width * self.sample_x, target_height * self.sample_y), resize_mode)
+        sized_picture = sized_picture.convert("L")
+
+        if use_clahe or rescale_intensity:
+            sized_picture = np.asarray(sized_picture)
+
+            if min(target_size) > 1 and use_clahe:
+                sized_picture = exposure.equalize_adapthist(sized_picture, clip_limit=clip_limit)
+
+            # TODO Something is screwy with the current contrast methods, need to investigate
+            self.value_extrema = (150, 250)
+
+            if rescale_intensity:
+                sized_picture = exposure.rescale_intensity(sized_picture, out_range=self.value_extrema)
+
+            sized_picture = Image.fromarray(sized_picture.astype("uint8"))
+
+        return sized_picture
+
+    # ~~ OUTPUT CREATION ~~
+
     def equalize_glyphs(self, image, mask=None):
         h = image.histogram(mask)
         target_indices = []
@@ -142,8 +165,6 @@ class ArtTyping:
 
         return image.point(lut)
 
-    # ~~ OUTPUT CREATION ~~
-
     def find_closest_glyph(self, target, cutoff=0.3):
 
         # TODO: may want to easy out if we're at glyph depth of 1?
@@ -152,7 +173,7 @@ class ArtTyping:
         for tree_set in self.tree_sets:
             tree = tree_set.tree
             distance, index = tree.query(target)
-            neighbours.append((tree_set, distance, index,))
+            neighbours.append((tree_set, distance, index))
 
         best_tree_set, best_distance, best_index = min(neighbours, key=lambda x: x[1])
 
@@ -165,9 +186,9 @@ class ArtTyping:
             rmd = self.root_mean_distance(target, tree_set)
 
             if (distance_diff / (stack_size_diff * rmd)) < cutoff:
-                return tree_set.glyph_set[index]
+                return tree_set.glyph_set[index], distance
 
-        return best_tree_set.glyph_set[best_index]
+        return best_tree_set.glyph_set[best_index], best_distance
 
     def compose_calculation(self, result, target_width, target_height):
         calculation = Image.new("L", (target_width * self.glyph_width, target_height * self.glyph_height))
@@ -239,8 +260,6 @@ class ArtTyping:
 
         return instructions
 
-    # Both of these are sort of generic, perhaps pushable into a utils.py
-
     @staticmethod
     def root_mean_distance(point, tree_set):
         centroid = tree_set.centroid
@@ -256,37 +275,34 @@ class ArtTyping:
                 yield "".join(s)
             size += 1
 
-    def image_to_text(self, image, target_size=(60, 60), resize_mode=Image.LANCZOS, clip_limit=0.02, cutoff=0.3):
+    def image_to_text(self, image, target_size=(60, 60), cutoff=0.3, resize_mode=Image.LANCZOS, clip_limit=0.02, use_clahe=True, rescale_intensity=True, instruction_spacer=None):
+
+        preprocessed_image = self.preprocess(image, target_size=target_size, resize_mode=resize_mode,
+                                             clip_limit=clip_limit, use_clahe=use_clahe, rescale_intensity=rescale_intensity)
+
+        calc, output, inst_str = self._convert(preprocessed_image, target_size, cutoff, instruction_spacer)
+        return calc, output, inst_str
+
+    def _convert(self, image, target_size=(60, 60), cutoff=0.3, instruction_spacer=None):
 
         target_width, target_height = target_size
-        desired_aspect = (self.glyph_width * target_width) / (self.glyph_height * target_height)
-        image = self.fit_to_aspect(image, desired_aspect)
 
-        sized_picture = image.resize((target_width * self.sample_x, target_height * self.sample_y), resize_mode)
-        sized_picture = np.asarray(sized_picture.convert("L"))
-
-        if min(target_size) > 1:
-            sized_picture = exposure.equalize_adapthist(sized_picture, clip_limit=clip_limit)
-
-        # TODO Something is screwy with the current contrast methods, need to investigate
-        self.value_extrema = (150, 250)
-
-        sized_picture = exposure.rescale_intensity(sized_picture, out_range=self.value_extrema)
-        sized_picture = Image.fromarray(sized_picture.astype("uint8"))
-
-        image_data = list(sized_picture.getdata())
+        image_data = list(image.getdata())
         target_parts = self.chunk(image_data, target_width=target_width)
 
         result = []
         for section in target_parts:
-            result.append(self.find_closest_glyph(section, cutoff=cutoff))
+            glyph, distance = self.find_closest_glyph(section, cutoff=cutoff)
+            result.append(glyph)
 
-        calculation = self.compose_calculation(result, target_width, target_height)
-        output = self.compose_output(result, target_width, target_height)
+        calculation = self.compose_calculation(result, target_width=target_width, target_height=target_height)
+        output = self.compose_output(result, target_width=target_width, target_height=target_height)
 
-        blank = Image.new("L", (25, 48), 'white')
-        space = Glyph(name='sp', image=blank)
+        if not instruction_spacer:
+            blank = Image.new("L", (25, 48), 'white')
+            instruction_spacer = Glyph(name='sp', image=blank)
 
-        instruction_string = '\n'.join(self.instructions(result, space, target_width, target_height))
+        instruction_string = '\n'.join(self.instructions(result, spacer=instruction_spacer,
+                                                         target_width=target_width, target_height=target_height))
 
         return calculation, output, instruction_string
