@@ -42,6 +42,51 @@ class ArtTyping:
         self.average_values = self.average_glyph_values()
         self.value_extrema = self.glyph_value_extrema()
 
+    @classmethod
+    def from_glyphsheet(cls, glyph_sheet, number_glyphs=None, glyph_dimensions=None, grid_size=None,
+                        glyph_names=None, spacing=(0, 0), **kwargs):
+
+        if not number_glyphs:
+            raise TypeError("from_glyphsheet() missing required argument 'number_glyphs'")
+
+        if not (glyph_dimensions or grid_size):
+            raise TypeError("from_glyphsheet() missing required argument "
+                            "'grid_size' or 'glyph_dimensions'")
+
+        sheet_width, sheet_height = glyph_sheet.size
+        spacing_x, spacing_y = spacing
+
+        if grid_size:
+            grid_width, grid_height = grid_size
+            glyph_width = (sheet_width - (spacing_x * (grid_width - 1))) / grid_width
+            glyph_height = (sheet_height - (spacing_y * (grid_height - 1))) / grid_height
+            if not (glyph_width.is_integer() and glyph_height.is_integer()):
+                raise ValueError("incorrect glyph counts for image and dimensions given")
+            glyph_width = int(glyph_width)
+            glyph_height = int(glyph_height)
+        else:
+            glyph_width, glyph_height = glyph_dimensions
+            grid_width = (sheet_width + spacing_x) / (glyph_width + spacing_x)
+            grid_height = (sheet_height + spacing_y) / (glyph_height + spacing_y)
+
+        glyph_images = {}
+        for i_y in range(grid_height):
+            for i_x in range(grid_width):
+                box = (i_x * (glyph_width + spacing_x), i_y * (glyph_height + spacing_y),
+                       ((i_x + 1) * glyph_width) + (i_x * spacing_x), ((i_y + 1) * glyph_height) + (i_y * spacing_y))
+                glyph = glyph_sheet.crop(box)
+                name_index = (i_y * grid_width) + i_x
+
+                if glyph_names:
+                    name = glyph_names[name_index]
+                else:
+                    name = 'g{}'.format(name_index)
+
+                glyph_images.update({name: glyph})
+
+                if len(glyph_images) == number_glyphs:
+                    return cls(glyph_images=glyph_images, **kwargs)
+
     # ~~ GLYPH WORK ON INIT ~~
 
     def load_glyphs(self, directory):
@@ -116,7 +161,6 @@ class ArtTyping:
 
         return image
 
-    # Could be split in 2, if wanted to. perform the histogram once, then apply on func call
     def preprocess(self, image, target_size=(60, 60), resize_mode=Image.LANCZOS, clip_limit=0.02,
                    use_clahe=True, rescale_intensity=True):
 
@@ -145,6 +189,7 @@ class ArtTyping:
 
     # ~~ OUTPUT CREATION ~~
 
+    # Could be split in 2, if wanted to. perform the histogram once, then apply on func call
     def equalize_glyphs(self, image, mask=None):
         h = image.histogram(mask)
         target_indices = []

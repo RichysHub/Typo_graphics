@@ -26,14 +26,7 @@ for filename in os.listdir(glyph_directory):
 # Code will run through lots of samples, and find match
 # Composed output has target spaced away to the right
 
-# This works PERFECT if we disable the line:
-# sized_picture = exposure.rescale_intensity(sized_picture, out_range=self.value_extrema)
-
-# The line:
-# self.value_extrema = (150, 250)
-# certainly improves reproduction, if the rescale_intensity is present
-
-# rescale_intensity is disables, as it throws off the matching, and makes • overly present
+# rescale_intensity is disabled, as it throws off the matching, and makes • overly present
 
 glyph_list = list(glyphs.items())
 
