@@ -1,28 +1,10 @@
 import art_typing
-from contextlib import suppress
-import os
-import json
 from PIL import Image
 
 glyph_directory = './Glyphs'
-
-with suppress(FileNotFoundError):
-    with open(os.path.join(glyph_directory, 'name_map.json'), 'r', encoding="utf-8") as fp:
-        glyph_names = json.load(fp)
-
-glyphs = {}
-for filename in os.listdir(glyph_directory):
-    if filename.endswith(".png"):
-
-        name = os.path.splitext(filename)[0]
-        name = glyph_names.get(name, name)
-        path = os.path.join(glyph_directory, filename)
-        image = Image.open(path)
-        glyphs.update({name: image})
-
-art = art_typing.ArtTyping(glyphs, glyph_depth=2)
+art = art_typing.ArtTyping.from_directory(glyph_directory, glyph_depth=2)
 
 target = Image.open('./dog.png')
-
 calc, out, ins = art.image_to_text(target, cutoff=0)
+
 out.show()

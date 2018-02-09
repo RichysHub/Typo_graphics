@@ -5,6 +5,8 @@ import itertools
 import operator
 from PIL import Image
 import os
+import json
+from contextlib import suppress
 import numpy as np
 from scipy.spatial import cKDTree
 import string
@@ -16,11 +18,10 @@ tree_set = namedtuple('tree_set', ['glyph_set', 'tree', 'centroid',
 
 # TODO dump list
 # Support for transparent images, with any glyph as background
+# --> Could almost be done in a postprocess step?
+# --> leaning toward not implementing, but providing a how-to recipe for this
 # Enhanced image production for single glyph stacking
 # --> looks to be issue with how we calculate self.value_extrema
-# support for loading glyphs in from other sources
-# --> directory with name_map
-# --> Sprite sheet style format with {offsets, glyph sizes} specified
 
 
 class ArtTyping:
@@ -87,16 +88,25 @@ class ArtTyping:
                 if len(glyph_images) == number_glyphs:
                     return cls(glyph_images=glyph_images, **kwargs)
 
-    # ~~ GLYPH WORK ON INIT ~~
+    @classmethod
+    def from_directory(cls, glyph_directory, **kwargs):
+        with suppress(FileNotFoundError):  # look for a name_map.json, but continue if not found
+            with open(os.path.join(glyph_directory, 'name_map.json'), 'r', encoding="utf-8") as fp:
+                glyph_names = json.load(fp)
 
-    def load_glyphs(self, directory):
         glyphs = {}
-        for filename in os.listdir(directory):
-            # TODO extend to support other file types
-            if filename.endswith(".png"):
-                glyph_ = Glyph.from_file(filename)
-                glyphs.update({glyph_.name: glyph_})
-        return glyphs
+
+        for filename in os.listdir(glyph_directory):
+            with suppress(IOError):  # skips over any files that Image cannot open
+                name = os.path.splitext(filename)[0]
+                name = glyph_names.get(name, name)
+                path = os.path.join(glyph_directory, filename)
+                image = Image.open(path)
+                glyphs.update({name: image})
+
+        return cls(glyphs, **kwargs)
+
+    # ~~ GLYPH WORK ON INIT ~~
 
     def calculate_trees(self):
         tree_sets = []
