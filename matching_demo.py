@@ -29,6 +29,7 @@ for filename in os.listdir(glyph_directory):
 # rescale_intensity is disabled, as it throws off the matching, and makes • overly present
 
 glyph_list = list(glyphs.items())
+glyph_list.sort(key=lambda item: item[0])
 
 column_image = Image.new("L", (25, 48*(len(glyph_list))))
 for j, (name, image)in enumerate(glyph_list):
