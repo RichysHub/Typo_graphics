@@ -44,14 +44,14 @@ for index, glyph in enumerate(glyphs):
 
 glyphsheet.show()
 
-art = art_typing.ArtTyping.from_glyphsheet(glyphsheet, number_glyphs=len(glyphs), glyph_names=names,
-                                           spacing=spacing, grid_size=(columns, rows), glyph_depth=1)
+art = art_typing.ArtTyping.from_glyph_sheet(glyphsheet, number_glyphs=len(glyphs), glyph_names=names,
+                                            spacing=spacing, grid_size=(columns, rows), glyph_depth=1)
 
 for name, glyph in art.glyphs.items():
     input_image = glyphs[names.index(name)]
     if glyph.image != input_image:
         glyph.image.show()
         input_image.show()
-        raise ValueError("glyph {} not reproduced correctly".format(name))
+        raise ValueError("glyph '{}' not reproduced correctly".format(name))
 else:
     print("All glyphs extracted from glyph sheet correctly")

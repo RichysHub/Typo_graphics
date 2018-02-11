@@ -16,6 +16,8 @@ from skimage import exposure
 tree_set = namedtuple('tree_set', ['glyph_set', 'tree', 'centroid',
                                    'mean_square_from_centroid', 'stack_size'])
 
+typed_art = namedtuple('typed_art', ['calculation', 'output', 'instructions'])
+
 # TODO dump list
 # Support for transparent images, with any glyph as background
 # --> Could almost be done in a postprocess step?
@@ -39,25 +41,47 @@ class ArtTyping:
         # TODO ugly, would be cleaner if glyphs were in a sequence
         self.glyph_width, self.glyph_height = list(self.glyphs.values())[0].image.size
         self.glyph_depth = glyph_depth
-        self.tree_sets = self.calculate_trees()
-        self.average_values = self.average_glyph_values()
-        self.value_extrema = self.glyph_value_extrema()
+        self.tree_sets = self._calculate_trees()
+        self.average_values = self._average_glyph_values()
+        self.value_extrema = self._glyph_value_extrema()
 
     @classmethod
-    def from_glyphsheet(cls, glyph_sheet, number_glyphs=None, glyph_dimensions=None, grid_size=None,
-                        glyph_names=None, spacing=(0, 0), **kwargs):
+    def from_glyph_sheet(cls, glyph_sheet, number_glyphs=None, glyph_dimensions=None, grid_size=None,
+                         glyph_names=None, spacing=(0, 0), **kwargs):
+        """
+        Create :class:`ArtTyping` object with glyphs as extracted from `glyph_sheet`
+        Allows for a single :class:`~PIL.Image.Image` to be used to provide glyph images
 
-        if not number_glyphs:
+        :param glyph_sheet: glyph sheet :class:`~PIL.Image.Image`, to be split into glyphs
+        :type glyph_sheet: :class:`~PIL.Image.Image`
+        :param int number_glyphs: total number of glyphs present in `glyph_sheet`
+        :param glyph_dimensions: pixel dimensions of glyphs given as (width, height)
+        :type glyph_dimensions: tuple(int, int)
+        :param grid_size: if given, number of (rows, columns) that glyphs are arranged in
+        :type grid_size: tuple(int, int)
+        :param glyph_names: list of glyph names listed left to right, top to bottom
+        :type glyph_names: list(str)
+        :param spacing: tuple of integer pixel spacing between adjacent glyphs,
+                        as number of pixels between glyphs horizontally and vertically
+        :type spacing: tuple(int, int)
+        :param kwargs: optional keyword arguments as for :class:`ArtTyping`
+        :return: An :class:`ArtTyping` object using glyphs images extracted from `glyph_sheet`
+        :rtype: :class:`ArtTyping`
+        :raises TypeError: if `number_glyphs` is not given
+        :raises TypeError: if neither `grid_size` or `glyph_dimensions` are specified
+        """
+
+        if number_glyphs is None:
             raise TypeError("from_glyphsheet() missing required argument 'number_glyphs'")
 
-        if not (glyph_dimensions or grid_size):
+        if (glyph_dimensions is None) or (grid_size is None):
             raise TypeError("from_glyphsheet() missing required argument "
                             "'grid_size' or 'glyph_dimensions'")
 
         sheet_width, sheet_height = glyph_sheet.size
         spacing_x, spacing_y = spacing
 
-        if grid_size:
+        if grid_size is not None:
             grid_width, grid_height = grid_size
             glyph_width = (sheet_width - (spacing_x * (grid_width - 1))) / grid_width
             glyph_height = (sheet_height - (spacing_y * (grid_height - 1))) / grid_height
@@ -90,6 +114,16 @@ class ArtTyping:
 
     @classmethod
     def from_directory(cls, glyph_directory, **kwargs):
+        """
+        Create :class:`ArtTyping` object loading glyph images from a given directory.
+        In addition to images, the directory can contain a name_map.json file
+        giving alias names for glyphs located in the directory
+
+        :param string glyph_directory: A file path for directory containing glyph images
+        :param kwargs: optional keyword arguments as for :class:`ArtTyping`
+        :return: An :class:`ArtTyping` object using glyphs images found from directory
+        :rtype: :class:`ArtTyping`
+        """
         with suppress(FileNotFoundError):  # look for a name_map.json, but continue if not found
             with open(os.path.join(glyph_directory, 'name_map.json'), 'r', encoding="utf-8") as fp:
                 glyph_names = json.load(fp)
@@ -108,11 +142,17 @@ class ArtTyping:
 
     # ~~ GLYPH WORK ON INIT ~~
 
-    def calculate_trees(self):
+    def _calculate_trees(self):
+        """
+        Calculate tree sets for input glyphs, combined up to `self.glyph_depth`
+
+        :return: list of tree sets
+        :rtype: list(:class:`tree_set`)
+        """
         tree_sets = []
 
         for stack_size in range(1, self.glyph_depth + 1):
-            glyph_set = list(self.combine_glyphs(stack_size).values())
+            glyph_set = list(self._combine_glyphs(stack_size).values())
             glyph_data = [list(glyph.fingerprint.getdata()) for glyph in glyph_set]
             tree = cKDTree(glyph_data)
             centroid = np.mean(glyph_data, axis=0)
@@ -124,7 +164,14 @@ class ArtTyping:
 
         return tree_sets
 
-    def combine_glyphs(self, depth):
+    def _combine_glyphs(self, depth):
+        """
+        Calculate all unique combinations of `depth` number of glyphs
+
+        :param int depth: number of glyphs to combine into composite glyphs
+        :return: dictionary of combination glyphs, using glyph names as keys
+        :rtype: dict
+        """
         glyph_combinations = itertools.combinations(iter(self.glyphs.values()), depth)
         output = {}
         for combination in glyph_combinations:
@@ -132,51 +179,76 @@ class ArtTyping:
             output.update({new.name: new})
         return output
 
-    def average_glyph_values(self):
+    def _average_glyph_values(self):
+        """
+        Calculate average pixel values for all glyphs in `self.tree_sets`
+
+        :return: list of average pixel values, no given order
+        :rtype: list(float)
+        """
         average_values = []
         for tree_set in self.tree_sets:
             for glyph in tree_set.glyph_set:
-                vals = list(glyph.fingerprint.getdata())
-                average_value = sum(vals) / len(vals)
+                values = list(glyph.fingerprint.getdata())
+                average_value = sum(values) / len(values)
                 average_values.append(average_value)
         return average_values
 
-    def glyph_value_extrema(self):
+    def _glyph_value_extrema(self):
+        """
+        Extrema of average pixel values for all glyphs
+
+        :return: tuple of (min, max) pixel values
+        :rtype: tuple(float, float)
+        """
         return min(self.average_values), max(self.average_values)
 
     # ~~ IMAGE PROCESSING ~~
 
-    def chunk(self, image_data, target_width):
-        chunks = []
-        height = len(image_data) // (target_width * self.sample_y * self.sample_x)
-        for y in range(height):
-            rows = range(self.sample_y * y, self.sample_y * (y + 1))
-            for x in range(target_width):
-                columns = range(self.sample_x * x, self.sample_x * (x + 1))
-                chunk = [image_data[column + row * target_width * self.sample_x] for row in rows for column in columns]
-                chunks.append(chunk)
-        return chunks
-
     @staticmethod
-    def fit_to_aspect(image, aspect_ratio):
+    def _fit_to_aspect(image, aspect_ratio):
+        """
+        Return copy of image, cropped to `aspect_ratio`.
+        Cropping is applied evenly to both sides of image, so as to preserve center
+
+        :param image:  An :class:`~PIL.Image.Image` object
+        :type image: :class:`~PIL.Image.Image`
+        :param float aspect_ratio: target aspect ratio of width / height
+        :return: An :class:`~PIL.Image.Image` object cropped to target aspect ratio
+        :rtype: :class:`~PIL.Image.Image`
+        """
         current_aspect = image.width / image.height
         if current_aspect < aspect_ratio:  # Image too tall
             perfect_height = image.width / aspect_ratio
             edge = (image.height - perfect_height) / 2
             image = image.crop((0, edge, image.width, perfect_height + edge))
-        else:  # Image too wide
+        elif current_aspect > aspect_ratio:  # Image too wide
             perfect_width = image.height * aspect_ratio
             edge = (image.width - perfect_width) / 2
             image = image.crop((edge, 0, perfect_width + edge, image.height))
 
         return image
 
-    def preprocess(self, image, target_size=(60, 60), resize_mode=Image.LANCZOS, clip_limit=0.02,
-                   use_clahe=True, rescale_intensity=True):
+    def _preprocess(self, image, target_size=(60, 60), resize_mode=Image.LANCZOS, clip_limit=0.02,
+                    use_clahe=True, rescale_intensity=True):
+        """
+        Preprocess input image to better be reproduced by glyphs
+
+        :param image: input `~PIL.Image.Image` to be processed
+        :type image: :class:`~PIL.Image.Image`
+        :param target_size: output size for glyph version of image.
+                            Given as total number of glyphs to be used across and down
+        :type target_size: tuple(int, int)
+        :param resize_mode: any resize mode as able to be used by :func:`~PIL.Image.Image.resize`
+        :param float clip_limit: clip limit as used by :func:`~skimage.exposure.equalize_adapthist`
+        :param bool use_clahe: enable or disable use of :func:`~skimage.exposure.equalize_adapthist on input image
+        :param bool rescale_intensity: enable or disable use of :func:`skimage.exposure.rescale_intensity`
+        :return:
+        """
 
         target_width, target_height = target_size
         desired_aspect = (self.glyph_width * target_width) / (self.glyph_height * target_height)
-        image = self.fit_to_aspect(image, desired_aspect)
+        image = self._fit_to_aspect(image, desired_aspect)
 
         sized_picture = image.resize((target_width * self.sample_x, target_height * self.sample_y), resize_mode)
         sized_picture = sized_picture.convert("L")
@@ -197,10 +269,34 @@ class ArtTyping:
 
         return sized_picture
 
+    def _chunk(self, image_data, target_width):
+        """
+        Separate `image_data` into chunks, according to `self.sample_x` and `self.sample_y`
+
+        Working from left to right, top to bottom of data representing an input image,
+                produces lists of data corresponding to a region of the full image
+                that are `self.sample_x` by `self.sample_y` in size.
+
+        :param image_data: list of image data specifying pixel values in range 0->255
+        :type image_data: list(int)
+        :param int target_width: width of target image as measured in glyphs
+        :return: list of chunks, each of which are a list of integer values from source `image_data`
+        :rtype: list(list(int))
+        """
+        chunks = []
+        height = len(image_data) // (target_width * self.sample_y * self.sample_x)
+        for y in range(height):
+            rows = range(self.sample_y * y, self.sample_y * (y + 1))
+            for x in range(target_width):
+                columns = range(self.sample_x * x, self.sample_x * (x + 1))
+                chunk = [image_data[column + row * target_width * self.sample_x] for row in rows for column in columns]
+                chunks.append(chunk)
+        return chunks
+
     # ~~ OUTPUT CREATION ~~
 
     # Could be split in 2, if wanted to. perform the histogram once, then apply on func call
-    def equalize_glyphs(self, image, mask=None):
+    def _equalize_glyphs(self, image, mask=None):
         h = image.histogram(mask)
         target_indices = []
         for i in range(256):
@@ -220,7 +316,25 @@ class ArtTyping:
 
         return image.point(lut)
 
-    def find_closest_glyph(self, target, cutoff=0.3):
+    def _find_closest_glyph(self, target, cutoff=0.3):
+        """
+        Determine closest glyph available to `target` data
+
+        `cutoff` value can be used to specify frequency with which glyphs will be
+        replaced by simpler glyphs that are not quite as close to target.
+        A value of 0.0 will permit no substitutions, always using the best glyph.
+        Higher values will allow less similar glyphs to be used, if they comprise of fewer component pieces.
+
+        :param target: data of target region of image, given as a list of integers, range 0->255
+                        listed from left to right, top to bottom.
+        :type target: list(int)
+        :param float cutoff: value used to determine replacement with a
+                            simpler glyph that is not quite as good a match to `target`.
+        :return: tuple of best matched :class:`~glyph.Glyph` found to `target`
+                 and distance between target and said glyph.
+                 Distance is given as Euclidian distance in `self.sample_x` * `self.sample_y` dimensional value space
+        :rtype: tuple(:class:`~glyph.Glyph`, float)
+        """
 
         # TODO: may want to easy out if we're at glyph depth of 1?
 
@@ -238,14 +352,25 @@ class ArtTyping:
 
             distance_diff = distance - best_distance
             stack_size_diff = best_tree_set.stack_size - tree_set.stack_size
-            rmd = self.root_mean_distance(target, tree_set)
+            rmd = self._root_mean_square_distance(target, tree_set)
 
             if (distance_diff / (stack_size_diff * rmd)) < cutoff:
                 return tree_set.glyph_set[index], distance
 
         return best_tree_set.glyph_set[best_index], best_distance
 
-    def compose_calculation(self, result, target_width, target_height):
+    def _compose_calculation(self, result, target_width, target_height):
+        """
+        Create calculation demonstration image, composed of glyph `fingerprint_display` images.
+        Useful in seeing how glyphs are matched to input image.
+
+        :param result: list of :class:`~glyph.Glyph`
+        :type result: list(:class:`~glyph.Glyph`)
+        :param int target_width: number of :class:`~glyph.Glyph` across the `result` represents
+        :param int target_height: number of :class:`~glyph.Glyph` down the `result` represents
+        :return: a :class:`~PIL.Image.Image` comprised of glyph `fingerprint_display` images
+        :rtype: :class:`~PIL.Image.Image`
+        """
         calculation = Image.new("L", (target_width * self.glyph_width, target_height * self.glyph_height))
         for i, glyph_ in enumerate(result):
             x = self.glyph_width * (i % target_width)
@@ -253,7 +378,20 @@ class ArtTyping:
             calculation.paste(glyph_.fingerprint_display, (x, y, x + self.glyph_width, y + self.glyph_height))
         return calculation
 
-    def compose_output(self, result, target_width, target_height):
+    def _compose_output(self, result, target_width, target_height):
+        """
+        Create output image, composed of glyph images.
+        Shows the final output of converting an image to a set of glyphs.
+        Very helpful to have visible when trying to type out result, for error checking.
+
+        :param result: list of :class:`~glyph.Glyph`
+        :type result: list(:class:`~glyph.Glyph`)
+        :param int target_width: number of :class:`~glyph.Glyph` across the `result` represents
+        :param int target_height: number of :class:`~glyph.Glyph` down the `result` represents
+        :return: a :class:`~PIL.Image.Image` comprised of glyph images,
+                 representing final output of conversion from image to glyphs
+        :rtype: :class:`~PIL.Image.Image`
+        """
         output = Image.new("L", (target_width * self.glyph_width, target_height * self.glyph_height))
         for i, glyph_ in enumerate(result):
             x = self.glyph_width * (i % target_width)
@@ -261,7 +399,7 @@ class ArtTyping:
             output.paste(glyph_.image, (x, y, x + self.glyph_width, y + self.glyph_height))
         return output
 
-    def instructions(self, result_glyphs, spacer, target_width, target_height, trailing_spacer=False):
+    def _instructions(self, result_glyphs, spacer, target_width, target_height, trailing_spacer=False):
         instructions = []
 
         row_counter_length = str(len(str(target_height)))
@@ -292,7 +430,7 @@ class ArtTyping:
                 line_columns.append(column)
 
             rows = list(itertools.zip_longest(*line_columns, fillvalue=spacer))
-            row_letters = self.iter_all_strings()
+            row_letters = self._iter_all_strings()
 
             for row_number, row in enumerate(rows):
                 glyph_groups = itertools.groupby(row, key=lambda glyph: glyph.name)
@@ -316,48 +454,76 @@ class ArtTyping:
         return instructions
 
     @staticmethod
-    def root_mean_distance(point, tree_set):
+    def _root_mean_square_distance(point, tree_set):
+        """
+        Calculate root mean square distance of a point from points in given tree set.
+        Uses centroid to avoid brute force calculation.
+
+        .. math::
+            \sqrt{\\frac{1}{N}\sum_{i=1}^N (x_i - a)^2} = \sqrt{(m - a)^2 + \\frac{1}{N}\sum_{i=1}^N (x_i - m)^2}
+
+            N is number of points
+            m is centroid of points
+            x_i is a point of the set
+            a is target point
+
+        :param array_like point: point from which mean square distance is calculated
+        :param tree_set: tree set to be compared against, contains centroid and mean square from centroid
+        :type tree_set: :class:`tree_set`
+        :return: root mean square distance of point from points given by tree set
+        :rtype: float
+        """
         centroid = tree_set.centroid
         mean_square_from_centroid = tree_set.mean_square_from_centroid
         square_distance_from_centroid = ((np.array(point) - centroid) ** 2).sum()
         return np.sqrt(square_distance_from_centroid + mean_square_from_centroid)
 
     @staticmethod
-    def iter_all_strings():
+    def _iter_all_strings():
+        """
+        Generator of Excel-like lowercase row letters
+        e.g. a, b, c, ... z, aa, ab
+        useful for cases in which instructions require multiple lines per character row
+
+        :return: generator of excel-like string identifiers
+        :rtype: generator
+        """
         size = 1
         while True:
             for s in itertools.product(string.ascii_lowercase, repeat=size):
                 yield "".join(s)
             size += 1
 
-    def image_to_text(self, image, target_size=(60, 60), cutoff=0.3, resize_mode=Image.LANCZOS, clip_limit=0.02, use_clahe=True, rescale_intensity=True, instruction_spacer=None):
+    def image_to_text(self, image, target_size=(60, 60), cutoff=0.3, resize_mode=Image.LANCZOS, clip_limit=0.02,
+                      use_clahe=True, rescale_intensity=True, instruction_spacer=None):
 
-        preprocessed_image = self.preprocess(image, target_size=target_size, resize_mode=resize_mode,
-                                             clip_limit=clip_limit, use_clahe=use_clahe, rescale_intensity=rescale_intensity)
+        preprocessed_image = self._preprocess(image, target_size=target_size, resize_mode=resize_mode,
+                                              clip_limit=clip_limit, use_clahe=use_clahe,
+                                              rescale_intensity=rescale_intensity)
 
         calc, output, inst_str = self._convert(preprocessed_image, target_size, cutoff, instruction_spacer)
-        return calc, output, inst_str
+        return typed_art(calc, output, inst_str)
 
     def _convert(self, image, target_size=(60, 60), cutoff=0.3, instruction_spacer=None):
 
         target_width, target_height = target_size
 
         image_data = list(image.getdata())
-        target_parts = self.chunk(image_data, target_width=target_width)
+        target_parts = self._chunk(image_data, target_width=target_width)
 
         result = []
         for section in target_parts:
-            glyph, distance = self.find_closest_glyph(section, cutoff=cutoff)
+            glyph, distance = self._find_closest_glyph(section, cutoff=cutoff)
             result.append(glyph)
 
-        calculation = self.compose_calculation(result, target_width=target_width, target_height=target_height)
-        output = self.compose_output(result, target_width=target_width, target_height=target_height)
+        calculation = self._compose_calculation(result, target_width=target_width, target_height=target_height)
+        output = self._compose_output(result, target_width=target_width, target_height=target_height)
 
-        if not instruction_spacer:
+        if instruction_spacer is None:
             blank = Image.new("L", (25, 48), 'white')
             instruction_spacer = Glyph(name='sp', image=blank)
 
-        instruction_string = '\n'.join(self.instructions(result, spacer=instruction_spacer,
-                                                         target_width=target_width, target_height=target_height))
+        instruction_string = '\n'.join(self._instructions(result, spacer=instruction_spacer,
+                                                          target_width=target_width, target_height=target_height))
 
         return calculation, output, instruction_string
