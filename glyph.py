@@ -5,7 +5,27 @@ import os
 
 
 class Glyph:
+    """
+    Class for containing glyph data
+
+    Exposes name, image, components, samples, fingerprint, and fingerprint_display attributes
+
+    Explicitly supports summation with other glyph objects
+    """
     def __init__(self, name=None, image=None, components=None, samples=(3, 3)):
+        """
+        Create glyph object
+
+        :param str name: name of glyph, used both internally and when creating instructions with glyphs
+        :param image: an :class:`~PIL.Image.Image` of the glyph. Likely sourced from scanned typewritten page.
+        :type image: :class:`~PIL.Image.Image`
+        :param components: glyphs that are used to create this glyph.
+        If not specified, will default to containing this glyph.
+        :type components: list(:class:`glyph.Glyph`)
+        :param samples: size specified in an integer, integer tuple for the fingerprint to be scaled to.
+        Specified as number of pixels across, by number of pixels .
+        :type samples: tuple(int, int)
+        """
         self.name = name
         self.image = image
         self.samples = samples
@@ -17,10 +37,7 @@ class Glyph:
         else:
             self.components = [self]
 
-    # With no global GLYPH_DIR, should this be from full filepath, from file handle object?
-    # Perhaps an option to pass the name_map dict (that opens up options to not use a file for it)
-    # Whatever is calling this will preopen the name_map, and can pass through
-    # At that point, can't it just set the name as an override?
+    # This has been largely replaced by the glyph loading code within ArtTyping. This will likely be removed in future
     @classmethod
     def from_file(cls, filename, **kwargs):
         name = os.path.splitext(filename)[0]
@@ -35,6 +52,17 @@ class Glyph:
         return cls(name=name, image=image, **kwargs)
 
     def __add__(self, other):
+        """
+        Addition override
+
+        Addition of two glyphs returns a new glyph object, combining images with :func:`~PIL.ImageChops.darker`,
+        and combining names with a space
+
+        :param other: glyph to add
+        :type other: :class:`~glyph.Glyph`
+        :return: composite glyph of this, and the `other` glyph
+        :rtype: :class:`~glyph.Glyph`
+        """
         if not isinstance(other, Glyph):
             raise TypeError('can only combine glyph (not "{}") with glyph'.format(type(other)))
 
