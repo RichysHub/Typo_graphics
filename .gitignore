@@ -1,8 +1,14 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 
-# Junk
-.idea/
+# Sphinx documentation
+docs/_build/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# JetBrains
+.idea
 
 # Working directories
 Input/
