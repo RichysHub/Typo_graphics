@@ -33,7 +33,7 @@ May be unpacked, or accessed using member names
 typed_art = namedtuple('typed_art', ['calculation', 'output', 'instructions'])
 
 typed_art.__doc__ = """
-Named tuple container for output of :func:`~ArtTyping.image_to_text`
+Named tuple container for output of :meth:`~ArtTyping.image_to_text`
 
 May be unpacked, or accessed using member names
 (`calculation`, `output`, `instructions`)
@@ -61,7 +61,8 @@ class ArtTyping:
     This class primarily is designed to be used to convert an image into a set of instructions,
     that can be typed on a typewriter to reproduce the image.
 
-    Class methods :func:`from_glyph_sheet` and :func:`from_directory` present other initialisation options
+    Class methods :meth:`~ArtTyping.from_glyph_sheet` and
+    :meth:`~ArtTyping.from_directory` present other initialisation options
 
     """
 
@@ -69,7 +70,7 @@ class ArtTyping:
         """
         Create :class:`ArtTyping` object with glyphs specified in `glyph_images`
 
-        Exposes :func:`image_to_text` , which can be used to convert any supplied image into glyph format
+        Exposes :meth:`~ArtTyping.image_to_text` , which can be used to convert any supplied image into glyph format
 
         :param glyph_images: dictionary of images, keyed with glyph names
         :type glyph_images: dict(str: :class:`~PIL.Image.Image`)
@@ -290,10 +291,10 @@ class ArtTyping:
         :param target_size: output size for glyph version of image.
                             Given as total number of glyphs to be used across and down
         :type target_size: tuple(int, int)
-        :param resize_mode: any resize mode as able to be used by :func:`~PIL.Image.Image.resize`
-        :param float clip_limit: clip limit as used by :func:`~skimage.exposure.equalize_adapthist`
-        :param bool use_clahe: enable or disable use of :func:`~skimage.exposure.equalize_adapthist on input image
-        :param bool rescale_intensity: enable or disable use of :func:`skimage.exposure.rescale_intensity`
+        :param resize_mode: any resize mode as able to be used by :meth:`~PIL.Image.Image.resize`
+        :param float clip_limit: clip limit as used by :meth:`~skimage.exposure.equalize_adapthist`
+        :param bool use_clahe: enable or disable use of :meth:`~skimage.exposure.equalize_adapthist on input image
+        :param bool rescale_intensity: enable or disable use of :meth:`skimage.exposure.rescale_intensity`
         :return: image after preprocessing has been applied
         :rtype: :class:`~PIL.Image.Image`
         """
@@ -563,18 +564,18 @@ class ArtTyping:
         """
         Convert image into a glyph version, using the instance's glyphs.
 
-        parameters as for :func:`~ArtTyping._preprocess`
+        parameters as for :meth:`~ArtTyping._preprocess`
         :param image: input :class:`~PIL.Image.Image` to be processed and converted
         :type image: :class:`~PIL.Image.Image`
         :param target_size: output size for glyph version of image.
                             Given as total number of glyphs to be used across and down
         :type target_size: tuple(int, int)
-        :param resize_mode: any resize mode as able to be used by :func:`~PIL.Image.Image.resize`
-        :param float clip_limit: clip limit as used by :func:`~skimage.exposure.equalize_adapthist`
-        :param bool use_clahe: enable or disable use of :func:`~skimage.exposure.equalize_adapthist on input image
-        :param bool rescale_intensity: enable or disable use of :func:`skimage.exposure.rescale_intensity`
+        :param resize_mode: any resize mode as able to be used by :meth:`~PIL.Image.Image.resize`
+        :param float clip_limit: clip limit as used by :meth:`~skimage.exposure.equalize_adapthist`
+        :param bool use_clahe: enable or disable use of :meth:`~skimage.exposure.equalize_adapthist on input image
+        :param bool rescale_intensity: enable or disable use of :meth:`skimage.exposure.rescale_intensity`
 
-        parameters as for :func:`~ArtTyping._convert`
+        parameters as for :meth:`~ArtTyping._convert`
         :param float cutoff: cutoff level for near-enough glyph replacement. A value of 0.0 will permit no replacements
         :param instruction_spacer: glyph to be used to represent moving the typing position one step, without adding ink
         :type instruction_spacer: :class:`~glyph.Glyph`
