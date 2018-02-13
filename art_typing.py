@@ -15,8 +15,36 @@ from skimage import exposure
 
 tree_set = namedtuple('tree_set', ['glyph_set', 'tree', 'centroid',
                                    'mean_square_from_centroid', 'stack_size'])
+tree_set.__doc__ = """
+Named tuple container for information regarding sets of glyphs
+
+May be unpacked, or accessed using member names
+(`glyph_set`, `tree`, `centroid`, `mean_square_from_centroid`, `stack_size`)
+
+:param glyph_set: list containing a collection of glyphs 
+:type glyph_set: list(:class:`~glyph.Glyph`)
+:param tree: a :class:`~scipy.spatial.cKDTree` instantiated with the glyphs of `glyph_set`
+:type tree: :class:`~scipy.spatial.cKDTree`
+:param array_like centroid: position of centroid in `sample_x` * `sample_y` parameter space
+:param float mean_square_from_centroid: mean square distance of glyphs from centroid
+:param int stack_size: number of fundamental glyphs used to compose each glyph in `glyph_set`
+"""
 
 typed_art = namedtuple('typed_art', ['calculation', 'output', 'instructions'])
+
+typed_art.__doc__ = """
+Named tuple container for output of :func:`~ArtTyping.image_to_text`
+
+May be unpacked, or accessed using member names
+(`calculation`, `output`, `instructions`)
+
+:param calculation: an :class:`~PIL.Image.Image` object, showing the `fingerprint_display` images, 
+composed according to the result
+:type calculation: :class:`~PIL.Image.Image`
+:param output: an :class:`~PIL.Image.Image` object, showing the composed glyph result
+:type output: :class:`~PIL.Image.Image`
+:param string instructions: string of instruction lines, separated by \n
+"""
 
 # TODO dump list
 # Support for transparent images, with any glyph as background
@@ -27,9 +55,29 @@ typed_art = namedtuple('typed_art', ['calculation', 'output', 'instructions'])
 
 
 class ArtTyping:
+    """
+    Class for processing glyphs for the creation of images.
 
-    # going with the glyphs being passed as a dict with {name:image}
+    This class primarily is designed to be used to convert an image into a set of instructions,
+    that can be typed on a typewriter to reproduce the image.
+
+    Class methods :func:`from_glyph_sheet` and :func:`from_directory` present other initialisation options
+
+    """
+
     def __init__(self, glyph_images, samples=(3, 3), glyph_depth=2):
+        """
+        Create :class:`ArtTyping` object with glyphs specified in `glyph_images`
+
+        Exposes :func:`image_to_text` , which can be used to convert any supplied image into glyph format
+
+        :param glyph_images: dictionary of images, keyed with glyph names
+        :type glyph_images: dict(str: :class:`~PIL.Image.Image`)
+        :param samples: number of samples across and down, used to match glyphs to input images
+        :type samples: tuple(int, int)
+        :param int glyph_depth: maximum number of glyphs to stack into single characters
+        """
+
         self.samples = samples
         self.sample_x, self.sample_y = samples
         self.glyphs = {}
@@ -50,6 +98,7 @@ class ArtTyping:
                          glyph_names=None, spacing=(0, 0), **kwargs):
         """
         Create :class:`ArtTyping` object with glyphs as extracted from `glyph_sheet`
+
         Allows for a single :class:`~PIL.Image.Image` to be used to provide glyph images
 
         :param glyph_sheet: glyph sheet :class:`~PIL.Image.Image`, to be split into glyphs
@@ -116,6 +165,7 @@ class ArtTyping:
     def from_directory(cls, glyph_directory, **kwargs):
         """
         Create :class:`ArtTyping` object loading glyph images from a given directory.
+
         In addition to images, the directory can contain a name_map.json file
         giving alias names for glyphs located in the directory
 
@@ -209,6 +259,7 @@ class ArtTyping:
     def _fit_to_aspect(image, aspect_ratio):
         """
         Return copy of image, cropped to `aspect_ratio`.
+
         Cropping is applied evenly to both sides of image, so as to preserve center
 
         :param image:  An :class:`~PIL.Image.Image` object
@@ -234,7 +285,7 @@ class ArtTyping:
         """
         Preprocess input image to better be reproduced by glyphs
 
-        :param image: input `~PIL.Image.Image` to be processed
+        :param image: input :class:`~PIL.Image.Image` to be processed
         :type image: :class:`~PIL.Image.Image`
         :param target_size: output size for glyph version of image.
                             Given as total number of glyphs to be used across and down
@@ -243,7 +294,8 @@ class ArtTyping:
         :param float clip_limit: clip limit as used by :func:`~skimage.exposure.equalize_adapthist`
         :param bool use_clahe: enable or disable use of :func:`~skimage.exposure.equalize_adapthist on input image
         :param bool rescale_intensity: enable or disable use of :func:`skimage.exposure.rescale_intensity`
-        :return:
+        :return: image after preprocessing has been applied
+        :rtype: :class:`~PIL.Image.Image`
         """
 
         target_width, target_height = target_size
@@ -296,8 +348,16 @@ class ArtTyping:
     # ~~ OUTPUT CREATION ~~
 
     # Could be split in 2, if wanted to. perform the histogram once, then apply on func call
-    def _equalize_glyphs(self, image, mask=None):
-        h = image.histogram(mask)
+    def _equalize_glyphs(self, image):
+        """
+        Adjust image histogram with the intention using each glyph equally.
+
+        :param image: image to manipulate
+        :type image: :class:`~PIL.Image.Image`
+        :return: input image adjusted to glyph histogram
+        :rtype: :class:`~PIL.Image.Image`
+        """
+        h = image.histogram()
         target_indices = []
         for i in range(256):
             count = self.average_values.count(i)
@@ -362,6 +422,7 @@ class ArtTyping:
     def _compose_calculation(self, result, target_width, target_height):
         """
         Create calculation demonstration image, composed of glyph `fingerprint_display` images.
+
         Useful in seeing how glyphs are matched to input image.
 
         :param result: list of :class:`~glyph.Glyph`
@@ -381,6 +442,7 @@ class ArtTyping:
     def _compose_output(self, result, target_width, target_height):
         """
         Create output image, composed of glyph images.
+
         Shows the final output of converting an image to a set of glyphs.
         Very helpful to have visible when trying to type out result, for error checking.
 
@@ -457,6 +519,7 @@ class ArtTyping:
     def _root_mean_square_distance(point, tree_set):
         """
         Calculate root mean square distance of a point from points in given tree set.
+
         Uses centroid to avoid brute force calculation.
 
         .. math::
@@ -482,6 +545,7 @@ class ArtTyping:
     def _iter_all_strings():
         """
         Generator of Excel-like lowercase row letters
+
         e.g. a, b, c, ... z, aa, ab
         useful for cases in which instructions require multiple lines per character row
 
@@ -496,6 +560,27 @@ class ArtTyping:
 
     def image_to_text(self, image, target_size=(60, 60), cutoff=0.3, resize_mode=Image.LANCZOS, clip_limit=0.02,
                       use_clahe=True, rescale_intensity=True, instruction_spacer=None):
+        """
+        Convert image into a glyph version, using the instance's glyphs.
+
+        parameters as for :func:`~ArtTyping._preprocess`
+        :param image: input :class:`~PIL.Image.Image` to be processed and converted
+        :type image: :class:`~PIL.Image.Image`
+        :param target_size: output size for glyph version of image.
+                            Given as total number of glyphs to be used across and down
+        :type target_size: tuple(int, int)
+        :param resize_mode: any resize mode as able to be used by :func:`~PIL.Image.Image.resize`
+        :param float clip_limit: clip limit as used by :func:`~skimage.exposure.equalize_adapthist`
+        :param bool use_clahe: enable or disable use of :func:`~skimage.exposure.equalize_adapthist on input image
+        :param bool rescale_intensity: enable or disable use of :func:`skimage.exposure.rescale_intensity`
+
+        parameters as for :func:`~ArtTyping._convert`
+        :param float cutoff: cutoff level for near-enough glyph replacement. A value of 0.0 will permit no replacements
+        :param instruction_spacer: glyph to be used to represent moving the typing position one step, without adding ink
+        :type instruction_spacer: :class:`~glyph.Glyph`
+        :return: a :class:`typed_art` object, containing construction, output and instructions, after preprocessing
+        :rtype: :class:`typed_art`
+        """
 
         preprocessed_image = self._preprocess(image, target_size=target_size, resize_mode=resize_mode,
                                               clip_limit=clip_limit, use_clahe=use_clahe,
@@ -505,6 +590,20 @@ class ArtTyping:
         return typed_art(calc, output, inst_str)
 
     def _convert(self, image, target_size=(60, 60), cutoff=0.3, instruction_spacer=None):
+        """
+        Raw conversion of image to glyphs, no preprocessing is performed.
+
+        :param image: input :class:`~PIL.Image.Image` to be processed and converted
+        :type image: :class:`~PIL.Image.Image`
+        :param target_size: output size for glyph version of image.
+                            Given as total number of glyphs to be used across and down
+        :type target_size: tuple(int, int)
+        :param float cutoff: cutoff level for near-enough glyph replacement. A value of 0.0 will permit no replacements
+        :param instruction_spacer: glyph to be used to represent moving the typing position one step, without adding ink
+        :type instruction_spacer: :class:`~glyph.Glyph`
+        :return: a :class:`typed_art` object, containing construction, output and instructions
+        :rtype: :class:`typed_art`
+        """
 
         target_width, target_height = target_size
 
