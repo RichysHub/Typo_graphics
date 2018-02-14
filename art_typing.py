@@ -90,6 +90,7 @@ class ArtTyping:
         # TODO ugly, would be cleaner if glyphs were in a sequence
         self.glyph_width, self.glyph_height = list(self.glyphs.values())[0].image.size
         self.glyph_depth = glyph_depth
+        self.standalone_glyphs = {}
         self.tree_sets = self._calculate_trees()
         self.average_values = self._average_glyph_values()
         self.value_extrema = self._glyph_value_extrema()
@@ -204,6 +205,10 @@ class ArtTyping:
 
         for stack_size in range(1, self.glyph_depth + 1):
             glyph_set = list(self._combine_glyphs(stack_size).values())
+
+            if stack_size == 1:
+                glyph_set.extend(list(self.standalone_glyphs.values()))
+
             glyph_data = [list(glyph.fingerprint.getdata()) for glyph in glyph_set]
             tree = cKDTree(glyph_data)
             centroid = np.mean(glyph_data, axis=0)
@@ -253,6 +258,25 @@ class ArtTyping:
         :rtype: tuple(float, float)
         """
         return min(self.average_values), max(self.average_values)
+
+    def add_glyph(self, glyph, use_in_combinations=False):
+        """
+        Add extra glyphs into the available pool.
+        New glyphs added in this manner can be exluded from use in combinations.
+
+        :param glyph:
+        :type glyph: :class:`~glyph.Glyph`
+        :param bool use_in_combinations: use this glyph in combinations, default False
+        """
+        if use_in_combinations:
+            self.glyphs.update({glyph.name: glyph})
+        else:
+            self.standalone_glyphs.update({glyph.name: glyph})
+
+        # little bit WET, replicated from __init__
+        self.tree_sets = self._calculate_trees()
+        self.average_values = self._average_glyph_values()
+        self.value_extrema = self._glyph_value_extrema()
 
     # ~~ IMAGE PROCESSING ~~
 
