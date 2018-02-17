@@ -1,4 +1,4 @@
-import art_typing
+import typograph
 from contextlib import suppress
 import os
 import json
@@ -47,8 +47,8 @@ for index, glyph in enumerate(glyphs):
 
 glyph_sheet.show()
 
-# Create ArtTyping instance using this glyph sheet
-art = art_typing.ArtTyping.from_glyph_sheet(glyph_sheet, number_glyphs=len(glyphs), glyph_names=names,
+# Create Typograph instance using this glyph sheet
+art = typograph.Typograph.from_glyph_sheet(glyph_sheet, number_glyphs=len(glyphs), glyph_names=names,
                                             spacing=spacing, grid_size=(columns, rows), glyph_depth=1)
 
 # iterate through the extracted glyphs, and verify they match the input images
