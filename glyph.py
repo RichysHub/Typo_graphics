@@ -37,7 +37,7 @@ class Glyph:
         else:
             self.components = [self]
 
-    # This has been largely replaced by the glyph loading code within ArtTyping. This will likely be removed in future
+    # This has been largely replaced by the glyph loading code within Typograph. This will likely be removed in future
     @classmethod
     def from_file(cls, filename, **kwargs):
         name = os.path.splitext(filename)[0]
