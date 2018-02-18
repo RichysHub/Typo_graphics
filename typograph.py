@@ -91,9 +91,7 @@ class Typograph:
         self.glyph_width, self.glyph_height = list(self.glyphs.values())[0].image.size
         self.glyph_depth = glyph_depth
         self.standalone_glyphs = {}
-        self.tree_sets = self._calculate_trees()
-        self.average_values = self._average_glyph_values()
-        self.value_extrema = self._glyph_value_extrema()
+        self._recalculate_glyphs()
 
     @classmethod
     def from_glyph_sheet(cls, glyph_sheet, number_glyphs=None, glyph_dimensions=None, grid_size=None,
@@ -259,24 +257,69 @@ class Typograph:
         """
         return min(self.average_values), max(self.average_values)
 
+    def _recalculate_glyphs(self):
+        # Will be recalculating all trees, not just the ones affected
+        self.tree_sets = self._calculate_trees()
+        self.average_values = self._average_glyph_values()
+        self.value_extrema = self._glyph_value_extrema()
+
     def add_glyph(self, glyph, use_in_combinations=False):
         """
         Add extra glyphs into the available pool.
-        New glyphs added in this manner can be exluded from use in combinations.
+        New glyphs added in this manner can be excluded from use in combinations or as a standalone glyph.
 
-        :param glyph:
+        Adding a glyph already present in combinations, as a standalone
+        will result in removal of glyph from combinations. The reverse of this is also true.
+
+        :param glyph: glyph to add
         :type glyph: :class:`~glyph.Glyph`
         :param bool use_in_combinations: use this glyph in combinations, default False
         """
         if use_in_combinations:
+            self.standalone_glyphs.pop(glyph.name)
             self.glyphs.update({glyph.name: glyph})
         else:
+            self.glyphs.pop(glyph.name)
             self.standalone_glyphs.update({glyph.name: glyph})
 
-        # little bit WET, replicated from __init__
-        self.tree_sets = self._calculate_trees()
-        self.average_values = self._average_glyph_values()
-        self.value_extrema = self._glyph_value_extrema()
+        self._recalculate_glyphs()
+
+    # string name variant, may want to investigate using glyph too
+    def remove_glyph(self, glyph, remove_from="both"):
+        """
+        Remove glyph from available pool.
+        Glyphs can be explicitly removed from combinations, standalone, or both
+
+        Glyphs are removed by name, if passed a :class:`~glyph.Glyph` instance, will use the .name attribute
+
+        "Combinations" or "C" to remove from combinations
+        "Standalone" or "S" to remove from standalone glyphs
+        "Both" or "B" to remove from both
+
+        Returns the glyph instance removed, or None if the glyph was not found
+
+        :param glyph: glyph to remove
+        :type glyph: :class:`~glyph.Glyph` or str
+        :param remove_from: string identifier for where to remove from
+        :return: glyph removed or None
+        :rtype: :class:`~glyph.Glyph` or None
+        """
+
+        if isinstance(glyph, Glyph):
+            glyph = glyph.name
+
+        remove_from = remove_from.lower()
+
+        if remove_from in ("both", "b", "combinations", "c"):
+            from_combination = self.glyphs.pop(glyph, None)
+        if remove_from in ("both", "b", "standalone", "s"):
+            from_standalone = self.standalone_glyphs.pop(glyph, None)
+
+        self._recalculate_glyphs()
+
+        return from_combination or from_standalone
+
+    # could add a make_standalone method that removes glyph, and adds as a standalone
 
     # ~~ IMAGE PROCESSING ~~
 
