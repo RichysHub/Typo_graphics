@@ -49,7 +49,7 @@ glyph_sheet.show()
 
 # Create Typograph instance using this glyph sheet
 art = typograph.Typograph.from_glyph_sheet(glyph_sheet, number_glyphs=len(glyphs), glyph_names=names,
-                                            spacing=spacing, grid_size=(columns, rows), glyph_depth=1)
+                                           spacing=spacing, grid_size=(columns, rows), glyph_depth=1)
 
 # iterate through the extracted glyphs, and verify they match the input images
 for name, glyph in art.glyphs.items():
