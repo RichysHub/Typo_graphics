@@ -358,8 +358,7 @@ class Typograph:
 
         return image
 
-    def _preprocess(self, image, target_size=(60, 60), resize_mode=Image.LANCZOS, clip_limit=0.02,
-                    use_clahe=True, rescale_intensity=True):
+    def _preprocess(self, image, target_size, resize_mode, clip_limit, use_clahe, rescale_intensity, background_glyph):
         """
         Preprocess input image to better be reproduced by glyphs
 
@@ -381,6 +380,15 @@ class Typograph:
         image = self._fit_to_aspect(image, desired_aspect)
 
         sized_picture = image.resize((target_width * self.sample_x, target_height * self.sample_y), resize_mode)
+        if background_glyph is not None:
+            image_bands = sized_picture.getbands()
+            if "A" in image_bands:
+                # alpha_channel = sized_picture.getdata(image_bands.index("A"))
+                alpha_channel = sized_picture.split()[image_bands.index("A")]
+            else:
+                # TODO is fully opaque white or black?
+                alpha_channel = Image.New("L", sized_picture.size)
+            alpha_channel.show()
         sized_picture = sized_picture.convert("L")
 
         if use_clahe or rescale_intensity:
@@ -397,6 +405,8 @@ class Typograph:
 
             sized_picture = Image.fromarray(sized_picture.astype("uint8"))
 
+        if background_glyph is not None:
+            sized_picture.putalpha(alpha_channel)
         return sized_picture
 
     def _chunk(self, image_data, target_width):
@@ -454,7 +464,7 @@ class Typograph:
 
         return image.point(lut)
 
-    def _find_closest_glyph(self, target, cutoff=0.3):
+    def _find_closest_glyph(self, target, cutoff, background_glyph):
         """
         Determine closest glyph available to `target` data
 
@@ -475,6 +485,14 @@ class Typograph:
         """
 
         # TODO: may want to easy out if we're at glyph depth of 1?
+
+        if background_glyph is not None:
+            # TODO this 128 could be tunable
+            is_transparent = [alpha < 128 for value, alpha in target]
+            if all(is_transparent):  # if deemed transparent enough
+                return background_glyph, None  # using None for distance
+            else:  # otherwise strip alpha
+                target = [value for value, alpha in target]
 
         neighbours = []
         for tree_set in self.tree_sets:
@@ -656,7 +674,7 @@ class Typograph:
             size += 1
 
     def image_to_text(self, image, target_size=(60, 60), cutoff=0.3, resize_mode=Image.LANCZOS, clip_limit=0.02,
-                      use_clahe=True, rescale_intensity=True, instruction_spacer=None):
+                      use_clahe=True, rescale_intensity=True, instruction_spacer=None, background_glyph=None):
         """
         Convert image into a glyph version, using the instance's glyphs.
 
@@ -674,18 +692,21 @@ class Typograph:
         :param float cutoff: cutoff level for near-enough glyph replacement. A value of 0.0 will permit no replacements
         :param instruction_spacer: glyph to be used to represent moving the typing position one step, without adding ink
         :type instruction_spacer: :class:`~glyph.Glyph`
+        :param background_glyph: glyph to fill background of transparent image with
+        :type background_glyph: :class:`~glyph.Glyph`
         :return: a :class:`typed_art` object, containing construction, output and instructions, after preprocessing
         :rtype: :class:`typed_art`
         """
 
-        preprocessed_image = self._preprocess(image, target_size=target_size, resize_mode=resize_mode,
+        preprocessed_image = self._preprocess(image=image, target_size=target_size, resize_mode=resize_mode,
                                               clip_limit=clip_limit, use_clahe=use_clahe,
-                                              rescale_intensity=rescale_intensity)
+                                              rescale_intensity=rescale_intensity, background_glyph=background_glyph)
 
-        calc, output, inst_str = self._convert(preprocessed_image, target_size, cutoff, instruction_spacer)
+        calc, output, inst_str = self._convert(image=preprocessed_image, target_size=target_size, cutoff=cutoff,
+                                               instruction_spacer=instruction_spacer, background_glyph=background_glyph)
         return typed_art(calc, output, inst_str)
 
-    def _convert(self, image, target_size=(60, 60), cutoff=0.3, instruction_spacer=None):
+    def _convert(self, image, target_size, cutoff, instruction_spacer, background_glyph):
         """
         Raw conversion of image to glyphs, no preprocessing is performed.
 
@@ -708,7 +729,7 @@ class Typograph:
 
         result = []
         for section in target_parts:
-            glyph, distance = self._find_closest_glyph(section, cutoff=cutoff)
+            glyph, distance = self._find_closest_glyph(section, cutoff=cutoff, background_glyph=background_glyph)
             result.append(glyph)
 
         calculation = self._compose_calculation(result, target_width=target_width, target_height=target_height)
