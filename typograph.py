@@ -9,6 +9,7 @@ import json
 from contextlib import suppress
 import numpy as np
 from scipy.spatial import cKDTree
+from scipy.spatial.distance import euclidean
 import string
 from skimage import exposure
 
@@ -484,11 +485,16 @@ class Typograph:
         # TODO: may want to easy out if we're at glyph depth of 1?
 
         if background_glyph is not None:
-            # TODO this 128 could be tunable
-            is_transparent = [alpha < 128 for value, alpha in target]
+            is_transparent = [alpha < 255 for value, alpha in target]
             if all(is_transparent):  # if deemed transparent enough
                 return background_glyph, None  # using None for distance
-            else:  # otherwise strip alpha
+            elif any(is_transparent):  # some transparency, merge in background glyph
+                background = background_glyph.fingerprint.getdata()
+                target = [(target_value * alpha/255) + (back_value * (255 - alpha)/255)
+                          for back_value, (target_value, alpha) in zip(background, target)]
+                background_distance = euclidean(background, target)
+            else:  # otherwise strip alpha, continue as normal
+                background_distance = None
                 target = [value for value, alpha in target]
 
         neighbours = []
@@ -498,6 +504,13 @@ class Typograph:
             neighbours.append((tree_set, distance, index))
 
         best_tree_set, best_distance, best_index = min(neighbours, key=lambda x: x[1])
+        best_glyph = best_tree_set.glyph_set[best_index]
+
+        # We permit background glyph use in semi-transparent areas, if best match
+        if background_distance is not None:
+            if background_distance < best_distance:
+                best_distance = background_distance
+                best_glyph = background_glyph
 
         max_stack_size = best_tree_set.stack_size
 
@@ -510,7 +523,7 @@ class Typograph:
             if (distance_diff / (stack_size_diff * rmd)) < cutoff:
                 return tree_set.glyph_set[index], distance
 
-        return best_tree_set.glyph_set[best_index], best_distance
+        return best_glyph, best_distance
 
     def _compose_calculation(self, result, target_width, target_height):
         """
