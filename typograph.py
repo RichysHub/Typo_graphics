@@ -383,12 +383,9 @@ class Typograph:
         if background_glyph is not None:
             image_bands = sized_picture.getbands()
             if "A" in image_bands:
-                # alpha_channel = sized_picture.getdata(image_bands.index("A"))
                 alpha_channel = sized_picture.split()[image_bands.index("A")]
             else:
-                # TODO is fully opaque white or black?
-                alpha_channel = Image.New("L", sized_picture.size)
-            alpha_channel.show()
+                alpha_channel = Image.New("L", sized_picture.size, "white")
         sized_picture = sized_picture.convert("L")
 
         if use_clahe or rescale_intensity:
