@@ -47,11 +47,6 @@ composed according to the result
 """
 
 # TODO dump list
-# Support for transparent images, with any glyph as background
-# --> Could almost be done in a postprocess step?
-# --> leaning toward not implementing, but providing a how-to recipe for this
-# --> Cannot do with making background beforehand,
-# ------> as doesn't cover case where background is not in allowed glyphs, ie. space
 # Enhanced image production for single glyph stacking
 # --> looks to be issue with how we calculate self.value_extrema
 # docs with sphinx
@@ -150,8 +145,8 @@ class Typograph:
             glyph_height = int(glyph_height)
         else:
             glyph_width, glyph_height = glyph_dimensions
-            grid_width = (sheet_width + spacing_x) / (glyph_width + spacing_x)
-            grid_height = (sheet_height + spacing_y) / (glyph_height + spacing_y)
+            grid_width = (sheet_width + spacing_x) // (glyph_width + spacing_x)
+            grid_height = (sheet_height + spacing_y) // (glyph_height + spacing_y)
 
         glyph_images = {}
         for i_y in range(grid_height):
@@ -484,6 +479,8 @@ class Typograph:
 
         # TODO: may want to easy out if we're at glyph depth of 1?
 
+        background_distance = None
+
         if background_glyph is not None:
             is_transparent = [alpha < 255 for value, alpha in target]
             if all(is_transparent):  # if deemed transparent enough
@@ -494,7 +491,6 @@ class Typograph:
                           for back_value, (target_value, alpha) in zip(background, target)]
                 background_distance = euclidean(background, target)
             else:  # otherwise strip alpha, continue as normal
-                background_distance = None
                 target = [value for value, alpha in target]
 
         neighbours = []
