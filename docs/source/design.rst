@@ -52,8 +52,6 @@ What makes Typo_graphics different?
 The core tenets that underpin Typo_graphics are to remain font independent, to utilise the characters to their full extent,
 and to use the typewriters ability to overtype characters, where useful to the image.
 
-How does it work?
------------------
 
 The instruction format
 ----------------------

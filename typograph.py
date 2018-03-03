@@ -1,4 +1,4 @@
-from glyph import Glyph
+from .glyph import Glyph
 from collections import namedtuple
 import functools
 import itertools

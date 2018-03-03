@@ -1,4 +1,4 @@
-import typograph
+from typo_graphics import typograph
 from PIL import Image
 
 # Create Typograph instance from the local directory of glyph images

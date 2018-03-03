@@ -14,7 +14,7 @@ class Glyph:
     Exposes following instance attributes:
      - :attr:`name`, the name of the glyph
      - :attr:`image`, :class:`~PIL.Image.Image` image of the glyph.
-     - :attr:`components`,
+     - :attr:`components`, the typed keys that compose this glyph
      - :attr:`samples`, tuple of ints governing how the glyph is down-sampled for matching
      - :attr:`fingerprint`, scaled :class:`~PIL.Image.Image` showing how glyph is internally processed
      - :attr:`fingerprint_display`, rescaled version of :attr:`fingerprint`, to size of original :attr:`image`
