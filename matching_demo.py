@@ -1,4 +1,4 @@
-import typograph
+from typo_graphics import typograph
 from contextlib import suppress
 import os
 import json
