@@ -6,9 +6,18 @@ import os
 
 class Glyph:
     """
-    Class for containing glyph data
+    Represents the ink typed into one monospaced space.
 
-    Exposes name, image, components, samples, fingerprint, and fingerprint_display attributes
+    This can comprise of multiple component glyphs, which are retained in :attr:`components`.
+    In the case that the glyph is as typed, this will contain simply a reference to self.
+
+    Exposes following instance attributes:
+     - :attr:`name`, the name of the glyph
+     - :attr:`image`, :class:`~PIL.Image.Image` image of the glyph.
+     - :attr:`components`,
+     - :attr:`samples`, tuple of ints governing how the glyph is down-sampled for matching
+     - :attr:`fingerprint`, scaled :class:`~PIL.Image.Image` showing how glyph is internally processed
+     - :attr:`fingerprint_display`, rescaled version of :attr:`fingerprint`, to size of original :attr:`image`
 
     Explicitly supports summation with other glyph objects
     """
@@ -20,10 +29,10 @@ class Glyph:
         :param image: an :class:`~PIL.Image.Image` of the glyph. Likely sourced from scanned typewritten page.
         :type image: :class:`~PIL.Image.Image`
         :param components: glyphs that are used to create this glyph.
-        If not specified, will default to containing this glyph.
-        :type components: list(:class:`glyph.Glyph`)
+         If not specified, will default to containing this glyph.
+        :type components: list(:class:`~glyph.Glyph`)
         :param samples: size specified in an integer, integer tuple for the fingerprint to be scaled to.
-        Specified as number of pixels across, by number of pixels .
+         Specified as number of pixels across, by number of pixels .
         :type samples: tuple(int, int)
         """
         self.name = name
@@ -55,6 +64,13 @@ class Glyph:
         """
         Addition override
 
+        Addition of glyphs encapsulates overlaying the two glyphs on a typewriter.
+        This would be achieved by first typing ``glyph1``, moving the carriage back, and typing ``glyph2`` in the same space.
+        Image combination is achieved with :func:`~PIL.ImageChops.darker`
+
+        If the ``samples`` of the two glyphs are not equal, a ``ValueError`` is raised.
+
+        The returned :class:`~glyph.Glyph`
         Addition of two glyphs returns a new glyph object, combining images with :func:`~PIL.ImageChops.darker`,
         and combining names with a space
 
@@ -62,6 +78,8 @@ class Glyph:
         :type other: :class:`~glyph.Glyph`
         :return: composite glyph of this, and the `other` glyph
         :rtype: :class:`~glyph.Glyph`
+        :raises ValueError: if ``samples`` attribute of the two glyphs do not match
+        :raises TypeError: if addition is attempted with an object **not** of type :class:`~glyph.Glyph`
         """
         if not isinstance(other, Glyph):
             raise TypeError('can only combine glyph (not "{}") with glyph'.format(type(other)))

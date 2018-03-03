@@ -3,20 +3,18 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Typo_graphics's documentation!
-=========================================
+Welcome to Typo_graphics
+========================
+
+Welcome to the documentation for Typo_graphics, a small project focusing on making images with a typewriter.
+
 
 Contents:
 
 .. toctree::
    :maxdepth: 2
 
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
+   demos
+   design
+   api
+   credits

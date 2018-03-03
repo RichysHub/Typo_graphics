@@ -33,7 +33,7 @@ May be unpacked, or accessed using member names
 
 typed_art = namedtuple('typed_art', ['calculation', 'output', 'instructions'])
 typed_art.__doc__ = """
-Named tuple container for output of :method:`~Typograph.image_to_text`
+Named tuple container for output of :meth:`~Typograph.image_to_text`
 
 May be unpacked, or accessed using member names
 (`calculation`, `output`, `instructions`)
@@ -66,8 +66,8 @@ class Typograph:
     This class primarily is designed to be used to convert an image into a set of instructions,
     that can be typed on a typewriter to reproduce the image.
 
-    Class methods :method:`~Typograph.from_glyph_sheet` and
-    :method:`~Typograph.from_directory` present other initialisation options
+    Class methods :meth:`~Typograph.from_glyph_sheet` and
+    :meth:`~Typograph.from_directory` present other initialisation options
 
     """
 
@@ -75,7 +75,7 @@ class Typograph:
         """
         Create :class:`Typograph` object with glyphs specified in `glyph_images`
 
-        Exposes :method:`~Typograph.image_to_text` , which can be used to convert any supplied image into glyph format
+        Exposes :meth:`~Typograph.image_to_text` , which can be used to convert any supplied image into glyph format
 
         :param glyph_images: dictionary of images, keyed with glyph names
         :type glyph_images: dict(str: :class:`~PIL.Image.Image`)
@@ -117,9 +117,9 @@ class Typograph:
         :param grid_size: if given, number of (rows, columns) that glyphs are arranged in
         :type grid_size: tuple(int, int)
         :param glyph_names: list of glyph names listed left to right, top to bottom
-        :type glyph_names: list(str)
+        :type glyph_names: list(string)
         :param spacing: tuple of integer pixel spacing between adjacent glyphs,
-        as number of pixels between glyphs horizontally and vertically
+         as number of pixels between glyphs horizontally and vertically
         :type spacing: tuple(int, int)
         :param kwargs: optional keyword arguments as for :class:`ArtTyping`
         :return: An :class:`ArtTyping` object using glyphs images extracted from `glyph_sheet`
@@ -361,12 +361,12 @@ class Typograph:
         :param image: input :class:`~PIL.Image.Image` to be processed
         :type image: :class:`~PIL.Image.Image`
         :param target_size: output size for glyph version of image.
-        Given as total number of glyphs to be used across and down
+         Given as total number of glyphs to be used across and down
         :type target_size: tuple(int, int)
-        :param resize_mode: any resize mode as able to be used by :method:`~PIL.Image.Image.resize`
-        :param float clip_limit: clip limit as used by :method:`~skimage.exposure.equalize_adapthist`
-        :param bool use_clahe: enable or disable use of :method:`~skimage.exposure.equalize_adapthist on input image
-        :param bool rescale_intensity: enable or disable use of :method:`skimage.exposure.rescale_intensity`
+        :param resize_mode: any resize mode as able to be used by :meth:`~PIL.Image.Image.resize`
+        :param float clip_limit: clip limit as used by :meth:`~skimage.exposure.equalize_adapthist`
+        :param bool use_clahe: enable or disable use of :meth:`~skimage.exposure.equalize_adapthist` on input image
+        :param bool rescale_intensity: enable or disable use of :meth:`skimage.exposure.rescale_intensity`
         :return: image after preprocessing has been applied
         :rtype: :class:`~PIL.Image.Image`
         """
@@ -467,13 +467,13 @@ class Typograph:
         Higher values will allow less similar glyphs to be used, if they comprise of fewer component pieces.
 
         :param target: data of target region of image, given as a list of integers,
-        range 0->255 listed from left to right, top to bottom.
+         range 0->255 listed from left to right, top to bottom.
         :type target: list(int)
         :param float cutoff: value used to determine replacement with a
-        simpler glyph that is not quite as good a match to `target`.
+         simpler glyph that is not quite as good a match to `target`.
         :return: tuple of best matched :class:`~glyph.Glyph` found to `target`
-        and distance between target and said glyph.
-        Distance is given as Euclidian distance in `self.sample_x` * `self.sample_y` dimensional value space.
+         and distance between target and said glyph.
+         Distance is given as Euclidian distance in `self.sample_x` * `self.sample_y` dimensional value space.
         :rtype: tuple(:class:`~glyph.Glyph`, float)
         """
 
@@ -579,7 +579,7 @@ class Typograph:
         :param int target_width: width of image, measured in glyphs
         :param int target_height: height of image, measured in glyphs
         :param bool trailing_spacer: enable inclusion of trailing spacer characters.
-        This can be helpful for counting back from end of line
+         This can be helpful for counting back from end of line
         :return: List of instruction strings
         :rtype: list(str)
         """
@@ -684,17 +684,18 @@ class Typograph:
         """
         Convert image into a glyph version, using the instance's glyphs.
 
-        parameters as for :method:`~Typograph._preprocess`
+        parameters as for :meth:`~Typograph._preprocess`
+
         :param image: input :class:`~PIL.Image.Image` to be processed and converted
         :type image: :class:`~PIL.Image.Image`
         :param target_size: output size for glyph version of image.
-        Given as total number of glyphs to be used across and down
+         Given as total number of glyphs to be used across and down
         :type target_size: tuple(int, int)
-        :param resize_mode: any resize mode as able to be used by :method:`~PIL.Image.Image.resize`
-        :param float clip_limit: clip limit as used by :method:`~skimage.exposure.equalize_adapthist`
-        :param bool use_clahe: enable or disable use of :method:`~skimage.exposure.equalize_adapthist on input image
-        :param bool rescale_intensity: enable or disable use of :method:`skimage.exposure.rescale_intensity`
-        parameters as for :method:`~Typograph._convert`
+        :param resize_mode: any resize mode as able to be used by :meth:`~PIL.Image.Image.resize`
+        :param float clip_limit: clip limit as used by :meth:`~skimage.exposure.equalize_adapthist`
+        :param bool use_clahe: enable or disable use of :meth:`~skimage.exposure.equalize_adapthist` on input image
+        :param bool rescale_intensity: enable or disable use of :meth:`skimage.exposure.rescale_intensity`
+         parameters as for :meth:`~Typograph._convert`
         :param float cutoff: cutoff level for near-enough glyph replacement. A value of 0.0 will permit no replacements
         :param instruction_spacer: glyph to be used to represent moving the typing position one step, without adding ink
         :type instruction_spacer: :class:`~glyph.Glyph`
@@ -719,7 +720,7 @@ class Typograph:
         :param image: input :class:`~PIL.Image.Image` to be processed and converted
         :type image: :class:`~PIL.Image.Image`
         :param target_size: output size for glyph version of image.
-        Given as total number of glyphs to be used across and down
+         Given as total number of glyphs to be used across and down
         :type target_size: tuple(int, int)
         :param float cutoff: cutoff level for near-enough glyph replacement. A value of 0.0 will permit no replacements
         :param instruction_spacer: glyph to be used to represent moving the typing position one step, without adding ink
