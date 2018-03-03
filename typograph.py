@@ -381,7 +381,7 @@ class Typograph:
             if "A" in image_bands:
                 alpha_channel = sized_picture.split()[image_bands.index("A")]
             else:
-                alpha_channel = Image.New("L", sized_picture.size, "white")
+                alpha_channel = Image.new("L", sized_picture.size, "white")
         sized_picture = sized_picture.convert("L")
 
         if use_clahe or rescale_intensity:
