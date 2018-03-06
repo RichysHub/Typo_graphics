@@ -23,12 +23,14 @@ May be unpacked, or accessed using member names
 (`glyph_set`, `tree`, `centroid`, `mean_square_from_centroid`, `stack_size`)
 
 :param glyph_set: list containing a collection of glyphs 
-:type glyph_set: list(:class:`~glyph.Glyph`)
+:type glyph_set: [:class:`Glyph`]
 :param tree: a :class:`~scipy.spatial.cKDTree` instantiated with the glyphs of `glyph_set`
 :type tree: :class:`~scipy.spatial.cKDTree`
 :param array_like centroid: position of centroid in `sample_x` * `sample_y` parameter space
-:param float mean_square_from_centroid: mean square distance of glyphs from centroid
-:param int stack_size: number of fundamental glyphs used to compose each glyph in `glyph_set`
+:param mean_square_from_centroid: mean square distance of glyphs from centroid
+:type mean_square_from_centroid: :class:`float`
+:param stack_size: number of fundamental glyphs used to compose each glyph in `glyph_set`
+:type stack_size: :class:`int`
 """
 
 typed_art = namedtuple('typed_art', ['calculation', 'output', 'instructions'])
@@ -38,12 +40,13 @@ Named tuple container for output of :meth:`~Typograph.image_to_text`
 May be unpacked, or accessed using member names
 (`calculation`, `output`, `instructions`)
 
-:param calculation: an :class:`~PIL.Image.Image` object, showing the `fingerprint_display` images, 
-composed according to the result
+:param calculation: an :class:`~PIL.Image.Image` object, showing the :attr:`~Glyph.fingerprint_display` images, 
+ composed according to the result
 :type calculation: :class:`~PIL.Image.Image`
 :param output: an :class:`~PIL.Image.Image` object, showing the composed glyph result
 :type output: :class:`~PIL.Image.Image`
-:param string instructions: string of instruction lines, separated by \n
+:param instructions: string of instruction lines, separated by \n
+:type instructions: :class:`string`
 """
 
 # TODO dump list
@@ -69,19 +72,20 @@ class Typograph:
     Class methods :meth:`~Typograph.from_glyph_sheet` and
     :meth:`~Typograph.from_directory` present other initialisation options
 
+    Exposes :meth:`~Typograph.image_to_text` , which can be used to convert any supplied image into glyph format
     """
 
     def __init__(self, glyph_images, samples=(3, 3), glyph_depth=2):
         """
         Create :class:`Typograph` object with glyphs specified in `glyph_images`
 
-        Exposes :meth:`~Typograph.image_to_text` , which can be used to convert any supplied image into glyph format
-
         :param glyph_images: dictionary of images, keyed with glyph names
-        :type glyph_images: dict(str: :class:`~PIL.Image.Image`)
-        :param samples: number of samples across and down, used to match glyphs to input images
-        :type samples: tuple(int, int) or int
-        :param int glyph_depth: maximum number of glyphs to stack into single characters
+        :type glyph_images: {:class:`str`: :class:`~PIL.Image.Image`}
+        :param samples: number of samples across and down, used to match glyphs to input images.
+         If only :class:`int` given, uses that value for both directions
+        :type samples: (:class:`int`, :class:`int`) or :class:`int`
+        :param glyph_depth: maximum number of glyphs to stack into single characters
+        :type glyph_depth: :class:`int`
         """
 
         if isinstance(samples, int):
@@ -105,24 +109,25 @@ class Typograph:
     def from_glyph_sheet(cls, glyph_sheet, number_glyphs, glyph_dimensions=None, grid_size=None,
                          glyph_names=None, spacing=(0, 0), **kwargs):
         """
-        Create :class:`ArtTyping` object with glyphs as extracted from `glyph_sheet`
+        Create :class:`Typograph` object with glyphs as extracted from `glyph_sheet`
 
         Allows for a single :class:`~PIL.Image.Image` to be used to provide glyph images
 
         :param glyph_sheet: glyph sheet :class:`~PIL.Image.Image`, to be split into glyphs
         :type glyph_sheet: :class:`~PIL.Image.Image`
-        :param int number_glyphs: total number of glyphs present in `glyph_sheet`
+        :param number_glyphs: total number of glyphs present in `glyph_sheet`
+        :type number_glyphs: :class:`int`
         :param glyph_dimensions: pixel dimensions of glyphs given as (width, height)
-        :type glyph_dimensions: tuple(int, int)
+        :type glyph_dimensions: (:class:`int`, :class:`int`)
         :param grid_size: if given, number of (rows, columns) that glyphs are arranged in
-        :type grid_size: tuple(int, int)
+        :type grid_size: (:class:`int`, :class:`int`)
         :param glyph_names: list of glyph names listed left to right, top to bottom
-        :type glyph_names: list(string)
+        :type glyph_names: [:class:`str`]
         :param spacing: tuple of integer pixel spacing between adjacent glyphs,
          as number of pixels between glyphs horizontally and vertically
-        :type spacing: tuple(int, int)
-        :param kwargs: optional keyword arguments as for :class:`ArtTyping`
-        :return: An :class:`ArtTyping` object using glyphs images extracted from `glyph_sheet`
+        :type spacing: (:class:`int`, :class:`int`)
+        :param kwargs: optional keyword arguments as for :class:`Typograph`
+        :return: An :class:`Typograph` object using glyphs images extracted from `glyph_sheet`
         :rtype: :class:`Typograph`
         :raises TypeError: if `number_glyphs` is not given
         :raises TypeError: if neither `grid_size` or `glyph_dimensions` are specified
@@ -169,14 +174,15 @@ class Typograph:
     @classmethod
     def from_directory(cls, glyph_directory, **kwargs):
         """
-        Create :class:`ArtTyping` object loading glyph images from a given directory.
+        Create :class:`Typograph` object loading glyph images from a given directory.
 
         In addition to images, the directory can contain a name_map.json file
         giving alias names for glyphs located in the directory
 
-        :param string glyph_directory: A file path for directory containing glyph images
-        :param kwargs: optional keyword arguments as for :class:`ArtTyping`
-        :return: An :class:`ArtTyping` object using glyphs images found from directory
+        :param glyph_directory: A file path for directory containing glyph images
+        :type glyph_directory: :class:`str`
+        :param kwargs: optional keyword arguments as for :class:`Typograph`
+        :return: An :class:`Typograph` object using glyphs images found from directory
         :rtype: :class:`Typograph`
         """
         with suppress(FileNotFoundError):  # look for a name_map.json, but continue if not found
@@ -202,7 +208,7 @@ class Typograph:
         Calculate tree sets for input glyphs, combined up to `self.glyph_depth`
 
         :return: list of tree sets
-        :rtype: list(:class:`tree_set`)
+        :rtype: [:class:`~typograph.tree_set`]
         """
         tree_sets = []
 
@@ -227,9 +233,10 @@ class Typograph:
         """
         Calculate all unique combinations of `depth` number of glyphs
 
-        :param int depth: number of glyphs to combine into composite glyphs
+        :param depth: number of glyphs to combine into composite glyphs
+        :type depth: :class:`int`
         :return: dictionary of combination glyphs, using glyph names as keys
-        :rtype: dict
+        :rtype: :class:`dict`
         """
         glyph_combinations = itertools.combinations(iter(self.glyphs.values()), depth)
         output = {}
@@ -243,7 +250,7 @@ class Typograph:
         Calculate average pixel values for all glyphs in `self.tree_sets`
 
         :return: list of average pixel values, no given order
-        :rtype: list(float)
+        :rtype: [:class:`float`]
         """
         average_values = []
         for tree_set in self.tree_sets:
@@ -258,7 +265,7 @@ class Typograph:
         Extrema of average pixel values for all glyphs
 
         :return: tuple of (min, max) pixel values
-        :rtype: tuple(float, float)
+        :rtype: (:class:`float`, :class:`float`)
         """
         return min(self.average_values), max(self.average_values)
 
@@ -274,14 +281,15 @@ class Typograph:
     def add_glyph(self, glyph, use_in_combinations=False):
         """
         Add extra glyphs into the available pool.
-        New glyphs added in this manner can be excluded from use in combinations or as a standalone glyph.
+        New glyphs added in this manner can be excluded from use in combinations, to be used only as standalone glyph.
 
         Adding a glyph already present in combinations, as a standalone
         will result in removal of glyph from combinations. The reverse of this is also true.
 
         :param glyph: glyph to add
-        :type glyph: :class:`~glyph.Glyph`
-        :param bool use_in_combinations: use this glyph in combinations, default False
+        :type glyph: :class:`Glyph`
+        :param use_in_combinations: use this glyph in combinations, default False
+        :type use_in_combinations: :class:`bool`
         """
         if use_in_combinations:
             self.standalone_glyphs.pop(glyph.name, None)
@@ -293,24 +301,24 @@ class Typograph:
         self._recalculate_glyphs()
 
     # string name variant, may want to investigate using glyph too
-    def remove_glyph(self, glyph, remove_from="both"):
+    def remove_glyph(self, glyph, remove_from="Both"):
         """
         Remove glyph from available pool.
         Glyphs can be explicitly removed from combinations, standalone, or both
 
-        Glyphs are removed by name, if passed a :class:`~glyph.Glyph` instance, will use the .name attribute
+        Glyphs are removed by name, if passed a :class:`Glyph` instance, will use the :attr:`~Glyph.name` attribute
 
-        "Combinations" or "C" to remove from combinations
-        "Standalone" or "S" to remove from standalone glyphs
-        "Both" or "B" to remove from both
+        ``"Combinations"`` or ``"C"`` to remove from combinations
+        ``"Standalone"`` or ``"S"`` to remove from standalone glyphs
+        ``"Both"`` or ``"B"`` to remove from both
 
         Returns the glyph instance removed, or None if the glyph was not found
 
         :param glyph: glyph to remove
-        :type glyph: :class:`~glyph.Glyph` or str
+        :type glyph: :class:`Glyph` or :class:`str`
         :param remove_from: string identifier for where to remove from
-        :return: glyph removed or None
-        :rtype: :class:`~glyph.Glyph` or None
+        :return: glyph removed or :class:`None`
+        :rtype: :class:`Glyph` or :class:`None`
         """
 
         if isinstance(glyph, Glyph):
@@ -338,7 +346,8 @@ class Typograph:
 
         :param image:  An :class:`~PIL.Image.Image` object
         :type image: :class:`~PIL.Image.Image`
-        :param float aspect_ratio: target aspect ratio of width / height
+        :param aspect_ratio: target aspect ratio of width / height
+        :type aspect_ratio: :class:`float`
         :return: An :class:`~PIL.Image.Image` object cropped to target aspect ratio
         :rtype: :class:`~PIL.Image.Image`
         """
@@ -362,11 +371,14 @@ class Typograph:
         :type image: :class:`~PIL.Image.Image`
         :param target_size: output size for glyph version of image.
          Given as total number of glyphs to be used across and down
-        :type target_size: tuple(int, int)
+        :type target_size: (:class:`int`, :class:`int`)
         :param resize_mode: any resize mode as able to be used by :meth:`~PIL.Image.Image.resize`
-        :param float clip_limit: clip limit as used by :meth:`~skimage.exposure.equalize_adapthist`
-        :param bool use_clahe: enable or disable use of :meth:`~skimage.exposure.equalize_adapthist` on input image
-        :param bool rescale_intensity: enable or disable use of :meth:`skimage.exposure.rescale_intensity`
+        :param clip_limit: clip limit as used by :meth:`~skimage.exposure.equalize_adapthist`
+        :type clip_limit: :class:`float`
+        :param use_clahe: enable or disable use of :meth:`~skimage.exposure.equalize_adapthist` on input image
+        :type use_clahe: :class:`bool`
+        :param rescale_intensity: enable or disable use of :meth:`~skimage.exposure.rescale_intensity`
+        :type rescale_intensity: :class:`bool`
         :return: image after preprocessing has been applied
         :rtype: :class:`~PIL.Image.Image`
         """
@@ -411,10 +423,11 @@ class Typograph:
                 that are `self.sample_x` by `self.sample_y` in size.
 
         :param image_data: list of image data specifying pixel values in range 0->255
-        :type image_data: list(int)
-        :param int target_width: width of target image as measured in glyphs
+        :type image_data: [:class:`int`]
+        :param target_width: width of target image as measured in glyphs
+        :type target_width: :class:`int`
         :return: list of chunks, each of which are a list of integer values from source `image_data`
-        :rtype: list(list(int))
+        :rtype: [[:class:`int`]]
         """
         chunks = []
         height = len(image_data) // (target_width * self.sample_y * self.sample_x)
@@ -468,13 +481,14 @@ class Typograph:
 
         :param target: data of target region of image, given as a list of integers,
          range 0->255 listed from left to right, top to bottom.
-        :type target: list(int)
-        :param float cutoff: value used to determine replacement with a
+        :type target: [:class:`int`]
+        :param cutoff: value used to determine replacement with a
          simpler glyph that is not quite as good a match to `target`.
-        :return: tuple of best matched :class:`~glyph.Glyph` found to `target`
+        :type cutoff: :class:`float`
+        :return: tuple of best matched :class:`Glyph` found to `target`
          and distance between target and said glyph.
          Distance is given as Euclidian distance in `self.sample_x` * `self.sample_y` dimensional value space.
-        :rtype: tuple(:class:`~glyph.Glyph`, float)
+        :rtype: (:class:`Glyph`, :class:`float`)
         """
 
         # TODO: may want to easy out if we're at glyph depth of 1?
@@ -527,10 +541,12 @@ class Typograph:
 
         Useful in seeing how glyphs are matched to input image.
 
-        :param result: list of :class:`~glyph.Glyph`
-        :type result: list(:class:`~glyph.Glyph`)
-        :param int target_width: number of :class:`~glyph.Glyph` across the `result` represents
-        :param int target_height: number of :class:`~glyph.Glyph` down the `result` represents
+        :param result: list of :class:`Glyph`
+        :type result: [:class:`Glyph`]
+        :param target_width: number of :class:`Glyph` across the `result` represents
+        :type target_width: :class:`int`
+        :param target_height: number of :class:`Glyph` down the `result` represents
+        :type target_height: :class:`int`
         :return: a :class:`~PIL.Image.Image` comprised of glyph `fingerprint_display` images
         :rtype: :class:`~PIL.Image.Image`
         """
@@ -548,10 +564,12 @@ class Typograph:
         Shows the final output of converting an image to a set of glyphs.
         Very helpful to have visible when trying to type out result, for error checking.
 
-        :param result: list of :class:`~glyph.Glyph`
-        :type result: list(:class:`~glyph.Glyph`)
-        :param int target_width: number of :class:`~glyph.Glyph` across the `result` represents
-        :param int target_height: number of :class:`~glyph.Glyph` down the `result` represents
+        :param result: list of :class:`Glyph`
+        :type result: [:class:`Glyph`]
+        :param target_width: number of :class:`Glyph` across the `result` represents
+        :type target_width: :class:`int`
+        :param target_height: number of :class:`Glyph` down the `result` represents
+        :type target_height: :class:`int`
         :return: a :class:`~PIL.Image.Image` comprised of glyph images,
          representing final output of conversion from image to glyphs
         :rtype: :class:`~PIL.Image.Image`
@@ -573,15 +591,18 @@ class Typograph:
         equal to the depth of the most stacked glyph in the line
 
         :param result_glyphs: list of glyphs that compost the output, listed top left, across then down
-        :type result_glyphs: list(:class`~glyph.Glyph`)
+        :type result_glyphs: [:class`Glyph`]
         :param spacer: spacing glyph, relating to a movement of 1 character over, with no glyph printed
-        :type spacer: :class:`~glyph.Glyph`
-        :param int target_width: width of image, measured in glyphs
-        :param int target_height: height of image, measured in glyphs
-        :param bool trailing_spacer: enable inclusion of trailing spacer characters.
+        :type spacer: :class:`Glyph`
+        :param target_width: width of image, measured in glyphs
+        :type target_width: :class:`int`
+        :param target_height: height of image, measured in glyphs
+        :type target_height: :class:`int`
+        :param trailing_spacer: enable inclusion of trailing spacer characters.
          This can be helpful for counting back from end of line
+        :type trailing_spacer: :class:`bool`
         :return: List of instruction strings
-        :rtype: list(str)
+        :rtype: [:class:`str`]
         """
         instructions = []
 
@@ -653,9 +674,9 @@ class Typograph:
 
         :param array_like point: point from which mean square distance is calculated
         :param tree_set: tree set to be compared against, contains centroid and mean square from centroid
-        :type tree_set: :class:`tree_set`
+        :type tree_set: :class:`~typograph.tree_set`
         :return: root mean square distance of point from points given by tree set
-        :rtype: float
+        :rtype: :class:`float`
         """
         centroid = tree_set.centroid
         mean_square_from_centroid = tree_set.mean_square_from_centroid
@@ -684,25 +705,26 @@ class Typograph:
         """
         Convert image into a glyph version, using the instance's glyphs.
 
-        parameters as for :meth:`~Typograph._preprocess`
-
         :param image: input :class:`~PIL.Image.Image` to be processed and converted
         :type image: :class:`~PIL.Image.Image`
         :param target_size: output size for glyph version of image.
          Given as total number of glyphs to be used across and down
-        :type target_size: tuple(int, int)
+        :type target_size: (:class:`int`, :class:`int`)
         :param resize_mode: any resize mode as able to be used by :meth:`~PIL.Image.Image.resize`
-        :param float clip_limit: clip limit as used by :meth:`~skimage.exposure.equalize_adapthist`
-        :param bool use_clahe: enable or disable use of :meth:`~skimage.exposure.equalize_adapthist` on input image
-        :param bool rescale_intensity: enable or disable use of :meth:`skimage.exposure.rescale_intensity`
-         parameters as for :meth:`~Typograph._convert`
-        :param float cutoff: cutoff level for near-enough glyph replacement. A value of 0.0 will permit no replacements
+        :param clip_limit: clip limit as used by :meth:`~skimage.exposure.equalize_adapthist`
+        :type clip_limit: :class:`float`
+        :param use_clahe: enable or disable use of :meth:`~skimage.exposure.equalize_adapthist` on input image
+        :type use_clahe: :class:`bool`
+        :param rescale_intensity: enable or disable use of :meth:`~skimage.exposure.rescale_intensity`
+        :type rescale_intensity: :class:`bool`
+        :param cutoff: cutoff level for near-enough glyph replacement. A value of 0.0 will permit no replacements
+        :type cutoff: :class:`float`
         :param instruction_spacer: glyph to be used to represent moving the typing position one step, without adding ink
-        :type instruction_spacer: :class:`~glyph.Glyph`
+        :type instruction_spacer: :class:`Glyph`
         :param background_glyph: glyph to fill background of transparent image with
-        :type background_glyph: :class:`~glyph.Glyph`
-        :return: a :class:`typed_art` object, containing construction, output and instructions, after preprocessing
-        :rtype: :class:`typed_art`
+        :type background_glyph: :class:`Glyph`
+        :return: a :class:`~typo_graphics.typograph.typed_art` object, containing construction, output and instructions, after preprocessing
+        :rtype: :class:`~typo_graphics.typograph.typed_art`
         """
 
         preprocessed_image = self._preprocess(image=image, target_size=target_size, resize_mode=resize_mode,
@@ -721,12 +743,13 @@ class Typograph:
         :type image: :class:`~PIL.Image.Image`
         :param target_size: output size for glyph version of image.
          Given as total number of glyphs to be used across and down
-        :type target_size: tuple(int, int)
-        :param float cutoff: cutoff level for near-enough glyph replacement. A value of 0.0 will permit no replacements
+        :type target_size: (:class:`int, :class:`int`)
+        :param cutoff: cutoff level for near-enough glyph replacement. A value of 0.0 will permit no replacements
+        :type cutoff: :class:`float`
         :param instruction_spacer: glyph to be used to represent moving the typing position one step, without adding ink
-        :type instruction_spacer: :class:`~glyph.Glyph`
-        :return: a :class:`typed_art` object, containing construction, output and instructions
-        :rtype: :class:`typed_art`
+        :type instruction_spacer: :class:`Glyph`
+        :return: a :class:`~typo_graphics.typograph.typed_art` object, containing construction, output and instructions
+        :rtype: :class:`~typo_graphics.typograph.typed_art`
         """
 
         target_width, target_height = target_size
