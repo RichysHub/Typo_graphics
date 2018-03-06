@@ -1,0 +1,24 @@
+Personal Use License
+
+Copyright (c) 2018, Richard Spencer
+
+Permission is hereby granted, to any person obtaining a copy of this software and associated documentation files (the "Software"), a non-exclusive, perpetual, personal use license to view, download, display, and copy the Software subject to the following restrictions:
+
+The Software is licensed for personal use only, not commercial use. The
+Software, and the products thereof, may not be used in any way whatsoever
+in which you charge money, collect fees, or receive any form of remuneration.
+The Software may not be resold, relicensed, sub-licensed, rented, leased, or used in advertising.
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+Title and ownership, and all rights now and in the future, of and for the
+Software remain exclusively with the Software owner.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

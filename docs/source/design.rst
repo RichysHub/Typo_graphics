@@ -1,6 +1,8 @@
 Design decisions and Development
 ================================
 
+.. currentmodule:: typo_graphics
+
 If you want to know more about the development of Typo_graphics, this section is for you.
 
 
@@ -49,9 +51,18 @@ It was clear that using such generators was not an acceptable solution, and that
 What makes Typo_graphics different?
 -----------------------------------
 
-The core tenets that underpin Typo_graphics are to remain font independent, to utilise the characters to their full extent,
-and to use the typewriters ability to overtype characters, where useful to the image.
+The core tenets that underpin Typo_graphics:
 
+* Remain font independent
+* Utilise the characters to their full extent
+* Use the typewriters ability to overtype characters, where useful to the image.
+
+Typo_graphics aims to be usable on a wide range of typewriters as possible.
+This flexibility would also allow use with block printing, or monospace fonts, though in the latter case overtyping need be disabled.
+
+The main output for Typo_graphics is the instruction set generated.
+:meth:`~Typograph.image_to_text` also produces an output image, which is mainly intended as reference while typing, to place oneself.
+The output, however, is perfectly usable, without the need to type the instructions out.
 
 The instruction format
 ----------------------
@@ -60,6 +71,11 @@ The instruction format is heavily borrowed from [Neill1982]_. Characters are spl
 lines are distinguished by a trailing letter. Within each line, characters are grouped together,
 and a number prepended to each to indicate how many times that characters should be typed in succession.
 
+In contrast to the Neill format, Typo_graphics does not expect the character grid to be square.
+Instead, images are expected to be typed using single line spacing, such that one row of glyphs sits touching the bottom of the previous row.
+
+In practice, the code works equally well for greater line spacing, by including said space into the :class:`Glyph` images, though the result will likely have a banded look.
+Using a glyph size smaller than the line spacing would also work, though characters that extend past their bounds may interfere with the image.
 
 .. [Nelson1939] Artyping, Julius Nelson, 1939 (viewable https://archive.org/details/Artyping )
 .. [Neill1982] Bob Neill's Book of Typewriter Art (with special computer program), Bob Neill, 1982 (viewable https://loriemersondotnet.files.wordpress.com/2013/01/typewriterart.pdf )
