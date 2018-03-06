@@ -72,7 +72,7 @@ lines are distinguished by a trailing letter. Within each line, characters are g
 and a number prepended to each to indicate how many times that characters should be typed in succession.
 
 In contrast to the Neill format, Typo_graphics does not expect the character grid to be square.
-Instead, images are expected to be typed using single line spacing, such that one row of glyphs sits touching the bottom of the previous row.
+Instead, images are expected to be typed using single line spacing, such that the top of one row of glyphs sits touching the bottom of the previous row.
 
 In practice, the code works equally well for greater line spacing, by including said space into the :class:`Glyph` images, though the result will likely have a banded look.
 Using a glyph size smaller than the line spacing would also work, though characters that extend past their bounds may interfere with the image.
