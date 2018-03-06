@@ -20,16 +20,22 @@ tree_set.__doc__ = """
 Named tuple container for information regarding sets of glyphs
 
 May be unpacked, or accessed using member names
-(`glyph_set`, `tree`, `centroid`, `mean_square_from_centroid`, `stack_size`)
+:attr:`~typo_graphics.typograph.tree_set.glyph_set`,
+:attr:`~typo_graphics.typograph.tree_set.tree`,
+:attr:`~typo_graphics.typograph.tree_set.centroid`,
+:attr:`~typo_graphics.typograph.tree_set.mean_square_from_centroid`,
+:attr:`~typo_graphics.typograph.tree_set.stack_size`
 
 :param glyph_set: list containing a collection of glyphs 
 :type glyph_set: [:class:`Glyph`]
-:param tree: a :class:`~scipy.spatial.cKDTree` instantiated with the glyphs of `glyph_set`
+:param tree: a :class:`~scipy.spatial.cKDTree` instantiated with the glyphs
+ of :attr:`~typo_graphics.typograph.tree_set.glyph_set`
 :type tree: :class:`~scipy.spatial.cKDTree`
-:param array_like centroid: position of centroid in `sample_x` * `sample_y` parameter space
+:param array_like centroid: position of centroid in :attr:`~Glyph.sample_x` * :attr:`~Glyph.sample_y` parameter space
 :param mean_square_from_centroid: mean square distance of glyphs from centroid
 :type mean_square_from_centroid: :class:`float`
-:param stack_size: number of fundamental glyphs used to compose each glyph in `glyph_set`
+:param stack_size: number of fundamental glyphs used to compose each glyph
+ in :attr:`~typo_graphics.typograph.tree_set.glyph_set`
 :type stack_size: :class:`int`
 """
 
@@ -38,7 +44,9 @@ typed_art.__doc__ = """
 Named tuple container for output of :meth:`~Typograph.image_to_text`
 
 May be unpacked, or accessed using member names
-(`calculation`, `output`, `instructions`)
+:attr:`~typo_graphics.typograph.typed_art.calculation`,
+:attr:`~typo_graphics.typograph.typed_art.output`,
+:attr:`~typo_graphics.typograph.typed_art.instructions`
 
 :param calculation: an :class:`~PIL.Image.Image` object, showing the :attr:`~Glyph.fingerprint_display` images, 
  composed according to the result
@@ -416,11 +424,11 @@ class Typograph:
 
     def _chunk(self, image_data, target_width):
         """
-        Separate `image_data` into chunks, according to `self.sample_x` and `self.sample_y`
+        Separate `image_data` into chunks, according to :attr:`~Glyph.sample_x` and :attr:`~Glyph.self.sample_y`
 
         Working from left to right, top to bottom of data representing an input image,
                 produces lists of data corresponding to a region of the full image
-                that are `self.sample_x` by `self.sample_y` in size.
+                that are :attr:`~Glyph.sample_x` by :attr:`~Glyph.sample_y` in size.
 
         :param image_data: list of image data specifying pixel values in range 0->255
         :type image_data: [:class:`int`]
@@ -487,7 +495,7 @@ class Typograph:
         :type cutoff: :class:`float`
         :return: tuple of best matched :class:`Glyph` found to `target`
          and distance between target and said glyph.
-         Distance is given as Euclidian distance in `self.sample_x` * `self.sample_y` dimensional value space.
+         Distance is given as Euclidian distance in :attr:`~Glyph.sample_x` * :attr:`~Glyph.sample_y` dimensional value space.
         :rtype: (:class:`Glyph`, :class:`float`)
         """
 
@@ -537,7 +545,7 @@ class Typograph:
 
     def _compose_calculation(self, result, target_width, target_height):
         """
-        Create calculation demonstration image, composed of glyph `fingerprint_display` images.
+        Create calculation demonstration image, composed of glyph :attr:`~Glyph.fingerprint_display` images.
 
         Useful in seeing how glyphs are matched to input image.
 
@@ -547,7 +555,7 @@ class Typograph:
         :type target_width: :class:`int`
         :param target_height: number of :class:`Glyph` down the `result` represents
         :type target_height: :class:`int`
-        :return: a :class:`~PIL.Image.Image` comprised of glyph `fingerprint_display` images
+        :return: a :class:`~PIL.Image.Image` comprised of glyph :attr:`~Glyph.fingerprint_display` images
         :rtype: :class:`~PIL.Image.Image`
         """
         calculation = Image.new("L", (target_width * self.glyph_width, target_height * self.glyph_height))
