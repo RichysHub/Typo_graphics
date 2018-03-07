@@ -1,18 +1,18 @@
-from .glyph import Glyph
-from collections import namedtuple
 import functools
 import itertools
-import operator
-from PIL import Image
-import os
 import json
+import operator
+import os
+import string
+from collections import namedtuple
 from contextlib import suppress
+
 import numpy as np
+from PIL import Image
 from scipy.spatial import cKDTree
 from scipy.spatial.distance import euclidean
-import string
 from skimage import exposure
-
+from typo_graphics import Glyph
 
 tree_set = namedtuple('tree_set', ['glyph_set', 'tree', 'centroid',
                                    'mean_square_from_centroid', 'stack_size'])
@@ -83,7 +83,7 @@ class Typograph:
     Exposes :meth:`~Typograph.image_to_text` , which can be used to convert any supplied image into glyph format
     """
 
-    def __init__(self, glyph_images, samples=(3, 3), glyph_depth=2):
+    def __init__(self, glyph_images=None, samples=(3, 3), glyph_depth=2):
         """
         Create :class:`Typograph` object with glyphs specified in `glyph_images`
 
@@ -101,7 +101,13 @@ class Typograph:
 
         self.samples = samples
         self.sample_x, self.sample_y = samples
+        if glyph_images is None:
+            from typo_graphics import package_directory
+            glyph_directory = os.path.join(package_directory, './Glyphs')
+            glyph_images = self._get_glyphs_from_directory(glyph_directory)
+
         self.glyphs = {}
+
         for name, image in glyph_images.items():
             glyph_ = Glyph(name, image, samples=samples)
             # TODO perhaps we no longer need this dict format
@@ -193,11 +199,16 @@ class Typograph:
         :return: An :class:`Typograph` object using glyphs images found from directory
         :rtype: :class:`Typograph`
         """
+        glyph_images = cls._get_glyphs_from_directory(glyph_directory)
+        return cls(glyph_images=glyph_images, **kwargs)
+
+    @staticmethod
+    def _get_glyphs_from_directory(glyph_directory):
         with suppress(FileNotFoundError):  # look for a name_map.json, but continue if not found
             with open(os.path.join(glyph_directory, 'name_map.json'), 'r', encoding="utf-8") as fp:
                 glyph_names = json.load(fp)
 
-        glyphs = {}
+        glyph_images = {}
 
         for filename in os.listdir(glyph_directory):
             with suppress(IOError):  # skips over any files that Image cannot open
@@ -205,9 +216,9 @@ class Typograph:
                 name = glyph_names.get(name, name)
                 path = os.path.join(glyph_directory, filename)
                 image = Image.open(path)
-                glyphs.update({name: image})
+                glyph_images.update({name: image})
 
-        return cls(glyphs, **kwargs)
+        return glyph_images
 
     # ~~ GLYPH WORK ON INIT ~~
 
@@ -401,7 +412,7 @@ class Typograph:
             if "A" in image_bands:
                 alpha_channel = sized_picture.split()[image_bands.index("A")]
             else:
-                alpha_channel = Image.New("L", sized_picture.size, "white")
+                alpha_channel = Image.new("L", sized_picture.size, "white")
         sized_picture = sized_picture.convert("L")
 
         if use_clahe or rescale_intensity:
