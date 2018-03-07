@@ -82,3 +82,6 @@ class Glyph:
 
     def __str__(self):
         return self.name
+
+    def show(self):
+        self.image.show(title=self.name)
