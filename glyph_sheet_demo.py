@@ -1,9 +1,10 @@
-from typo_graphics import typograph
-from contextlib import suppress
-import os
 import json
+import os
+from contextlib import suppress
 from math import ceil
+
 from PIL import Image
+from typo_graphics import Typograph
 
 # look for name_map, if present
 glyph_directory = './Glyphs'
@@ -48,11 +49,11 @@ for index, glyph in enumerate(glyphs):
 glyph_sheet.show()
 
 # Create Typograph instance using this glyph sheet
-art = typograph.Typograph.from_glyph_sheet(glyph_sheet, number_glyphs=len(glyphs), glyph_names=names,
-                                           spacing=spacing, grid_size=(columns, rows), glyph_depth=1)
+typograph = Typograph.from_glyph_sheet(glyph_sheet, number_glyphs=len(glyphs), glyph_names=names,
+                                       spacing=spacing, grid_size=(columns, rows), glyph_depth=1)
 
 # iterate through the extracted glyphs, and verify they match the input images
-for name, glyph in art.glyphs.items():
+for name, glyph in typograph.glyphs.items():
     input_image = glyphs[names.index(name)]
     if glyph.image != input_image:
         glyph.image.show()
