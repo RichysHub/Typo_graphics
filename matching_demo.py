@@ -1,8 +1,9 @@
-from typo_graphics import typograph
-from contextlib import suppress
-import os
 import json
+import os
+from contextlib import suppress
+
 from PIL import Image
+from typo_graphics import Typograph
 
 glyph_directory = './Glyphs'
 
@@ -37,9 +38,9 @@ for j, (name, image)in enumerate(glyph_list):
 
 output = Image.new("L", (25*27, 48*(len(glyph_list)+2)))
 for i in range(1, 26):
-    art = typograph.Typograph(glyphs, glyph_depth=1, samples=(i, min(i * 2, 48)))
-    calc, out, ins = art.image_to_text(column_image, target_size=(1, len(glyph_list)), cutoff=0,
-                                       enhance_contrast=False, rescale_intensity=False)
+    typograph = Typograph(glyphs, glyph_depth=1, samples=(i, min(i * 2, 48)))
+    calc, out, ins = typograph.image_to_text(column_image, target_size=(1, len(glyph_list)), cutoff=0,
+                                             enhance_contrast=False, rescale_intensity=False)
     output.paste(out, ((i-1)*25, 48*2, i*25, 48*(len(glyph_list)+2)))
 
 output.paste(column_image, (26*25, 48*2, 27*25, 48*(len(glyph_list)+2)))
