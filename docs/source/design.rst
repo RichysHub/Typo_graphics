@@ -10,18 +10,44 @@ Inspiration
 -----------
 
 This project began when I purchased a Silver Reed SR100 Tabulator typewriter, second hand, for just £1.25.
+
+.. figure:: ../../../Doc_Images/SR100.png
+    :scale: 75%
+    :align: center
+
+    Silver Reed SR100 Typewriter.
+
 This typewriter model doesn't have a ``1`` key, the ``l`` is used in substitute. Similarly, there is no key for ``!``.
 
+Some other characters that are missing can be made by overtyping, typing a character,
+moving the carriage back, and typing another.
 To type a ``!``, one must first type ``'``, backspace, and overtype ``.``.
+
+.. figure:: ../../../Doc_Images/Exclamation.png
+    :align: center
+
+    Exclamation mark from quote and full stop.
+
 This got me interested in what other combinations exist.
 I tried to type out a few such combinations, but with 82 glyphs on the typewriter, attempting to type all would a large task.
 Of those I had typed, I found ``:`` and ``-`` would form a ``÷``, but in general it was hard to spot anything of much use.
 
+.. figure:: ../../../Doc_Images/Obelus.png
+    :align: center
+
+    Obelus from hyphen and colon.
+
 Trying to find reference material online for what combinations would form what characters, I found little of relevance.
-What I did find, was instructions to produce a soldier, as can be seen here.
+What I did find, was instructions to produce a soldier from O, X, &, /, W, and _ using variable line spacing.
+
+.. figure:: ../../../Doc_Images/Soldiers.png
+    :align: center
+
+    Soldiers, formed by stacking characters using variable line spacing.
 
 Further looking into producing this type of images, I came across the book Artyping [Nelson1939]_.
 In this book Nelson explores ways to create patterns from characters, for bordering letters, and later showcases some typewritten images.
+Soldiers, similar to those above, also feature.
 
 In looking for how to reproduce these more complex images, I found Bob Neill's Book of Typewriter Art [Neill1982]_, which contains page after page of instructions.
 However, a problem arose; all of the instructions heavily use the ``@`` key, one which my SR100 lacks.
