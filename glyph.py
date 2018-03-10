@@ -22,7 +22,7 @@ class Glyph:
 
     Explicitly supports summation with other glyph objects, which represent typing the two glyph atop one another.
     """
-    def __init__(self, name=None, image=None, components=None, samples=(3, 3)):
+    def __init__(self, name, image, components=None, samples=(3, 3)):
         """
         Create glyph object.
 

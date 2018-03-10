@@ -10,6 +10,7 @@ Inspiration
 -----------
 
 This project began when I purchased a Silver Reed SR100 Tabulator typewriter, second hand, for just £1.25.
+I had never owned a typewriter before, and I picked it up out of some latent interest in the mechanics, and of typography.
 
 .. figure:: ../../../Doc_Images/SR100.png
     :scale: 75%
@@ -19,14 +20,14 @@ This project began when I purchased a Silver Reed SR100 Tabulator typewriter, se
 
 This typewriter model doesn't have a ``1`` key, the ``l`` is used in substitute. Similarly, there is no key for ``!``.
 
-Some other characters that are missing can be made by overtyping, typing a character,
+Some of the characters that are missing can be made by overtyping, typing a character,
 moving the carriage back, and typing another.
 To type a ``!``, one must first type ``'``, backspace, and overtype ``.``.
 
 .. figure:: ../../../Doc_Images/Exclamation.png
     :align: center
 
-    Exclamation mark from quote and full stop.
+    Exclamation mark from apostrophe and full stop.
 
 This got me interested in what other combinations exist.
 I tried to type out a few such combinations, but with 82 glyphs on the typewriter, attempting to type all would a large task.
@@ -39,6 +40,7 @@ Of those I had typed, I found ``:`` and ``-`` would form a ``÷``, but in genera
 
 Trying to find reference material online for what combinations would form what characters, I found little of relevance.
 What I did find, was instructions to produce a soldier from O, X, &, /, W, and _ using variable line spacing.
+A quick and easy way to make something unusual from a typewriter.
 
 .. figure:: ../../../Doc_Images/Soldiers.png
     :align: center

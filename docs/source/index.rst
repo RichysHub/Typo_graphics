@@ -14,10 +14,9 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
-   quickstart
+   tutorial
    demos
    design
-   glyphs
    api
    credits
    full_reference
