@@ -30,7 +30,6 @@ you can examine the glyphs by their names:
     typograph.glyphs['9'].show()
 
 .. figure:: ../../Glyphs/9.png
-    :scale: 200%
     :align: center
 
     Glyph image for the character ``9``.
@@ -89,6 +88,7 @@ The following creates a new glyph, with a solid white image, representing pressi
 
     from PIL import Image
     from typo_graphics import Glyph
+
     blank_image = Image.new((25, 48), "white")
     space = Glyph(name='sp', image=blank_image)
 
@@ -186,11 +186,14 @@ but customisation to the specific machine will produce best results.
 In order to use a new set of glyphs, they must be passed to the :class:`~Typograph` upon creation.
 There are three ways to instantiate this class, each corresponding to a different way to pass glyph information.
 
-Passing glyphs to __init__
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+Passing glyphs to Typograph
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-:meth:`~Typograph.__init__` will accept a dictionary of :class:`~Glyph` objects,
+:class:`Typograph` will accept a dictionary of :class:`~Glyph` objects,
 keyed with the glyph names. This is ideal if you are generating the glyphs dynamically, or wish to preprocess glyphs.
+
+However, often we have our glyph images ready and stored. :class:`Typograph` offers two factory methods,
+for use in these cases.
 
 Working from a directory of images
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -225,7 +228,7 @@ This would require only minor manipulation, to align the image with the page, an
 
 In addition to the image, the total number of glyphs must be passed as an integer, as well as some information on how the glyphs are arranged.
 Either the dimensions of the grid can be specified, ie. 9 rows, of a maximum of 10 glyphs would be passed as the tuple, (10,9).
-Alternatively, the size of the glyphs can be passed.
+Alternatively, the size of the glyphs in (width in pixels, height in pixels) can be passed.
 
 In both cases, the spacing between glyphs must also be given. Glyph names can be passed as a list from top left to bottom right,
 if omitted names will be assigned sequentially.
@@ -239,46 +242,177 @@ if omitted names will be assigned sequentially.
     number_glyphs = 82
     grid_size = (10, 9)
 
-        typograph.from_glyph_sheet(glyph_sheet=glyph_sheet, number_glyphs=number_glyphs, grid_size=grid_size)
+    typograph.from_glyph_sheet(glyph_sheet=glyph_sheet, number_glyphs=number_glyphs, grid_size=grid_size)
 
 Manipulating Typograph's glyphs
 -------------------------------
 
+We've seen how we can create a :class:`Typograph` object using glyphs from several sources.
+However, what if we want to manipulate the glyphs post instantiation?
+:class:`Typograph` exposes two methods for this, :meth:`~Typograph.add_glyph` and :meth:`~Typograph.remove_glyph`.
+
 Adding glyphs
 ^^^^^^^^^^^^^
+
+We saw earlier how to make a :ref:`spacebar glyph <spacebar_glyph>`,
+but how do we get our :class:`Typograph` object to use it in images?
+
+.. code-block:: python
+
+    from PIL import Image
+    from typo_graphics import Glyph, Typograph
+
+    blank_image = Image.new((25, 48), "white")
+    space = Glyph(name='sp', image=blank_image)
+    typograph = Typograph()
+
+    typograph.add_glyph(space)
+
+Any subsequent uses of :meth:`~Typograph.image_to_text` will use the spacebar glyph above to compose the image.
+
+However, if we look for our glyph in `typograph.glyphs`, it will be surprisingly absent.
+
+    >>> 'a' in typograph.glyphs
+    True
+    >>> 'sp' in typograph.glyphs
+    False
+
+So, what is going on? Well, by default :meth:`Typograph.add_glyph` adds our glyph to a separate list of standalone glyphs.
+
+Standalone glyphs
+^^^^^^^^^^^^^^^^^
+
+Any :class:`Glyph` objects, present in :attr:`Typograph.glyphs` will be used in combinations.
+By default, :attr:`~Typograph.glyph_depth` will be 2, meaning that `typograph` will have constructed and stored all 2-glyph combinations.
+
+The default behaviour of :meth:`~Typograph.add_glyph`, however, is to not use the glyph in combinations.
+This might seem odd, but it allows glyphs like the spacebar glyph shown above to be added, and used, without combining them.
+
+In glyph addition, the spacebar acts similar to how zero does in regular arithmetic.
+Adding a spacebar glyph to any other glyph, doesn't change that glyph's appearance.
+Therefore, if we were to allow spacebar to combine, it would produce 82 additional 2-glyph combinations,
+that have the identical image to our base glyphs.
+
+By default, :meth:`~Typograph.add_glyph` will in fact place the glyph within the attribute :attr:`Typograph.standalone_glyphs`.
+These glyphs are treated in the same way when matching into an image, but are kept from combinations.
+
+    >>> 'a' in typograph.standalone_glyphs
+    False
+    >>> 'sp' in typograph.standalone_glyphs
+    True
+
+If you **do** want your added glyph to be combined, this is as simple as passing ``True`` to the keyword argument `use_in_combinations`.
+The following would add the spacebar glyph into the general glyph pool, for use in combinations,
+a reminder that this is **not recommended**, for performance reasons detailed above.
+
+.. code-block:: python
+
+    from PIL import Image
+    from typo_graphics import Glyph, Typograph
+
+    blank_image = Image.new((25, 48), "white")
+    space = Glyph(name='sp', image=blank_image)
+    typograph = Typograph()
+
+    typograph.add_glyph(space, use_in_combinations=True)
+
+..
+
+    >>> 'sp' in typograph.standalone_glyphs
+    False
+    >>> 'sp' in typograph.glyphs
+    True
+
+:class:`Typograph` will keep the two dictionaries of glyphs, :attr:`Typograph.glyphs` and :attr:`Typograph.standalone_glyphs` mutually exclusive.
+No glyph should appear in both. As such, adding a glyph to either will simultaneous search and remove it from the other.
+
+    >>> 'sp' in typograph.glyphs
+    True
+    >>> typograph.add_glyph(space, use_in_combinations=False)
+    >>> 'sp' in typograph.glyphs
+    False
+    >>> 'sp' in typograph.standalone_glyphs
+    True
+
+Adding glyphs directly to either of these dictionaries, without using :meth:`~Typograph.add_glyph` will produce erroneous behaviour.
 
 Removing glyphs
 ^^^^^^^^^^^^^^^
 
-standalone glyphs
-^^^^^^^^^^^^^^^^^
+Let us imagine that in using typo_graphics, one of the keys to your typewriter has become stuck.
+As such, we now want not to include anything from that key in our images, we need remove them.
 
-Glyph depth
-^^^^^^^^^^^
+Of course, we could remove the image from the directory, if using :meth:`~Typograph.from_directory`,
+or we could edit the glyph sheet if using :meth:`~Typograph.from_glyph_sheet`. However, there is an easier way.
 
-By default, :attr:`~Typograph.glyph_depth` will be 2,
-meaning that `typograph` will have constructed and stored all 2-glyph combinations.
+Say that the ``M`` key has become stuck, and we want to not use ``M`` or ``m`` glyphs.
+Glyphs can be removed by name, as follows:
 
-Tunable parameters
-------------------
+.. code-block:: python
 
-What is samples for?
-^^^^^^^^^^^^^^^^^^^^
+    from typo_graphics import Typograph
 
-cutoff
-^^^^^^
+    typograph = Typograph()
 
-clip limit
-^^^^^^^^^^
+    capital_m = typograph.remove_glyph("M")
+    lowercase_m = typograph.remove_glyph("m")
+    capital_m.show()
+    lowercase_m.show()
 
-rescale intensity
-^^^^^^^^^^^^^^^^^
+.. figure:: ../../../Doc_Images/M_and_m.png
+    :align: center
 
-enhance contrast
-^^^^^^^^^^^^^^^^
+    Capital and lowercase m glyphs, removed from :class:`Typograph` instance.
 
-instruction spacer
-^^^^^^^^^^^^^^^^^^
+Removed glyphs are returned, in case they wish to be used, which is why we can show them here. If the glyph is not found,
+``None`` will be returned instead.
+By doing this, we have removed these two glyphs from :attr:`Typograph.glyphs`, which will now only contain 80 items, not the 82 it had prior.
 
-sizing
-^^^^^^
+    >>> len(typograph.glyphs)
+    80
+
+These glyphs will now not be used in future calls to :meth:`Typograph.image_to_text`,
+neither alone or within combinations.
+
+Without additional arguments, :meth:`~Typograph.remove_glyph` will remove the given glyph from both `typograph.glyphs` and `typograph.standalone_glyphs`,
+wherever it may appear. If, however, you wish to control the removal, the keyword argument `remove_from` can be specified.
+
+The following are valid values for `remove_from`
+
+    * ``"Combinations"`` or ``"C"`` to remove from combinations (:attr:`Typograph.glyphs`).
+    * ``"Standalone"`` or ``"S"`` to remove from standalone glyphs (:attr:`Typograph.standalone_glyphs`).
+    * ``"Both"`` or ``"B"`` to remove from both.
+
+Recall that :class:`Typograph` maintains that no glyph appear in both dictionaries simultaneously,
+and as such ``"Both"`` is to be interpreted as searching for the glyph in both, and removing it from any it appears in.
+
+    >>> 'a' in typograph.glyphs
+    True
+    >>> typograph.remove_glyph('a', "Standalone")
+    None
+    >>> 'a' in typograph.glyphs
+    True
+    >>> a = typograph.remove_glyph('a', "Combinations")
+    >>> 'a' in typograph.glyphs
+    False
+
+One way to use :meth:`remove_glyph` and :meth:`add_glyph` together, is to extract a glyph, and insert a new one in its place.
+
+Propose that somehow your ``M`` key had, instead of sticking, suffered damage,
+and was now was typing a capital M at the equivalent of 10 pixels below the normal position.
+
+We will use :func:`PIL.ImageChops.offset` to implement this offsetting.
+
+.. code-block:: python
+
+    from PIL.ImageChops import offset
+    from typo_graphics import Typograph, Glyph
+
+    typograph = Typograph()
+
+    capital_m = typograph.remove_glyph('M')
+    shifted_image = offset(capital_m.image, 0, 10)
+    new_capital_m = Glyph(name='M', image=shifted_image)
+
+    typograph.add_glyph(new_capital_m, use_in_combinations=True)
+

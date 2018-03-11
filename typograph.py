@@ -336,7 +336,6 @@ class Typograph:
 
         self._recalculate_glyphs()
 
-    # string name variant, may want to investigate using glyph too
     def remove_glyph(self, glyph, remove_from="Both"):
         """
         Remove glyph from available pool.
@@ -410,11 +409,11 @@ class Typograph:
          Given as total number of glyphs to be used across and down.
         :type target_size: (:class:`int`, :class:`int`)
         :param resize_mode: any resize mode as able to be used by :meth:`~PIL.Image.Image.resize`.
-        :param clip_limit: clip limit as used by :meth:`~skimage.exposure.equalize_adapthist`.
+        :param clip_limit: clip limit as used by :func:`~skimage.exposure.equalize_adapthist`.
         :type clip_limit: :class:`float`
-        :param enhance_contrast: enable or disable use of :meth:`~skimage.exposure.equalize_adapthist` on input image.
+        :param enhance_contrast: enable or disable use of :func:`~skimage.exposure.equalize_adapthist` on input image.
         :type enhance_contrast: :class:`bool`
-        :param rescale_intensity: enable or disable use of :meth:`~skimage.exposure.rescale_intensity`.
+        :param rescale_intensity: enable or disable use of :func:`~skimage.exposure.rescale_intensity`.
         :type rescale_intensity: :class:`bool`
         :return: image after preprocessing has been applied.
         :rtype: :class:`~PIL.Image.Image`
@@ -748,11 +747,11 @@ class Typograph:
          Given as total number of glyphs to be used across and down.
         :type target_size: (:class:`int`, :class:`int`)
         :param resize_mode: any resize mode as able to be used by :meth:`~PIL.Image.Image.resize`.
-        :param clip_limit: clip limit as used by :meth:`~skimage.exposure.equalize_adapthist`.
+        :param clip_limit: clip limit as used by :func:`~skimage.exposure.equalize_adapthist`.
         :type clip_limit: :class:`float`
-        :param enhance_contrast: enable or disable use of :meth:`~skimage.exposure.equalize_adapthist` on input image.
+        :param enhance_contrast: enable or disable use of :func:`~skimage.exposure.equalize_adapthist` on input image.
         :type enhance_contrast: :class:`bool`
-        :param rescale_intensity: enable or disable use of :meth:`~skimage.exposure.rescale_intensity`.
+        :param rescale_intensity: enable or disable use of :func:`~skimage.exposure.rescale_intensity`.
         :type rescale_intensity: :class:`bool`
         :param cutoff: cutoff level for near-enough glyph replacement. A value of 0.0 will permit no replacements.
         :type cutoff: :class:`float`
