@@ -38,7 +38,7 @@ for j, (name, image)in enumerate(glyph_list):
 output = Image.new("L", (25*27, 48*(len(glyph_list)+2)))
 for i in range(1, 26):
     art = typograph.Typograph(glyphs, glyph_depth=1, samples=(i, min(i * 2, 48)))
-    calc, out, ins = art.image_to_text(column_image, target_size=(1, len(glyph_list)), cutoff=0,
+    calc, out, ins = art.image_to_text(column_image, max_size=(1, len(glyph_list)), cutoff=0,
                                        use_clahe=False, rescale_intensity=False)
     output.paste(out, ((i-1)*25, 48*2, i*25, 48*(len(glyph_list)+2)))
 
