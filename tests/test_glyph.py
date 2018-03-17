@@ -1,6 +1,6 @@
 import unittest
-from PIL import Image, ImageChops
 
+from PIL import Image, ImageChops
 from typo_graphics import Glyph
 
 
@@ -69,10 +69,10 @@ class TestGlyph(unittest.TestCase):
         """
         a_samples = self.a_glyph.samples
         self.assertIsInstance(a_samples, tuple)
-        self.assertEqual(a_samples, (3, 3))
+        self.assertTupleEqual(a_samples, (3, 3))
 
         k_samples = self.k_glyph.samples
-        self.assertEqual(k_samples, (5, 8))
+        self.assertTupleEqual(k_samples, (5, 8))
 
     def test_fingerprint(self):
         """
@@ -81,7 +81,7 @@ class TestGlyph(unittest.TestCase):
         """
         fingerprint = self.a_glyph.fingerprint
         self.assertIsInstance(fingerprint, Image.Image)
-        self.assertEqual(fingerprint.size, (3, 3))
+        self.assertTupleEqual(fingerprint.size, (3, 3))
         self.assertEqual(fingerprint.mode, "L")
 
     def test_fingerprint_display(self):
@@ -129,7 +129,7 @@ class TestGlyph(unittest.TestCase):
         self.assertEqual(combined_glyph.samples, self.a_glyph.samples)
 
         high_sample_glyph = self.k_glyph + self.f_glyph
-        self.assertEqual(high_sample_glyph.samples, self.k_glyph.samples)
+        self.assertTupleEqual(high_sample_glyph.samples, self.k_glyph.samples)
 
         with self.assertRaises(TypeError):
             self.a_glyph + 42
