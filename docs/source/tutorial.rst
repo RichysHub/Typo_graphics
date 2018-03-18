@@ -1,6 +1,10 @@
 Tutorial
 ========
 
+This tutorial is aimed at introducing the concepts of Typo_graphics, and to get you started converting images to text.
+Starting with the most basic uses, and introducing some of the more complex capabilities.
+
+
 .. currentmodule:: typo_graphics
 
 Basic use
