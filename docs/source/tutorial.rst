@@ -60,6 +60,8 @@ to the :meth:`~Typograph.image_to_text` method, as follows:
 
     Input image of Australian shepherd dog.
 
+.. _aus_shep:
+
 This `result`, which will be a :class:`~typo_graphics.typograph.typed_art` object contains our output.
 From this object we can extract the instructions and our reference output image.
 
@@ -135,6 +137,8 @@ it is allowed to add one glyph on top of another, but cannot add more than that.
 
 This stacking drastically increases the possible glyphs, and helps to create darker glyphs than are typeable.
 You can control the depth to which glyphs are stacking, by passing an integer to the keyword argument, `glyph_depth`.
+
+.. _shep_single:
 
 The following reproduces the dog image we have seen previously, but without stacking glyphs, by setting `glyph_depth` to 1.
 

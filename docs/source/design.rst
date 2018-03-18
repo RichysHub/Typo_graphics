@@ -95,9 +95,24 @@ The output, however, is perfectly usable, without the need to type the instructi
 The instruction format
 ----------------------
 
-The instruction format is heavily borrowed from [Neill1982]_. Characters are split into lines, and if overtyping is needed,
-lines are distinguished by a trailing letter. Within each line, characters are grouped together,
+The instruction format is heavily borrowed from [Neill1982]_.
+
+Lines of the image are denoted by an integer, starting from 0.
+Within each line, characters are grouped together,
 and a number prepended to each to indicate how many times that characters should be typed in succession.
+
+Here is an extract from the instructions for the :ref:`single depth Australian shepherd <shep_single>`:
+
+.. literalinclude:: ../../../Doc_Images/aus_shep_single_depth-instructions.txt
+    :language: text
+    :lines: 1-10
+
+If overtyping is used by the image, and therefore a single image line requires two or more typing passes,
+line numbers have letter(s) appended. An example of this can be seen in the instructions for the :ref:`Australian shepherd <aus_shep>`.
+
+.. literalinclude:: ../../../Doc_Images/aus_shep_crop-instructions.txt
+    :language: text
+    :lines: 1-10
 
 In contrast to the Neill format, Typo_graphics does not expect the character grid to be square.
 Instead, images are expected to be typed using single line spacing, such that the top of one row of glyphs sits touching the bottom of the previous row.
