@@ -737,8 +737,8 @@ class Typograph:
 
         .. math::
 
-            RMSD &= \sqrt{\\frac{1}{N}\sum_{i=1}^N (x_i - a)^2} \\\\
-                 &= \sqrt{(m - a)^2 + \\frac{1}{N}\sum_{i=1}^N (x_i - m)^2}
+            \text{RMSD} &= \sqrt{\\frac{1}{N}\sum_{i=1}^N (x_i - a)^2} \\\\
+                        &= \sqrt{(m - a)^2 + \\frac{1}{N}\sum_{i=1}^N (x_i - m)^2}
 
         * :math:`N` is number of points
         * :math:`m` is centroid of points
