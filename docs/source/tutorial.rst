@@ -19,6 +19,7 @@ The simplest way to create an instance is without any arguments passed:
 .. code-block:: python
 
     from typo_graphics import Typograph
+
     typograph = Typograph()
 
 
@@ -49,23 +50,33 @@ to the :meth:`~Typograph.image_to_text` method, as follows:
     target_image = Image.open('dog.png')
     result = typograph.image_to_text(target_image)
 
+.. figure:: ../../../Doc_Images/aus_shep_crop.png
+    :align: center
+
+    Input image of Australian shepherd dog.
+
 This `result`, which will be a :class:`~typo_graphics.typograph.typed_art` object contains our output.
-From this object we can extract the instructions, output image,
-and even peer into the workings of the code by looking at the calculation image.
+From this object we can extract the instructions and our reference output image.
 
 .. code-block:: python
 
     print(result.instructions)
 
+.. literalinclude:: ../../../Doc_Images/aus_shep_crop-instructions.txt
+    :language: text
+    :lines: 1-16
+
+The first 16 lines of the instructions file are shown here. As the image uses a glyph depth of two, this corresponds to 8 typed lines.
+The entire image is rendered here with 32 lines, 60 characters wide.
 
 .. code-block:: python
 
-    result.output.show()
+        result.output.show()
 
+.. figure:: ../../../Doc_Images/aus_shep_crop-output.png
+    :align: center
 
-.. code-block:: python
-
-    result.calculation.show()
+    Reference image from conversion, useful for preview, and for help when typing.
 
 The Glyph class
 ---------------
@@ -396,7 +407,7 @@ and as such ``"Both"`` is to be interpreted as searching for the glyph in both, 
     >>> 'a' in typograph.glyphs
     False
 
-One way to use :meth:`remove_glyph` and :meth:`add_glyph` together, is to extract a glyph, and insert a new one in its place.
+One way to use :meth:`~Typograph.remove_glyph` and :meth:`~Typograph.add_glyph` together, is to extract a glyph, and insert a new one in its place.
 
 Propose that somehow your ``M`` key had, instead of sticking, suffered damage,
 and was now was typing a capital M at the equivalent of 10 pixels below the normal position.
