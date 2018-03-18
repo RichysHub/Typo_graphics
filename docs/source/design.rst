@@ -67,7 +67,7 @@ The process of making images from characters is well established in ASCII art.
 In looking for simple ASCII art generators, I found many to be very underwhelming.
 Many of these would depend on a predetermined scale of brightness, such as ``['.', ',', '+', 'X']``.
 Not only did this make the code nontransferable to machines without such characters, but I felt it underutilised the characters.
-If two characters have the same average brightness, eg ``"`` and ``/``, the above would make no distinction between them,
+If two characters have the same average brightness, perhaps ``"`` and ``/``, the above would make no distinction between them,
 however they would produce drastically different results.
 
 More advances ASCII art generators **do** appreciate the character forms, but are still lacking.
