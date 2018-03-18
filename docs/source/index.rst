@@ -15,7 +15,6 @@ Contents:
    :maxdepth: 2
 
    tutorial
-   demos
    design
    api
    credits
