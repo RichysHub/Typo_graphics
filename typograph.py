@@ -737,12 +737,14 @@ class Typograph:
         Uses centroid to avoid brute force calculation.
 
         .. math::
-            \sqrt{\\frac{1}{N}\sum_{i=1}^N (x_i - a)^2} = \sqrt{(m - a)^2 + \\frac{1}{N}\sum_{i=1}^N (x_i - m)^2}
 
-            N is number of points
-            m is centroid of points
-            x_i is a point of the set
-            a is target point
+            RMSD &= \sqrt{\\frac{1}{N}\sum_{i=1}^N (x_i - a)^2} \\\\
+                 &= \sqrt{(m - a)^2 + \\frac{1}{N}\sum_{i=1}^N (x_i - m)^2}
+
+        * :math:`N` is number of points
+        * :math:`m` is centroid of points
+        * :math:`x_i` is a point of the set
+        * :math:`a` is target point
 
         :param array_like point: point from which mean square distance is calculated.
         :param tree_set: tree set to be compared against, contains centroid and mean square from centroid.
