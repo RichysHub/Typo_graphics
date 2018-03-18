@@ -50,6 +50,7 @@ to the :meth:`~Typograph.image_to_text` method, as follows:
     target_image = Image.open('dog.png')
     result = typograph.image_to_text(target_image)
 
+
 .. figure:: ../../../Doc_Images/aus_shep_crop.png
     :align: center
 
@@ -76,7 +77,80 @@ The entire image is rendered here with 32 lines, 60 characters wide.
 .. figure:: ../../../Doc_Images/aus_shep_crop-output.png
     :align: center
 
-    Reference image from conversion, useful for preview, and for help when typing.
+    Reference image from conversion, useful for preview, and for help when typing. Best viewed at a slight distance.
+
+Tuning the result
+-----------------
+
+In order to control the appearance of the image, several keyword arguments are available,
+for both :meth:`~Typograph.image_text`, and during the instantiation of :class:`Typograph`.
+
+A few are detailed here, see the :ref:`API` for more details.
+
+Larger or smaller images
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+When converting an image, :meth:`~Typograph.image_to_text` will make best use of the available space,
+scaling the image to best fit within the page. By default, the page is defined to have space for an image 60 characters wide,
+and 60 characters tall.
+
+These parameters can be altered by passing a tuple to :meth:`~Typograph.image_to_text` as the keyword argument `max_size`.
+These dimensions specify a bounding box, (width, height) in glyphs, within which the image will be scaled.
+
+For example, if you can only fit 30 characters width, and 20 high on the page, we would alter the previous code to:
+
+.. code-block:: python
+
+    from PIL import Image
+    from typo_graphics import Typograph
+
+    typograph = Typograph()
+    target_image = Image.open('dog.png')
+    result = typograph.image_to_text(target_image, max_size=(30, 20))
+
+    result.output.show()
+
+.. figure:: ../../../Doc_Images/aus_shep_30-output.png
+    :align: center
+
+    Image of Australian shepherd within a 30 glyph width.
+
+In specifying `max_size`, either one or both of the dimensions can be set to ``None``.
+If a single dimension is ``None``, it will be assumed to have infinite space, the image will be scaled to the other dimension.
+If both are ``None``, the size of the input image will be closely matched in the output image.
+
+The default fit mode is to scale the image to within the bounds.
+If, instead the keyword argument of `fit_mode` is set to "Crop", the image will be minimally cropped, centered on the image.
+Cropping requires both dimensions of `max_size` be specified.
+
+Glyph depth
+^^^^^^^^^^^
+
+By default, :class:`Typograph` will stack the glyphs from the SR100 to a depth of 2, that is to say,
+it is allowed to add one glyph on top of another, but cannot add more than that.
+
+This stacking drastically increases the possible glyphs, and helps to create darker glyphs than are typeable.
+You can control the depth to which glyphs are stacking, by passing an integer to the keyword argument, `glyph_depth`.
+
+The following reproduces the dog image we have seen previously, but without stacking glyphs, by setting `glyph_depth` to 1.
+
+.. code-block:: python
+
+    from PIL import Image
+    from typo_graphics import Typograph
+
+    typograph = Typograph(glyph_depth=1)
+    target_image = Image.open('dog.png')
+    result = typograph.image_to_text(target_image)
+
+    result.output.show()
+
+.. figure:: ../../../Doc_Images/aus_shep_single_depth-output.png
+    :align: center
+
+    Reproducing the Australian shepherd dog image, with no glyph overtyping.
+
+Note this keyword is on instantiation, not use, as it affects how glyphs are processed and stored internally.
 
 The Glyph class
 ---------------
