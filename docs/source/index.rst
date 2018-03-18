@@ -17,5 +17,6 @@ Contents:
    tutorial
    design
    api
-   credits
+   about
+   concepts
    full_reference
