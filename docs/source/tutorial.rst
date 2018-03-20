@@ -158,7 +158,9 @@ The following reproduces the dog image we have seen previously, but without stac
 
     Reproducing the Australian shepherd dog image, with no glyph overtyping.
 
-Note this keyword is on instantiation, not use, as it affects how glyphs are processed and stored internally.
+.. Note::
+
+    This keyword is on instantiation, not use, as it affects how glyphs are processed and stored internally.
 
 The Glyph class
 ---------------

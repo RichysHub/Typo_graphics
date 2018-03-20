@@ -257,12 +257,19 @@ latex_elements = {
 
      # Additional stuff for the LaTeX preamble.
      #
-     # 'preamble': '',
+     # 'preamble': r'',
 
      # Latex figure (float) alignment
      #
      # 'figure_align': 'htbp',
 }
+
+# Adding LaTeX macros for imgmath output
+macros_file = open('latex_macros.sty')
+imgmath_latex_preamble = r''
+
+for macro in macros_file:
+    imgmath_latex_preamble += macro + '\n'
 
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title,

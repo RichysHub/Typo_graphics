@@ -15,7 +15,7 @@ Contents:
    :maxdepth: 2
 
    tutorial
-   design
+   development
    api
    about
    concepts

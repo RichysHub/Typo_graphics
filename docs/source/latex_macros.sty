@@ -1,0 +1,10 @@
+\usepackage{stackengine}
+% composite glyph column displays
+\newcommand{\OneGlyph}[1]{\begin{bmatrix} #1 \end{bmatrix}}
+\newcommand{\TwoGlyph}[2]{\begin{bmatrix} #1 \\ #2 \end{bmatrix}}
+\newcommand{\ThreeGlyph}[3]{\begin{bmatrix} #1 \\ #2 \\ #3 \end{bmatrix}}
+% composite glyph column displays, aligned to the top of the \ThreeGlyph
+\newcommand{\uOneGlyph}[1]{\begin{array}{@{}c@{}}{\begin{bmatrix} #1 \end{bmatrix}} \\ \\ \\ \end{array}}
+\newcommand{\uTwoGlyph}[2]{\begin{array}{@{}c@{}}{\begin{bmatrix} #1 \\ #2 \end{bmatrix}} \\ \\ \end{array}}
+%
+\newcommand{\vshunt}[1]{\belowbaseline[-3pt]{$ #1 $}}
