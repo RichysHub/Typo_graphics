@@ -1,10 +1,9 @@
-Design decisions and Development
-================================
+Development
+===========
 
 .. currentmodule:: typo_graphics
 
 If you want to know more about the development of Typo_graphics, this section is for you.
-
 
 Inspiration
 -----------
@@ -91,6 +90,8 @@ This flexibility would also allow use with block printing, or monospace fonts, t
 The main output for Typo_graphics is the instruction set generated.
 :meth:`~Typograph.image_to_text` also produces an output image, which is mainly intended as reference while typing, to place oneself.
 The output, however, is perfectly usable, without the need to type the instructions out.
+
+.. _instruction_format:
 
 The instruction format
 ----------------------
