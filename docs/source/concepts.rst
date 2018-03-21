@@ -368,7 +368,7 @@ and keep track of the indexes we have available.
 .. math::
 
     \ThreeGlyph{B}{C}{D} \ThreeGlyph{sp}{sp}{sp} \quad
-    \mathit{indexes} = \begin{pmatrix} 1 \\ 2 \\ 3 \end{pmatrix}
+    \mathit{indexes} = \begin{pmatrix} 0 \\ 1 \\ 2 \end{pmatrix}
 
 We work through it in order.
 Is :math:`A` in our previous glyph? No? Then let us set it aside in a deferred list.
@@ -376,7 +376,7 @@ Is :math:`A` in our previous glyph? No? Then let us set it aside in a deferred l
 .. math::
 
     \ThreeGlyph{B}{C}{D} \ThreeGlyph{sp}{sp}{sp} \quad
-    \mathit{indexes} = \begin{pmatrix} 1 \\ 2 \\ 3 \end{pmatrix} \quad
+    \mathit{indexes} = \begin{pmatrix} 0 \\ 1 \\ 2 \end{pmatrix} \quad
     \mathit{deferred} = [ A ]
 
 Next, is :math:`B` in our previous glyph? Yes! Place it in the correct position in our new glyph,
@@ -385,7 +385,7 @@ and mark its index as no longer available.
 .. math::
 
     \ThreeGlyph{B}{C}{D} \ThreeGlyph{B}{sp}{sp} \quad
-    \mathit{indexes} = \begin{pmatrix} 2 \\ 3 \end{pmatrix} \quad
+    \mathit{indexes} = \begin{pmatrix} 1 \\ 2 \end{pmatrix} \quad
     \mathit{deferred} = [ A ]
 
 Is :math:`D` in our previous glyph? Yes, so repeat as above.
@@ -393,7 +393,7 @@ Is :math:`D` in our previous glyph? Yes, so repeat as above.
 .. math::
 
     \ThreeGlyph{B}{C}{D} \ThreeGlyph{B}{sp}{D} \quad
-    \mathit{indexes} = \begin{pmatrix} 2 \end{pmatrix} \quad
+    \mathit{indexes} = \begin{pmatrix} 1 \end{pmatrix} \quad
     \mathit{deferred} = [ A ]
 
 We have reached the end of the components that we need to place.
@@ -408,20 +408,20 @@ In practice this is helpful, as overtyped lines are harder to check when typing.
     \ThreeGlyph{B}{C}{D} \ThreeGlyph{B}{A}{D}
 
 The next composite glyph we need to place is :math:`\OneGlyph{A}`.
-This only has one components, but the last one had 3, so we will use three as well.
+This only has one component, but the last one had 3, so we will use three as well.
 In general, the number of component indexes we allow will be equal or more than is used on the line already.
 
 .. math::
 
     \ThreeGlyph{B}{C}{D} \ThreeGlyph{B}{A}{D} \ThreeGlyph{sp}{sp}{sp} \quad
-    \mathit{indexes} = \begin{pmatrix} 1 \\ 2 \\ 3 \end{pmatrix}
+    \mathit{indexes} = \begin{pmatrix} 0 \\ 1 \\ 2 \end{pmatrix}
 
 Is :math:`A` in the glyph before? Yes, place it in the correct location, and remove the index.
 
 .. math::
 
     \ThreeGlyph{B}{C}{D} \ThreeGlyph{B}{A}{D} \ThreeGlyph{sp}{A}{sp} \quad
-    \mathit{indexes} = \begin{pmatrix} 1 \\ 3 \end{pmatrix}
+    \mathit{indexes} = \begin{pmatrix} 0 \\ 2 \end{pmatrix}
 
 We have reached the end of our components, fill in any deferred glyphs, of which we have none, and we are done.
 Pre-filling with the spacer avoids us having to look for and fill in any holes at this stage.
