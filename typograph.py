@@ -57,18 +57,8 @@ May be unpacked, or accessed using member names
 :type instructions: :class:`string`
 """
 
-# TODO dump list
-# Enhanced image production for single glyph stacking
-# --> looks to be issue with how we calculate self.value_extrema
-# docs with sphinx
-# demo images / gifs etc
-# --> translation, rotations of simple shapes
-# --> show image, calculation for both good samples, and sample of (1,1)
-# ------> ie the common easy ascii method
-# some nice, royalty free images to show
-# updated glyph images, getting rid of some of the messiness
-# --> can just make a glyph sheet for this
-
+# TODO
+# self.value_extrema is currently being overridden in preprocess
 
 class Typograph:
     """
@@ -81,6 +71,15 @@ class Typograph:
     :meth:`~Typograph.from_directory` present other initialisation options.
 
     Exposes :meth:`~Typograph.image_to_text` , which can be used to convert any supplied image into glyph format.
+
+    Exposes following instance attributes:
+     - :attr:`glyphs`, dictionary of typeable glyphs, keyed by glyph names, used in combinations.
+     - :attr:`standalone_glyphs`, dictionary of typeable glyphs, keyed by glyph names, that are only to be used alone.
+     - :attr:`glyph_depth`, integer detailing maximum glyphs that are combined together for each combination glyph.
+     - :attr:`sample_x`, integer of samples across the glyph images.
+     - :attr:`sample_y`, integer of samples down the glyph images.
+     - :attr:`samples`, tuple of ints governing how glyphs are down-sampled for matching.
+     - :attr:`tree_sets`, list of tree_sets containing all combination glyphs, and associated values.
     """
     def __init__(self, glyph_images=None, samples=(3, 3), glyph_depth=2):
         """
