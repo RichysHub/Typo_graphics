@@ -172,7 +172,7 @@ class TestTypograph(unittest.TestCase):
         Create a blank glyph, called 'space'
         """
         glyph_dimensions = next(iter(self.typograph.glyphs.values())).image.size
-        blank_image = Image.new("RGB", glyph_dimensions, "white")
+        blank_image = Image.new("RGBA", glyph_dimensions, "white")
         space = Glyph(name='sp', image=blank_image)
         return space
 
@@ -202,7 +202,7 @@ class TestTypograph(unittest.TestCase):
         self.typograph.add_glyph(glyph=space, use_in_combinations=True)
 
         standalone_glyphs = self.typograph.standalone_glyphs
-        self.assertNotIn(standalone_glyphs, space)
+        self.assertNotIn(space, standalone_glyphs)
 
         glyphs = self.typograph.glyphs
         space_name = space.name
