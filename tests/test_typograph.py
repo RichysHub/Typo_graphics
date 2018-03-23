@@ -225,7 +225,7 @@ class TestTypograph(unittest.TestCase):
         self.assertNotIn(space_name, glyphs)
 
         self.typograph.add_glyph(glyph=space, use_in_combinations=True)
-        self.assertIn(glyphs, space_name)
+        self.assertIn(space_name, glyphs)
         self.assertNotIn(space_name, standalone_glyphs)
 
         self.typograph.add_glyph(glyph=space, use_in_combinations=False)
