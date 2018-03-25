@@ -34,11 +34,15 @@ class Glyph:
          If not specified, will default to containing this glyph.
         :type components: [:class:`Glyph`]
         :param samples: size specified in an integer, integer tuple for the fingerprint to be scaled to.
-         Specified as number of pixels across, by number of pixels.
-        :type samples: (:class:`int`, :class:`int`)
+         Specified as number of pixels across, by number of pixels. Can also pass integer to be used in both dimensions.
+        :type samples: (:class:`int`, :class:`int`) or :class:`int`
         """
         self.name = name
         self.image = image
+
+        if isinstance(samples, int):
+            samples = (samples, samples)
+
         self.samples = samples
         self.fingerprint = self.image.convert("L").resize(samples, Image.BOX)
         self.fingerprint_display = self.fingerprint.resize(self.image.size)

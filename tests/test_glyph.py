@@ -74,6 +74,16 @@ class TestGlyph(unittest.TestCase):
         k_samples = self.k_glyph.samples
         self.assertTupleEqual(k_samples, (5, 8))
 
+    def test_integer_samples(self):
+        """
+        Glyph can accept an integer it will use to create samples tuple from
+        """
+        int_value = 5
+        glyph = Glyph(name=self.a_name, image=self.a_image, samples=int_value)
+        samples = glyph.samples
+        self.assertIsInstance(samples, tuple)
+        self.assertEqual(samples, (int_value, int_value))
+
     def test_fingerprint(self):
         """
         Fingerprint is a scaled down version of image, to samples size
