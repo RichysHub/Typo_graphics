@@ -370,26 +370,45 @@ class TestTypograph(unittest.TestCase):
         self.assertListEqual(chunks[2], [128, 128, 128, 128])
         self.assertListEqual(chunks[3], [0, 255, 128, 0])
 
-    def test_find_closest_glyphs(self):
-        pass
+    def test_find_closest_glyph_perfect_match(self):
+        """
+        Provided samples is high enough, Typograph should identify the perfect match, and its distance should be zero
+        """
 
-    def test_compose_calculation(self):
-        pass
+        typograph = self.typograph
 
-    def test_compose_output(self):
-        pass
+        target_glyph = next(iter(typograph.glyphs.values()))
+        target = target_glyph.fingerprint.getdata()
+        closest, distance = typograph._find_closest_glyph(target=target, cutoff=0, background_glyph=None)
 
-    def test_instructions(self):
-        pass
+        self.assertIsInstance(closest, Glyph)
+        self.assertIs(closest, target_glyph)
+        self.assertEqual(distance, 0)
 
-    def test_root_mean_square_distance(self):
-        pass
+    def test_find_closest_glyph_fully_transparent(self):
+        """
+        Using a perfect match, Typograph would otherwise match to that glyph.
+        Adding an alpha channel, so image is fully transparent, as such, background glyph should be matched.
+        """
 
-    def test_image_to_text(self):
-        pass
+        typograph = self.typograph
 
-    def test_convert(self):
-        pass
+        glyphs = iter(typograph.glyphs.values())
+        target_glyph = next(glyphs)
+        background_glyph = next(glyphs)
+        background_glyph = typograph.remove_glyph(background_glyph)
+
+        target_image = target_glyph.fingerprint
+        alpha_channel = Image.new("L", target_image.size)
+        target_image.putalpha(alpha_channel)
+
+        target = target_image.getdata()
+
+        closest, distance = typograph._find_closest_glyph(target=target, cutoff=0, background_glyph=background_glyph)
+
+        self.assertIsInstance(closest, Glyph)
+        self.assertIs(closest, background_glyph)
+        self.assertIsNone(distance)
 
 
 if __name__ == '__main__':
