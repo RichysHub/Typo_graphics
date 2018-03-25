@@ -1,7 +1,3 @@
-import json
-import os
-from contextlib import suppress
-
 from PIL import Image, ImageChops
 
 
@@ -72,12 +68,17 @@ class Glyph:
         :rtype: :class:`Glyph`
         :raises ValueError: if :attr:`~Glyph.samples` attribute of the two glyphs do not match.
         :raises TypeError: if addition is attempted with an object **not** of type :class:`Glyph`.
+        :raises ValueError: if :attr:`~Glyph.image.mode` attribute of the two glyphs do not match.
         """
         if not isinstance(other, Glyph):
             raise TypeError('can only combine glyph (not "{}") with glyph'.format(type(other)))
 
         if self.samples != other.samples:
             raise ValueError('Cannot combine glyphs with unequal samples {} =/= {}'.format(self.samples, other.samples))
+
+        if self.image.mode != other.image.mode:
+            raise ValueError('Cannot combine glyphs with unequal image modes, {} =/= {}'
+                             .format(self.image.mode, other.image.mode))
 
         name = self.name + ' ' + other.name
         composite = ImageChops.darker(self.image, other.image)

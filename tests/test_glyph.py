@@ -151,6 +151,22 @@ class TestGlyph(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.a_glyph + self.k_glyph
 
+    def test_add_mode_error(self):
+        """
+        Adding two glyphs of different modes should raise a ValueError.
+        Previously a cryptic ValueError was raised by ImageChops instead.
+        """
+
+        a_image = self.a_image.convert("L")
+        a_glyph = Glyph(name=self.a_name, image=a_image)
+        z_image = self.z_image.convert("RGBA")
+        z_glyph = Glyph(name=self.z_name, image=z_image)
+
+        self.assertNotEqual(a_glyph.image.mode, z_glyph.image.mode)
+
+        with self.assertRaises(ValueError):
+            a_glyph + z_glyph
+
 
 if __name__ == '__main__':
     unittest.main()
