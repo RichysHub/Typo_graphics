@@ -356,6 +356,9 @@ class Typograph:
 
         remove_from = remove_from.lower()
 
+        from_combination = None
+        from_standalone = None
+
         if remove_from in ("both", "b", "combinations", "c"):
             from_combination = self.glyphs.pop(glyph, None)
         if remove_from in ("both", "b", "standalone", "s"):
