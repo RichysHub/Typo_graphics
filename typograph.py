@@ -4,7 +4,7 @@ import json
 import operator
 import os
 import string
-from collections import namedtuple
+from collections import namedtuple, Counter
 from contextlib import suppress
 
 import numpy as np
@@ -134,7 +134,7 @@ class Typograph:
         :type glyph_dimensions: (:class:`int`, :class:`int`)
         :param grid_size: if given, number of (rows, columns) that glyphs are arranged in.
         :type grid_size: (:class:`int`, :class:`int`)
-        :param glyph_names: list of glyph names listed left to right, top to bottom.
+        :param glyph_names: list of unique glyph names listed left to right, top to bottom.
         :type glyph_names: [:class:`str`]
         :param spacing: tuple of integer pixel spacing between adjacent glyphs,
          as number of pixels between glyphs horizontally and vertically.
@@ -144,10 +144,15 @@ class Typograph:
         :rtype: :class:`Typograph`
         :raises TypeError: if `number_glyphs` is not given.
         :raises TypeError: if neither `grid_size` or `glyph_dimensions` are specified.
+        :raises ValueError: is duplicates in glyph_names
         """
         if (glyph_dimensions is None) and (grid_size is None):
             raise TypeError("from_glyph_sheet() missing required keyword argument "
                             "'grid_size' or 'glyph_dimensions'")
+
+        if len(glyph_names) != len(set(glyph_names)):
+            duplicates = [name for name, count in Counter(glyph_names).items() if count > 1]
+            raise ValueError("duplicate names in glyph_names: {}.".format(duplicates))
 
         sheet_width, sheet_height = glyph_sheet.size
         spacing_x, spacing_y = spacing

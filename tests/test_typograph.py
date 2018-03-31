@@ -156,6 +156,20 @@ class TestTypograph(unittest.TestCase):
     def test_from_glyph_sheet(self):
         pass
 
+    def test_from_glyph_sheet_duplicate_names(self):
+        """
+        Because glyph names are used for a dictionary, they must be unique.
+        If duplicates are found in the list, a ValueError should be raised.
+        """
+
+        names = ['a', 'b', 'c', 'd', 'a']
+
+        glyph_sheet = Image.new("RGBA", (225, 50))
+        with self.assertRaises(ValueError):
+            Typograph.from_glyph_sheet(glyph_sheet=glyph_sheet, number_glyphs=5,
+                                       glyph_dimensions=(25, 50), spacing=(25, 50),
+                                       glyph_names=names)
+
     def test_from_directory(self):
         pass
 
@@ -200,12 +214,12 @@ class TestTypograph(unittest.TestCase):
         """
         space = self.space_glyph()
         self.typograph.add_glyph(glyph=space, use_in_combinations=True)
+        space_name = space.name
 
         standalone_glyphs = self.typograph.standalone_glyphs
-        self.assertNotIn(space, standalone_glyphs)
+        self.assertNotIn(space_name, standalone_glyphs)
 
         glyphs = self.typograph.glyphs
-        space_name = space.name
         self.assertIn(space_name, glyphs)
         entry_in_glyphs = glyphs[space_name]
         self.assertIsInstance(entry_in_glyphs, Glyph)
