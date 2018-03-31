@@ -167,6 +167,31 @@ class TestGlyph(unittest.TestCase):
         with self.assertRaises(ValueError):
             a_glyph + z_glyph
 
+    def test_glyph_commutativity(self):
+        """
+        Glyphs are easily made commutative. The order has no meaning, so should not matter.
+        """
+
+        a_z = self.a_glyph + self.z_glyph
+        z_a = self.z_glyph + self.a_glyph
+
+        self.assertEqual(a_z, z_a)
+
+    def test_equivalence_identical_glyphs(self):
+        """
+        Glyphs that are identical in every way, should be seen as equal to one another.
+        """
+        a_copy = Glyph(name=self.a_name, image=self.a_image)
+
+        self.assertEqual(self.a_glyph, a_copy)
+
+    def test_equivalence_different_glyphs(self):
+        """
+        Glyphs that differ, even slightly, should be deemed different.
+        """
+        a_variant = Glyph(name=self.a_name + ' ', image=self.a_image)
+
+        self.assertNotEqual(self.a_glyph, a_variant)
 
 if __name__ == '__main__':
     unittest.main()

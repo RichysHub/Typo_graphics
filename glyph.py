@@ -68,7 +68,7 @@ class Glyph:
         :rtype: :class:`Glyph`
         :raises ValueError: if :attr:`~Glyph.samples` attribute of the two glyphs do not match.
         :raises TypeError: if addition is attempted with an object **not** of type :class:`Glyph`.
-        :raises ValueError: if :attr:`~Glyph.image.mode` attribute of the two glyphs do not match.
+        :raises ValueError: if :attr:`Glyph.image.mode` attribute of the two glyphs do not match.
         """
         if not isinstance(other, Glyph):
             raise TypeError('can only combine glyph (not "{}") with glyph'.format(type(other)))
@@ -80,13 +80,37 @@ class Glyph:
             raise ValueError('Cannot combine glyphs with unequal image modes, {} =/= {}'
                              .format(self.image.mode, other.image.mode))
 
-        name = self.name + ' ' + other.name
         composite = ImageChops.darker(self.image, other.image)
         components = sorted(self.components + other.components, key=lambda g: g.name)
+        name = ' '.join([g.name for g in components])
         return Glyph(name=name, image=composite, components=components, samples=self.samples)
 
     def __str__(self):
+        """
+        String override.
+
+        Returns the name attribute for the glyph.
+        :return: name of the glyph.
+        :rtype: :class:`string`
+        """
         return self.name
+
+    def __eq__(self, other):
+        """
+        Equivalence override
+
+        :param other: glyph to compare against.
+        :type other: :class:`Glyph`
+        :return: True if the name, image and samples of the two glyphs match, otherwise False
+        :rtype: :class:`boolean`
+        """
+
+        if isinstance(self, other.__class__):
+            return self.name == other.name and\
+                   self.image == other.image and\
+                   self.samples == other.samples
+
+        return False
 
     def show(self):
         self.image.show(title=self.name)
