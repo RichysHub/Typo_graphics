@@ -62,7 +62,7 @@ to the :meth:`~Typograph.image_to_text` method, as follows:
 
 .. _aus_shep:
 
-This `result`, which will be a :class:`~typo_graphics.typograph.typed_art` object contains our output.
+This `result`, which will be a :class:`~typo_graphics.typograph.TypedArt` object contains our output.
 From this object we can extract the instructions and our reference output image.
 
 .. code-block:: python

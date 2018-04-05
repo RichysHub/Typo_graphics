@@ -186,7 +186,7 @@ For each chunk, of which we expect on the order of several thousand,
 we would have to calculate distances in 9 dimensional space to thousands of glyphs.
 
 In order to tackle this hefty workload in a smarter way, we employ use of a centroid.
-Upon creation of each :class:`~typo_graphics.typograph.tree_set`, the centroid of the glyphs in that collection is calculated.
+Upon creation of each :class:`~typo_graphics.typograph.TreeSet`, the centroid of the glyphs in that collection is calculated.
 The centroid is defined as the average position in sample parameter space, so by default it will be a 9 dimensional point.
 
 :math:`\bar{d}` is the Root Mean Square Distance (RMSD) to glyphs in the collection.
@@ -221,7 +221,7 @@ But, by definition of the centroid, the second summation vanishes,
     \text{RMSD} = \sqrt{(m-p)^2 + \frac{1}{N}\sum_{i=1}^N (x_i - m)^2}
 
 The second term inside the square root is simply the mean square distance from centroid,
-which is a constant over the :class:`~typo_graphics.typograph.tree_set`, and can also be calculated at creation time.
+which is a constant over the :class:`~typo_graphics.typograph.TreeSet`, and can also be calculated at creation time.
 
 This derivation allows us to calculate :math:`\bar{d}`, needing only to calculate its distance from one point, the centroid.
 This approach is used in :meth:`~Typograph._root_mean_square_distance`, used by :meth:`~Typograph._find_closest_glyph`.

@@ -14,39 +14,39 @@ from scipy.spatial.distance import euclidean
 from skimage import exposure
 from typo_graphics import Glyph
 
-tree_set = namedtuple('tree_set', ['glyph_set', 'tree', 'centroid',
-                                   'mean_square_from_centroid', 'stack_size'])
-tree_set.__doc__ = """
+TreeSet = namedtuple('TreeSet', ['glyph_set', 'tree', 'centroid',
+                                 'mean_square_from_centroid', 'stack_size'])
+TreeSet.__doc__ = """
 Named tuple container for information regarding sets of glyphs
 
 May be unpacked, or accessed using member names
-:attr:`~typo_graphics.typograph.tree_set.glyph_set`,
-:attr:`~typo_graphics.typograph.tree_set.tree`,
-:attr:`~typo_graphics.typograph.tree_set.centroid`,
-:attr:`~typo_graphics.typograph.tree_set.mean_square_from_centroid`,
-:attr:`~typo_graphics.typograph.tree_set.stack_size`
+:attr:`~typo_graphics.typograph.TreeSet.glyph_set`,
+:attr:`~typo_graphics.typograph.TreeSet.tree`,
+:attr:`~typo_graphics.typograph.TreeSet.centroid`,
+:attr:`~typo_graphics.typograph.TreeSet.mean_square_from_centroid`,
+:attr:`~typo_graphics.typograph.TreeSet.stack_size`
 
 :param glyph_set: list containing a collection of glyphs 
 :type glyph_set: [:class:`Glyph`]
 :param tree: a :class:`~scipy.spatial.cKDTree` instantiated with the glyphs
- of :attr:`~typo_graphics.typograph.tree_set.glyph_set`
+ of :attr:`~typo_graphics.typograph.TreeSet.glyph_set`
 :type tree: :class:`~scipy.spatial.cKDTree`
 :param array_like centroid: position of centroid in :attr:`~Glyph.sample_x` * :attr:`~Glyph.sample_y` parameter space
 :param mean_square_from_centroid: mean square distance of glyphs from centroid
 :type mean_square_from_centroid: :class:`float`
 :param stack_size: number of fundamental glyphs used to compose each glyph
- in :attr:`~typo_graphics.typograph.tree_set.glyph_set`
+ in :attr:`~typo_graphics.typograph.TreeSet.glyph_set`
 :type stack_size: :class:`int`
 """
 
-typed_art = namedtuple('typed_art', ['calculation', 'output', 'instructions'])
-typed_art.__doc__ = """
+TypedArt = namedtuple('TypedArt', ['calculation', 'output', 'instructions'])
+TypedArt.__doc__ = """
 Named tuple container for output of :meth:`~Typograph.image_to_text`
 
 May be unpacked, or accessed using member names
-:attr:`~typo_graphics.typograph.typed_art.calculation`,
-:attr:`~typo_graphics.typograph.typed_art.output`,
-:attr:`~typo_graphics.typograph.typed_art.instructions`
+:attr:`~typo_graphics.typograph.TypedArt.calculation`,
+:attr:`~typo_graphics.typograph.TypedArt.output`,
+:attr:`~typo_graphics.typograph.TypedArt.instructions`
 
 :param calculation: an :class:`~PIL.Image.Image` object, showing the :attr:`~Glyph.fingerprint_display` images, 
  composed according to the result
@@ -79,7 +79,8 @@ class Typograph:
      - :attr:`sample_x`, integer of samples across the glyph images.
      - :attr:`sample_y`, integer of samples down the glyph images.
      - :attr:`samples`, tuple of ints governing how glyphs are down-sampled for matching.
-     - :attr:`tree_sets`, list of tree_sets containing all combination glyphs, and associated values.
+     - :attr:`tree_sets`, list of :class:`~typo_graphics.typograph.TreeSet` objects containing all combination glyphs,
+        and associated values.
     """
     def __init__(self, glyph_images=None, samples=(3, 3), glyph_depth=2):
         """
@@ -253,9 +254,9 @@ class Typograph:
             centroid = np.mean(glyph_data, axis=0)
             mean_square_from_centroid = np.mean(((glyph_data - centroid) ** 2).sum(axis=1))
 
-            tree_sets.append(tree_set(glyph_set=glyph_set, tree=tree, centroid=centroid,
-                                      mean_square_from_centroid=mean_square_from_centroid,
-                                      stack_size=stack_size))
+            tree_sets.append(TreeSet(glyph_set=glyph_set, tree=tree, centroid=centroid,
+                                     mean_square_from_centroid=mean_square_from_centroid,
+                                     stack_size=stack_size))
 
         return tree_sets
 
@@ -753,9 +754,9 @@ class Typograph:
         * :math:`a` is target point
 
         :param array_like point: point from which mean square distance is calculated.
-        :param tree_set: tree set to be compared against, contains centroid and mean square from centroid.
-        :type tree_set: :class:`~typograph.tree_set`
-        :return: root mean square distance of point from points given by tree set.
+        :param tree_set: :class:`~typo_graphics.typograph.TreeSet` to be compared against, contains centroid and mean square from centroid.
+        :type tree_set: :class:`~typo_graphics.typograph.TreeSet`
+        :return: root mean square distance of point from points given by `tree_set`.
         :rtype: :class:`float`
         """
         centroid = tree_set.centroid
@@ -811,9 +812,9 @@ class Typograph:
         :type instruction_spacer: :class:`Glyph`
         :param background_glyph: glyph to fill background of transparent image with.
         :type background_glyph: :class:`Glyph`
-        :return: a :class:`~typo_graphics.typograph.typed_art` object, containing construction, output and instructions,
+        :return: a :class:`~typo_graphics.typograph.TypedArt` object, containing construction, output and instructions,
          after preprocessing.
-        :rtype: :class:`~typo_graphics.typograph.typed_art`
+        :rtype: :class:`~typo_graphics.typograph.TypedArt`
         """
         if fit_mode.lower() == "crop":
             if None in max_size:
@@ -829,7 +830,7 @@ class Typograph:
 
         calc, output, inst_str = self._convert(image=preprocessed_image, target_size=target_size, cutoff=cutoff,
                                                instruction_spacer=instruction_spacer, background_glyph=background_glyph)
-        return typed_art(calc, output, inst_str)
+        return TypedArt(calc, output, inst_str)
 
     def _convert(self, image, target_size, cutoff, instruction_spacer, background_glyph):
         """
@@ -845,8 +846,8 @@ class Typograph:
         :param instruction_spacer: glyph to be used to represent moving the typing position one step,
          without adding ink.
         :type instruction_spacer: :class:`Glyph`
-        :return: a :class:`~typo_graphics.typograph.typed_art` object, containing construction, output and instructions.
-        :rtype: :class:`~typo_graphics.typograph.typed_art`
+        :return: a :class:`~typo_graphics.typograph.TypedArt` object, containing construction, output and instructions.
+        :rtype: :class:`~typo_graphics.typograph.TypedArt`
         """
         target_width, target_height = target_size
         image_data = list(image.getdata())
