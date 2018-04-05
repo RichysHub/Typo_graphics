@@ -12,15 +12,15 @@ Typograph Object
     :private-members:
     :special-members: __init__
 
-Typograph return object, typed_art
+Typograph return object, TypedArt
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. autoclass:: typo_graphics.typograph.typed_art
+.. autoclass:: typo_graphics.typograph.TypedArt
 
-Typograph internal object, tree_set
+Typograph internal object, TreeSet
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. autoclass:: typo_graphics.typograph.tree_set
+.. autoclass:: typo_graphics.typograph.TreeSet
 
 Glyph Object
 ------------

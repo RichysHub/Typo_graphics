@@ -5,7 +5,7 @@ from PIL import Image
 from scipy.spatial import cKDTree
 from scipy.special import comb
 from typo_graphics import Typograph, Glyph
-from typo_graphics.typograph import tree_set
+from typo_graphics.typograph import TreeSet
 
 
 class TestTypograph(unittest.TestCase):
@@ -107,7 +107,7 @@ class TestTypograph(unittest.TestCase):
         self.assertIsInstance(tree_sets, list)
 
         for tree_index, tree_set_ in enumerate(tree_sets):
-            self.assertIsInstance(tree_set_, tree_set)
+            self.assertIsInstance(tree_set_, TreeSet)
             tree_set_stack_size = tree_set_.stack_size
             self.assertIsInstance(tree_set_stack_size, int)
             stack_size = tree_index + 1
