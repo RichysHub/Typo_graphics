@@ -828,9 +828,9 @@ class Typograph:
                                               enhance_contrast=enhance_contrast, rescale_intensity=rescale_intensity,
                                               background_glyph=background_glyph)
 
-        calc, output, inst_str = self._convert(image=preprocessed_image, target_size=target_size, cutoff=cutoff,
+        calc, output, inst_str, distance = self._convert(image=preprocessed_image, target_size=target_size, cutoff=cutoff,
                                                instruction_spacer=instruction_spacer, background_glyph=background_glyph)
-        return TypedArt(calc, output, inst_str)
+        return TypedArt(calc, output, inst_str), distance
 
     def _convert(self, image, target_size, cutoff, instruction_spacer, background_glyph):
         """
@@ -854,9 +854,11 @@ class Typograph:
         target_parts = self._chunk(image_data, target_width=target_width)
 
         result = []
+        total_distance = 0
         for section in target_parts:
             glyph, distance = self._find_closest_glyph(section, cutoff=cutoff, background_glyph=background_glyph)
             result.append(glyph)
+            total_distance += distance
 
         calculation = self._compose_calculation(result, target_width=target_width, target_height=target_height)
         output = self._compose_output(result, target_width=target_width, target_height=target_height)
@@ -868,4 +870,4 @@ class Typograph:
         instruction_string = '\n'.join(self._instructions(result, spacer=instruction_spacer,
                                                           target_width=target_width, target_height=target_height))
 
-        return calculation, output, instruction_string
+        return calculation, output, instruction_string, total_distance
