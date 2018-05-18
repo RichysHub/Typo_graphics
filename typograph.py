@@ -382,6 +382,9 @@ class Typograph:
 
         Cropping is applied evenly to both sides of image, so as to preserve center.
 
+        Image is cropped so that max_size glyphs fit inside the image, then scaled to max_size(0) * self.samples(0) by
+        max_size(1) * self.samples(1) pixels. As such, output image may appear squashed or stretched.
+
         :param image:  An :class:`~PIL.Image.Image` object.
         :type image: :class:`~PIL.Image.Image`
         :param max_size: maximum size in glyphs across and down.
@@ -414,6 +417,9 @@ class Typograph:
 
         Values of ``None`` in `max_size` are treated as infinite available space in that dimension.
         If (``None``, ``None``), will match input image size to nearest whole glyph in each dimension.
+
+        Output image ends up being scaled by the number of samples in that given dimension,
+        as such it may appear distorted.
 
         :param image:  An :class:`~PIL.Image.Image` object.
         :type image: :class:`~PIL.Image.Image`
