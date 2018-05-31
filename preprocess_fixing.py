@@ -9,9 +9,9 @@ import warnings
 from math import ceil, floor
 
 
-image_paths = ['doggo.png', 'Output/dog.png', 'Output/Copyright free/waterfall.png',
+image_paths = ['Output/dog.png', 'Output/Copyright free/waterfall.png',
                'Output/Copyright free/aus_shep_crop.png',
-               'Input/Mikko2.jpg', 'Possible fish.jpg', 'Output/Copyright free/flower2.png',
+               'Input/Mikko2.jpg', 'Input/Possible fish.jpg', 'Output/Copyright free/flower2.png',
                'docs/build/html/_images/SR100.png']
 
 image_directories = []  # ['Glyphs/']
