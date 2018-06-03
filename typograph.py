@@ -146,7 +146,7 @@ class Typograph:
         :rtype: :class:`Typograph`
         :raises TypeError: if `number_glyphs` is not given.
         :raises TypeError: if neither `grid_size` or `glyph_dimensions` are specified.
-        :raises ValueError: is duplicates in glyph_names
+        :raises ValueError: if duplicates in glyph_names
         """
         if (glyph_dimensions is None) and (grid_size is None):
             raise TypeError("from_glyph_sheet() missing required keyword argument "
@@ -466,6 +466,9 @@ class Typograph:
         :param enhance_contrast: enable or disable use of :func:`~skimage.exposure.equalize_adapthist` on input image.
         :type enhance_contrast: :class:`bool`
         :param rescale_intensity: control, or disable the effect of :func:`~skimage.exposure.rescale_intensity`.
+         Values higher than 1 cause values near the extremes, to be pushed into those extremes.
+         A value lover than 1 will tend to move all values toward the average glyph value.
+         If `None` is passed, the rescaling is skipped. This is preferred over passing unity.
         :type rescale_intensity: :class:`float`, :class:`int` or `None`
         :return: image after preprocessing has been applied.
         :rtype: :class:`~PIL.Image.Image`
@@ -813,6 +816,9 @@ class Typograph:
         :param enhance_contrast: enable or disable use of :func:`~skimage.exposure.equalize_adapthist` on input image.
         :type enhance_contrast: :class:`bool`
         :param rescale_intensity: control, or disable the effect of :func:`~skimage.exposure.rescale_intensity`.
+         Values higher than 1 cause values near the extremes, to be pushed into those extremes.
+         A value lover than 1 will tend to move all values toward the average glyph value.
+         If `None` is passed, the rescaling is skipped. This is preferred over passing unity.
          Defaults to expanding the output range 1.5 times.
         :type rescale_intensity: :class:`float`, :class:`int` or `None`
         :param cutoff: cutoff level for near-enough glyph replacement. A value of 0.0 will permit no replacements.
