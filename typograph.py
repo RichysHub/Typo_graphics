@@ -464,8 +464,8 @@ class Typograph:
         :type clip_limit: :class:`float`
         :param enhance_contrast: enable or disable use of :func:`~skimage.exposure.equalize_adapthist` on input image.
         :type enhance_contrast: :class:`bool`
-        :param rescale_intensity: enable or disable use of :func:`~skimage.exposure.rescale_intensity`.
-        :type rescale_intensity: :class:`bool`
+        :param rescale_intensity: control, or disable the effect of :func:`~skimage.exposure.rescale_intensity`.
+        :type rescale_intensity: :class:`float`, :class:`int` or `None`
         :return: image after preprocessing has been applied.
         :rtype: :class:`~PIL.Image.Image`
         """
@@ -483,11 +483,18 @@ class Typograph:
             if min(target_size) > 1 and enhance_contrast:
                 image_array = exposure.equalize_adapthist(image_array, clip_limit=clip_limit)
 
-            # TODO Something is screwy with the current contrast methods, need to investigate
-            self.value_extrema = (150, 250)
+            if rescale_intensity is not None:
 
-            if rescale_intensity:
-                image_array = exposure.rescale_intensity(image_array, out_range=self.value_extrema)
+                mean_value = sum(self.value_extrema) / 2
+                min_val, max_val = self.value_extrema
+                value_range = max_val - min_val
+
+                new_min = max([0, int(mean_value - (rescale_intensity / 2) * value_range)])
+                new_max = min([255, int(mean_value + (rescale_intensity / 2) * value_range)])
+
+                out_range = (new_min, new_max)
+
+                image_array = exposure.rescale_intensity(image_array, out_range=out_range)
 
             greyscale_image = Image.fromarray(image_array.astype("uint8"))
 
@@ -782,7 +789,7 @@ class Typograph:
             size += 1
 
     def image_to_text(self, image, max_size=(60, 60), cutoff=0, resize_mode=Image.LANCZOS, clip_limit=0.02,
-                      enhance_contrast=True, rescale_intensity=True, instruction_spacer=None, background_glyph=None,
+                      enhance_contrast=True, rescale_intensity=1.5, instruction_spacer=None, background_glyph=None,
                       fit_mode="Scale"):
         """
         Convert image into a glyph version, using the instance's glyphs.
@@ -804,8 +811,9 @@ class Typograph:
         :type clip_limit: :class:`float`
         :param enhance_contrast: enable or disable use of :func:`~skimage.exposure.equalize_adapthist` on input image.
         :type enhance_contrast: :class:`bool`
-        :param rescale_intensity: enable or disable use of :func:`~skimage.exposure.rescale_intensity`.
-        :type rescale_intensity: :class:`bool`
+        :param rescale_intensity: control, or disable the effect of :func:`~skimage.exposure.rescale_intensity`.
+         Defaults to expanding the output range 1.5 times.
+        :type rescale_intensity: :class:`float`, :class:`int` or `None`
         :param cutoff: cutoff level for near-enough glyph replacement. A value of 0.0 will permit no replacements.
         :type cutoff: :class:`float`
         :param instruction_spacer: glyph to be used to represent moving the typing position one step, without adding ink.
@@ -828,9 +836,10 @@ class Typograph:
                                               enhance_contrast=enhance_contrast, rescale_intensity=rescale_intensity,
                                               background_glyph=background_glyph)
 
-        calc, output, inst_str, distance = self._convert(image=preprocessed_image, target_size=target_size, cutoff=cutoff,
+        calc, output, inst_str = self._convert(image=preprocessed_image, target_size=target_size, cutoff=cutoff,
                                                instruction_spacer=instruction_spacer, background_glyph=background_glyph)
-        return TypedArt(calc, output, inst_str), distance
+
+        return TypedArt(calc, output, inst_str)
 
     def _convert(self, image, target_size, cutoff, instruction_spacer, background_glyph):
         """
@@ -854,11 +863,9 @@ class Typograph:
         target_parts = self._chunk(image_data, target_width=target_width)
 
         result = []
-        total_distance = 0
         for section in target_parts:
             glyph, distance = self._find_closest_glyph(section, cutoff=cutoff, background_glyph=background_glyph)
             result.append(glyph)
-            total_distance += distance
 
         calculation = self._compose_calculation(result, target_width=target_width, target_height=target_height)
         output = self._compose_output(result, target_width=target_width, target_height=target_height)
@@ -870,4 +877,4 @@ class Typograph:
         instruction_string = '\n'.join(self._instructions(result, spacer=instruction_spacer,
                                                           target_width=target_width, target_height=target_height))
 
-        return calculation, output, instruction_string, total_distance
+        return calculation, output, instruction_string
