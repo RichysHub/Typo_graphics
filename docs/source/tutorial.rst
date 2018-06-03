@@ -85,6 +85,7 @@ The entire image is rendered here with 32 lines, 60 characters wide.
 
     Reference image from conversion, useful for preview, and for help when typing. Best viewed at a slight distance.
 
+
 Tuning the result
 -----------------
 
@@ -128,6 +129,22 @@ If both are ``None``, the size of the input image will be closely matched in the
 The default fit mode is to scale the image to within the bounds.
 If, instead the keyword argument of `fit_mode` is set to "Crop", the image will be minimally cropped, centered on the image.
 Cropping requires both dimensions of `max_size` be specified.
+
+Very small scales
+^^^^^^^^^^^^^^^^^
+
+At very small scales, the ability to represent all the features of an image with glyphs becomes harder and harder.
+The results may surprise you, however. The following is a demonstration of recreating a triangle as it rotates.
+
+.. figure:: ../../../Doc_Images/rotating_triangle.gif
+    :align: center
+
+    From left to right: scanned image of typewritten image, the input image,
+    the values for glyphs :class:`Typograph` has determined are the best match,
+    and the glyphs rendered as :attr:`~typograph.TypedArt.output` with the outline of the triangle overlaid in blue.
+
+I hope you will agree that the ability to convey motion within just 20 glyphs per frame is staggering.
+
 
 Glyph depth
 ^^^^^^^^^^^
