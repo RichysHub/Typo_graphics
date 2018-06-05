@@ -247,7 +247,7 @@ To underscore it, we would also add the underscore to the stack:
 
     \text{!} = \TwoGlyph{'}{.}
 
-In general, I will use capital letters, though the logic is not dependent on the specif glyph components.
+In general, I will use capital letters, though the logic is not dependent on the specific glyph components.
 Occasionally I will align glyph stacks of uneven length. In this situation, the instructions should have a spacer inserted.
 In fact, the spacer glyph used in these situations can be passed as the keyword argument `instruction_spacer` to :meth:`~Typograph.image_to_text`.
 The default for this is a spacebar glyph, which has the :attr:`~Glyph.name` sp.

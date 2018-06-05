@@ -229,10 +229,11 @@ with their images overlaid. We can show this, using the SR100 :class:`Glyph` obj
 Combined glyphs are named according to their components, separated by whitespace.
 
     >>> exclamation_mark.name
-    ". '"
+    "' ."
 
 The :attr:`~Glyph.components` attribute contains references to the glyphs that composed the combination glyphs,
-here the apostrophe, and the full stop.
+here the apostrophe, and the full stop. Components are sorted. This allows glyph addition to be commutative,
+so that order of addition is not important.
 
     >>> [glyph.name for glyph in exclamation_mark.components]
     ["'", '.']
