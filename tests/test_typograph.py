@@ -35,6 +35,7 @@ class TestTypograph(unittest.TestCase):
     def test_glyphs(self):
         """
         Typograph.glyphs should be a dictionary of glyphs
+
         each glyph should be keyed by name
         glyphs should have correct number of samples
 
@@ -153,7 +154,38 @@ class TestTypograph(unittest.TestCase):
 
         self.assertLessEqual(minimum_value, maximum_value)
 
+    # TODO
+    def glyph_sheet(self):
+        pass
+
+    # TODO
     def test_from_glyph_sheet(self):
+        pass
+
+    # TODO
+    def test_from_glyph_sheet_number_glyphs_not_given(self):
+        """
+        If the number of glyphs is not given, this raises a TypeError
+        """
+        # TODO we may want to investigate ways we can extrapolate the number from other information given
+        # --> Length of names
+        # --> Maximum number that fit in the sheet
+        pass
+
+
+    # TODO
+    def test_from_glyph_sheet_no_grid_size_or_dimension(self):
+        """
+        If neither grid_size or glyph dimensions are given, the glyph sheet is unusable
+        This should therefore raise a TypeError
+        """
+        pass
+
+    # TODO
+    def test_from_glyph_sheet_no_names_given(self):
+        """
+        If no names are provided, glyphs should be given sequential placeholder names
+        """
         pass
 
     def test_from_glyph_sheet_duplicate_names(self):
@@ -170,7 +202,36 @@ class TestTypograph(unittest.TestCase):
                                        glyph_dimensions=(25, 50), spacing=(25, 50),
                                        glyph_names=names)
 
+    # TODO
     def test_from_directory(self):
+        """
+        Glyph should be loaded from the directory, into typograph.glyphs
+        Names from the name map should be used for all
+        """
+        pass
+
+    # TODO
+    def test_from_directory_partial_name_map(self):
+        """
+        If a name map only contains some of the file names,
+        others should continue to use that file name
+        """
+        pass
+
+    # TODO
+    def test_from_directory_empty_name_map(self):
+        """
+        If a name_map.json exists, but contains no entries, it should not affect behaviour
+        """
+        pass
+
+    # TODO
+    def test_from_directory_missing_name_map(self):
+        """
+        If no name_map.json exists, the FileNotFound error that would otherwise occur should be handled.
+        Glyphs should all be loaded, named according to file names
+        """
+
         pass
 
     def test_standalone_glyphs(self):
@@ -423,6 +484,29 @@ class TestTypograph(unittest.TestCase):
         self.assertIsInstance(closest, Glyph)
         self.assertIs(closest, background_glyph)
         self.assertIsNone(distance)
+
+    # TODO: background_glyph is not allowed to be used where image is not transparent
+    def test_background_glyph_excluded_from_main_image(self):
+        pass
+
+    # TODO
+    def test_image_to_text(self):
+        pass
+
+    # TODO
+    def test_image_to_text_max_size_scale(self):
+        pass
+
+    # TODO
+    def test_image_to_text_max_size_crop(self):
+        pass
+
+    # TODO
+    def test_image_to_text_cutoff_1_no_doubles(self):
+        """
+        If a cutoff value of 1 is given, it should result in no double glyphs
+        """
+        pass
 
 
 if __name__ == '__main__':
