@@ -151,7 +151,7 @@ class Typograph:
             raise TypeError("from_glyph_sheet() missing required keyword argument "
                             "'grid_size' or 'glyph_dimensions'")
 
-        if len(glyph_names) != len(set(glyph_names)):
+        if glyph_names and len(glyph_names) != len(set(glyph_names)):
             duplicates = [name for name, count in Counter(glyph_names).items() if count > 1]
             raise ValueError("duplicate names in glyph_names: {}.".format(duplicates))
 
