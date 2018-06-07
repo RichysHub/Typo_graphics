@@ -1,11 +1,17 @@
 import unittest
+from collections import namedtuple
+from string import ascii_uppercase
 
-from numpy import ndarray
 from PIL import Image
+from numpy import ndarray
 from scipy.spatial import cKDTree
 from scipy.special import comb
 from typo_graphics import Typograph, Glyph
 from typo_graphics.typograph import TreeSet
+
+
+GlyphSheet = namedtuple("GlyphSheet", ["glyph_sheet", "glyph_dimensions", "spacing", "glyph_images",
+                                       "glyph_names", "grid_size", "number_glyphs"])
 
 
 class TestTypograph(unittest.TestCase):
@@ -154,39 +160,124 @@ class TestTypograph(unittest.TestCase):
 
         self.assertLessEqual(minimum_value, maximum_value)
 
-    # TODO
-    def glyph_sheet(self):
-        pass
+    @staticmethod
+    def glyph_sheet():
+        """
+        Create a GlyphSheet object, containing the glyph sheet image, and all the required metadata to test
+        """
 
-    # TODO
-    def test_from_glyph_sheet(self):
-        pass
+        glyph_dimensions = (25, 50)
+        spacing = (25, 50)
+        number_glyphs = 5
+        glyph_width, glyph_height = glyph_dimensions
+        spacing_width, spacing_height = spacing
+        grid_size = (number_glyphs, 1)
 
-    # TODO
+        total_width = (glyph_width * number_glyphs) + (spacing_width * (number_glyphs - 1))
+        glyph_sheet = Image.new("L", (total_width, glyph_height))
+
+        glyph_images = []
+        glyph_names = []
+
+        for i in range(number_glyphs):
+            glyph_image = Image.new("L", glyph_dimensions, "white")
+            glyph_image.putpixel((i % number_glyphs, i // number_glyphs), 0)
+            glyph_images.append(glyph_image)
+            glyph_names.append(ascii_uppercase[i])
+
+            glyph_sheet.paste(glyph_image, (i * (glyph_width + spacing[0]), 0,
+                                            ((i + 1) * glyph_width) + (i * spacing[0]), glyph_height))
+
+        sheet = GlyphSheet(glyph_names=glyph_names, spacing=spacing, glyph_sheet=glyph_sheet,
+                           glyph_dimensions=glyph_dimensions, grid_size=grid_size,
+                           number_glyphs=number_glyphs, glyph_images=glyph_images)
+
+        return sheet
+
+    def test_from_glyph_sheet_grid_size(self):
+        """
+        Using the grid size, are glyphs correctly extracted from the Glyph sheet?
+        """
+
+        sheet = self.glyph_sheet()
+
+        typograph = Typograph.from_glyph_sheet(glyph_sheet=sheet.glyph_sheet, glyph_names=sheet.glyph_names,
+                                               number_glyphs=sheet.number_glyphs, spacing=sheet.spacing,
+                                               grid_size=sheet.grid_size)
+
+        self.assertEqual(len(typograph.glyphs), sheet.number_glyphs)
+
+        for name, image in zip(sheet.glyph_names, sheet.glyph_images):
+            self.assertIn(name, typograph.glyphs)
+            glyph = typograph.glyphs[name]
+
+            self.assertIsInstance(glyph, Glyph)
+            self.assertEqual(glyph.image, image)
+
+    def test_from_glyph_sheet_grid_dimensions(self):
+        """
+        Using the grid dimensions, are glyphs correctly extracted from the Glyph sheet?
+        """
+
+        sheet = self.glyph_sheet()
+
+        typograph = Typograph.from_glyph_sheet(glyph_sheet=sheet.glyph_sheet, glyph_names=sheet.glyph_names,
+                                               number_glyphs=sheet.number_glyphs, spacing=sheet.spacing,
+                                               glyph_dimensions=sheet.glyph_dimensions)
+
+        self.assertEqual(len(typograph.glyphs), sheet.number_glyphs)
+
+        for name, image in zip(sheet.glyph_names, sheet.glyph_images):
+            self.assertIn(name, typograph.glyphs)
+            glyph = typograph.glyphs[name]
+
+            self.assertIsInstance(glyph, Glyph)
+            self.assertEqual(glyph.image, image)
+
     def test_from_glyph_sheet_number_glyphs_not_given(self):
         """
         If the number of glyphs is not given, this raises a TypeError
         """
+
         # TODO we may want to investigate ways we can extrapolate the number from other information given
         # --> Length of names
         # --> Maximum number that fit in the sheet
-        pass
 
+        sheet = self.glyph_sheet()
 
-    # TODO
+        with self.assertRaises(TypeError):
+            typograph = Typograph.from_glyph_sheet(glyph_sheet=sheet.glyph_sheet, glyph_names=sheet.glyph_names,
+                                                   spacing=sheet.spacing, grid_size=sheet.grid_size)
+
     def test_from_glyph_sheet_no_grid_size_or_dimension(self):
         """
         If neither grid_size or glyph dimensions are given, the glyph sheet is unusable
         This should therefore raise a TypeError
         """
-        pass
 
-    # TODO
+        sheet = self.glyph_sheet()
+
+        with self.assertRaises(TypeError):
+            typograph = Typograph.from_glyph_sheet(glyph_sheet=sheet.glyph_sheet, glyph_names=sheet.glyph_names,
+                                                   number_glyphs=sheet.number_glyphs, spacing=sheet.spacing)
+
     def test_from_glyph_sheet_no_names_given(self):
         """
         If no names are provided, glyphs should be given sequential placeholder names
         """
-        pass
+
+        sheet = self.glyph_sheet()
+
+        typograph = Typograph.from_glyph_sheet(glyph_sheet=sheet.glyph_sheet, number_glyphs=sheet.number_glyphs,
+                                               spacing=sheet.spacing, grid_size=sheet.grid_size)
+
+        self.assertEqual(len(typograph.glyphs), sheet.number_glyphs)
+
+        for i in range(sheet.number_glyphs):
+            glyph_name = "g{}".format(i)
+            self.assertIn(glyph_name, typograph.glyphs)
+            glyph = typograph.glyphs[glyph_name]
+            self.assertIsInstance(glyph, Glyph)
 
     def test_from_glyph_sheet_duplicate_names(self):
         """
