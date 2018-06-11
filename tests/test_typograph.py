@@ -1,10 +1,9 @@
+import json
 import os
 import tempfile
 import unittest
 from collections import namedtuple
 from string import ascii_uppercase, punctuation
-
-import json
 
 from PIL import Image
 from numpy import ndarray
@@ -18,6 +17,7 @@ GlyphSheet = namedtuple("GlyphSheet", ["glyph_sheet", "glyph_dimensions", "spaci
 
 GlyphDirectory = namedtuple("GlyphDirectory", ["directory", "glyph_file_names", "glyph_end_names", "number_glyphs",
                                                "glyph_images"])
+
 
 class TestTypograph(unittest.TestCase):
 
@@ -692,6 +692,37 @@ class TestTypograph(unittest.TestCase):
         self.assertIs(closest, target_glyph)
         self.assertEqual(distance, 0)
 
+    def test_find_closest_glyph_perfect_match_combination(self):
+        """
+        Perfect matching should work equally with a combination glyph
+        """
+
+        typograph = self.typograph
+
+        glyph_iter = iter(typograph.glyphs.values())
+        target_glyph = next(glyph_iter) + next(glyph_iter)
+        target = target_glyph.fingerprint.getdata()
+        closest, distance = typograph._find_closest_glyph(target=target, cutoff=0, background_glyph=None)
+
+        self.assertIsInstance(closest, Glyph)
+        self.assertEqual(closest, target_glyph)
+        self.assertEqual(distance, 0)
+
+    def test_find_closest_glyph_cutoff_1_combination_to_single(self):
+        """
+        With a cutoff value of 1, the matching should match a single glyph,
+        despite there being a perfect combination glyph match
+        """
+        typograph = self.typograph
+
+        glyph_iter = iter(typograph.glyphs.values())
+        target_glyph = next(glyph_iter) + next(glyph_iter)
+        target = target_glyph.fingerprint.getdata()
+        closest, distance = typograph._find_closest_glyph(target=target, cutoff=1, background_glyph=None)
+
+        self.assertIsInstance(closest, Glyph)
+        self.assertEqual(len(closest.components), 1)
+
     def test_find_closest_glyph_fully_transparent(self):
         """
         Using a perfect match, Typograph would otherwise match to that glyph.
@@ -734,25 +765,6 @@ class TestTypograph(unittest.TestCase):
 
         self.assertIsInstance(closest, Glyph)
         self.assertIsNot(closest, background_glyph)
-
-    # TODO
-    def test_image_to_text(self):
-        pass
-
-    # TODO
-    def test_image_to_text_max_size_scale(self):
-        pass
-
-    # TODO
-    def test_image_to_text_max_size_crop(self):
-        pass
-
-    # TODO
-    def test_image_to_text_cutoff_1_no_doubles(self):
-        """
-        If a cutoff value of 1 is given, it should result in no double glyphs
-        """
-        pass
 
 
 if __name__ == '__main__':
