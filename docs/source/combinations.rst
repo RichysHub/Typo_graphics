@@ -27,8 +27,15 @@ and the components that constitute it.
     "Cent", "ȼ", .. glyphcombination:: c /
     "Stroked O", "Ø", .. glyphcombination:: O /
     "Stroked C", "Ȼ", .. glyphcombination:: C /
+    "Stroked T", "Ⱦ", .. glyphcombination:: T /
+    "Stroked E", "Ɇ", .. glyphcombination:: E /
+    "Stroked e", "ɇ", .. glyphcombination:: e /
     "Dotted m", "ṁ", .. glyphcombination:: m i
-    "Armed 7", "", .. glyphcombination:: 7 -
+    "Barred J", "Ɉ", .. glyphcombination:: J -
+    "Barred j", "ɉ", .. glyphcombination:: j -
+    "Armed 7", " ", .. glyphcombination:: 7 -
+    "Stroked 2", "ƻ", .. glyphcombination:: 2 -
+
 
 And below are some combinations that are worthy of mention, but I haven't associated with existing characters.
 
@@ -60,6 +67,7 @@ And below are some combinations that are worthy of mention, but I haven't associ
     .. glyphcombination:: : " _
     .. glyphcombination:: H I
     .. glyphcombination:: 5 7
+    .. glyphcombination:: ' com
+    .. glyphcombination:: ? com
+    .. glyphcombination:: • com
 
-
-asd

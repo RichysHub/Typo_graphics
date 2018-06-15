@@ -33,6 +33,10 @@ class Glyphcombination(Directive):
     def run(self):
         base, *arguments = self.arguments
 
+        # have to provide an alternative entry method for ',' for csv-table usage
+        if base == "com":
+            base = ","
+
         try:
             glyph = typograph.glyphs[base]
         except KeyError:
@@ -41,6 +45,10 @@ class Glyphcombination(Directive):
                 line=self.lineno)]
 
         for character in arguments:
+
+            if character == "com":
+                character = ","
+
             try:
                 glyph += typograph.glyphs[character]
             except KeyError:
