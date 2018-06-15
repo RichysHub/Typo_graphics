@@ -19,4 +19,5 @@ Contents:
    api
    about
    concepts
+   combinations
    full_reference
