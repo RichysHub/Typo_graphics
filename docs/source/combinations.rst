@@ -11,32 +11,55 @@ and the components that constitute it.
 
 .. csv-table::
     :header: "Name", "Character", "Construction"
-    :widths: 10, 5, 20
+    :widths: 10, 5, 10
 
-    "Exclamation mark", "!", .. figure:: ../../../Doc_Images/Exclamation.png
-    "Circled plus", "🜨", .. figure:: ../../../Doc_Images/Exclamation.png
-    "Interrobang", "‽", .. figure:: ../../../Doc_Images/Exclamation.png
-    "Theta", "ϴ", .. figure:: ../../../Doc_Images/Exclamation.png
-    "Cent", "ȼ", .. figure:: ../../../Doc_Images/Exclamation.png
-    "Division / Obelus", "÷", .. figure:: ../../../Doc_Images/Exclamation.png
-    "Eight pointed star", "✳", .. figure:: ../../../Doc_Images/Exclamation.png
-    "Not equal", "≠", .. figure:: ../../../Doc_Images/Exclamation.png
-    "Five pointed star", "☆", .. figure:: ../../../Doc_Images/Exclamation.png
+    "Exclamation mark", "!", .. glyphcombination:: ' .
+    "Circled plus", "⊕", .. glyphcombination:: o +
+    "Circled minus", "⊖", .. glyphcombination:: o -
+    "Circled multiply", "⊗", .. glyphcombination:: o x
+    "Interrobang", "‽", .. glyphcombination:: ' ?
+    "Theta", "ϴ", .. glyphcombination:: 0 o
+    "Phi", "Φ", .. glyphcombination:: I o
+    "Division / Obelus", "÷", .. glyphcombination:: : -
+    "Eight pointed star", "❋", .. glyphcombination:: + x
+    "Not equal", "≠", .. glyphcombination:: = /
+    "Five pointed star", "☆", .. glyphcombination:: A x
+    "Cent", "ȼ", .. glyphcombination:: c /
+    "Stroked O", "Ø", .. glyphcombination:: O /
+    "Stroked C", "Ȼ", .. glyphcombination:: C /
+    "Dotted m", "ṁ", .. glyphcombination:: m i
+    "Armed 7", "", .. glyphcombination:: 7 -
 
-. & ' ➠ !
+And below are some combinations that are worthy of mention, but I haven't associated with existing characters.
 
-\+ & o ➠ 🜨
+.. csv-table::
+    :header: "Constructions"
+    :widths: 10
 
-? & ' ➠ ‽
+    .. glyphcombination:: = I
+    .. glyphcombination:: - I
+    .. glyphcombination:: = T
+    .. glyphcombination:: - T
+    .. glyphcombination:: " -
+    .. glyphcombination:: " a
+    .. glyphcombination:: " o
+    .. glyphcombination:: " e
+    .. glyphcombination:: ( )
+    .. glyphcombination:: ( ) •
+    .. glyphcombination:: O X
+    .. glyphcombination:: O =
+    .. glyphcombination:: O -
+    .. glyphcombination:: X -
+    .. glyphcombination:: U -
+    .. glyphcombination:: U =
+    .. glyphcombination:: h -
+    .. glyphcombination:: D -
+    .. glyphcombination:: 3 I
+    .. glyphcombination:: : 0
+    .. glyphcombination:: : H
+    .. glyphcombination:: : " _
+    .. glyphcombination:: H I
+    .. glyphcombination:: 5 7
 
-O & o ➠ ϴ
 
-c & / ➠ ȼ
-
-‒ & : ➠ ÷
-
-x & + ➠ ✳
-
-= & / ➠ ≠
-
-x & A ➠ ☆
+asd
