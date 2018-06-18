@@ -24,10 +24,9 @@ class Glyphcombination(Directive):
     Directive to generate an image of a glyph decomposition.
 
     Arguments specify glyphs to use in the combination
+    separated by whitespace
     'com' provided as alternative to ','
 
-    content is included as a caption, in the same fashion as figure directive
-    has option align, which matches figure directive
     """
     has_content = False
     required_arguments = 1
@@ -65,6 +64,7 @@ class Glyphcombination(Directive):
         node = glyphcombination()
         node['glyph'] = glyph
         node['options'] = []
+
         return [node]
 
 
@@ -98,13 +98,15 @@ def make_glyphcombination_files(self, node, glyph, prefix='glyphcombination'):
     relative_filename = posixpath.join(self.builder.imgpath, filename)
     output_filename = path.join(self.builder.outdir, '_images', filename)
 
-    image = render_glyphcombination(self, glyph)
+    if not path.isfile(output_filename):  # if image not already created
 
-    if image is None:
-        relative_filename = None
-    else:
-        ensuredir(path.dirname(output_filename))
-        image.save(output_filename)
+        image = render_glyphcombination(self, glyph)
+
+        if image is None:
+            relative_filename = None
+        else:
+            ensuredir(path.dirname(output_filename))
+            image.save(output_filename)
 
     return relative_filename
 
