@@ -4,9 +4,9 @@ from os import path
 
 from PIL import Image
 from docutils import nodes
+from docutils.parsers.rst import directives
 from sphinx.util import ensuredir
 from sphinx.util.compat import Directive
-
 from typo_graphics import Typograph
 
 # sphinx extension to allow for easy inclusion of glyph construction images
@@ -22,16 +22,22 @@ class glyphcombination(nodes.General, nodes.Element):
 class Glyphcombination(Directive):
     """
     Directive to generate an image of a glyph decomposition.
+
+    Arguments specify glyphs to use in the combination
+    'com' provided as alternative to ','
+
+    content is included as a caption, in the same fashion as figure directive
+    has option align, which matches figure directive
     """
     has_content = False
     required_arguments = 1
-    optional_arguments = len(typograph.glyphs) - 1
-    final_argument_whitespace = False
+    optional_arguments = 0
+    final_argument_whitespace = True
     option_spec = {
     }
 
     def run(self):
-        base, *arguments = self.arguments
+        base, *arguments = self.arguments[0].split()
 
         # have to provide an alternative entry method for ',' for csv-table usage
         if base == "com":
