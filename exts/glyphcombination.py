@@ -9,8 +9,16 @@ from sphinx.util import ensuredir
 from sphinx.util.compat import Directive
 from typo_graphics import Typograph
 
+from sphinx.ext.graphviz import figure_wrapper
+
 # sphinx extension to allow for easy inclusion of glyph construction images
 # code based on sphinxcontrib-proceduralimage
+
+
+def align(argument):
+    """Conversion function for the "align" option."""
+    return directives.choice(argument, ('left', 'center', 'right'))
+
 
 typograph = Typograph()
 
@@ -27,12 +35,15 @@ class Glyphcombination(Directive):
     separated by whitespace
     'com' provided as alternative to ','
 
+    ##content is included as a caption, in the same fashion as figure directive
+    ##has option align, which matches figure directive
     """
-    has_content = False
+    has_content = True
     required_arguments = 1
     optional_arguments = 0
     final_argument_whitespace = True
     option_spec = {
+        'align': align
     }
 
     def run(self):
@@ -63,7 +74,14 @@ class Glyphcombination(Directive):
 
         node = glyphcombination()
         node['glyph'] = glyph
-        node['options'] = []
+        node['options'] = self.options
+
+        if self.content:
+            node = figure_wrapper(self, node, '\n'.join(self.content))
+            node['caption'] = '\n'.join(self.content)
+
+        if 'align' in self.options:
+            node['align'] = self.options['align']
 
         return [node]
 
@@ -114,10 +132,13 @@ def make_glyphcombination_files(self, node, glyph, prefix='glyphcombination'):
 def render_glyphcombination_html(self, node, glyph, options, prefix='glyphcombination'):
 
     relative_filename = make_glyphcombination_files(self, node, glyph, prefix)
-    self.body.append(self.starttag(node, 'p', CLASS='glyphcombination'))
-    self.body.append('<img src="{}"/>\n'.format(relative_filename))
-    self.body.append('</p>\n')
+    if 'caption' not in node:
+        atts = {'class': 'glyphcombination',
+                'src': relative_filename}
+        if node.get('align'):
+            atts['class'] += " align-" + node['align']
 
+        self.body.append(self.starttag(node, 'img', **atts))
     raise nodes.SkipNode
 
 

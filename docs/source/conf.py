@@ -187,6 +187,11 @@ html_static_path = ['_static']
 #
 # html_use_smartypants = True
 
+# Added to be true, disables on hover link icon.
+# Removed to fix an issue with glyphcombination figure captions realigning
+
+html_add_permalinks = False
+
 # Custom sidebar templates, maps document names to template names.
 #
 # html_sidebars = {}

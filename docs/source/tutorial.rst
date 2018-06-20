@@ -34,7 +34,7 @@ you can examine the glyphs by their names:
 
     typograph.glyphs['9'].show()
 
-.. figure:: ../../Glyphs/9.png
+.. glyphcombination:: 9
     :align: center
 
     Glyph image for the character ``9``.
