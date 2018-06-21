@@ -47,11 +47,11 @@ class Glyphcombination(Directive):
     }
 
     def run(self):
-        base, *arguments = self.arguments[0].split()
+
+        arguments = self.arguments[0]
 
         # have to provide an alternative entry method for ',' for csv-table usage
-        if base == "com":
-            base = ","
+        base, *arguments = arguments.replace(',', 'com').split()
 
         try:
             glyph = typograph.glyphs[base]
@@ -61,10 +61,6 @@ class Glyphcombination(Directive):
                 line=self.lineno)]
 
         for character in arguments:
-
-            if character == "com":
-                character = ","
-
             try:
                 glyph += typograph.glyphs[character]
             except KeyError:
@@ -149,9 +145,7 @@ def html_visit_glyphcombination(self, node):
 class Dotand(Glyphcombination):
 
     def run(self):
-        print(self.arguments)
         self.arguments = ['. ' + self.arguments[0]]
-        print(self.arguments)
         return super().run()
 
 
