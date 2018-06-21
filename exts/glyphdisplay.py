@@ -88,12 +88,12 @@ def render_glyphdisplay(self, glyphs, options):
     if presentation_choice == 'composition':
         # combine all the glyphs, and just take the result
         glyph = reduce(add, glyphs)
-        glyphs = glyph
+        glyphs = [glyph]
 
     if presentation_choice == 'decomposition':
         if len(glyphs) == 1:
             # this is a weird case, but we can handle it gracefully
-            glyphs = glyph
+            glyphs = [glyph]
         else:
             # we combine the glyphs, and peel out the components so that they are sorted
             glyph = reduce(add, glyphs)
@@ -121,7 +121,8 @@ def render_glyphdisplay(self, glyphs, options):
 def make_glyphdisplay_files(self, node, glyphs, options, prefix='glyphdisplay'):
 
     # if the image has already been made, take it from the cache
-    hashkey = b''.join(glyph.name.encode('utf-8') for glyph in glyphs)
+    hash_factors = [glyph.name for glyph in glyphs] + [*options]
+    hashkey = b''.join(factor_part.encode('utf-8') for factor_part in hash_factors)
     filename = '{}-{}.{}'.format(prefix, sha(hashkey).hexdigest(), "png")
 
     relative_filename = posixpath.join(self.builder.imgpath, filename)
@@ -156,10 +157,10 @@ def html_visit_glyphdisplay(self, node):
     render_glyphdisplay_html(self, node, node['glyphs'], node['options'])
 
 
-class Dotand(Glyphdisplay):
+class Glyphdecomposition(Glyphdisplay):
 
     def run(self):
-        self.arguments = ['. ' + self.arguments[0]]
+        self.options.update({'presentation': 'decomposition'})
         return super().run()
 
 
@@ -167,4 +168,4 @@ def setup(app):
     app.add_node(glyphdisplay,
                  html=(html_visit_glyphdisplay, None))
     app.add_directive('glyphdisplay', Glyphdisplay)
-    app.add_directive('dotand', Dotand)
+    app.add_directive('glyphdecomposition', Glyphdecomposition)

@@ -13,36 +13,36 @@ and the components that constitute it.
     :header: "Name", "Character", "Construction"
     :widths: 10, 5, 10
 
-    "Exclamation mark", "!", .. glyphdisplay:: ' .
-    "Circled plus", "⊕", .. glyphdisplay:: o +
-    "Circled minus", "⊖", .. glyphdisplay:: o -
-    "Circled multiply", "⊗", .. glyphdisplay:: o x
-    "Interrobang", "‽", .. glyphdisplay:: ' ?
-    "Theta", "ϴ", .. glyphdisplay:: 0 o
-    "Phi", "Φ", .. glyphdisplay:: I o
-    "Division / Obelus", "÷", .. glyphdisplay:: : -
-    "Six pointed star", "✶", .. glyphdisplay:: x -
-    "Eight pointed star", "❋", .. glyphdisplay:: + x
-    "Not equal", "≠", .. glyphdisplay:: = /
-    "Five pointed star", "☆", .. glyphdisplay:: A x
-    "Cent", "ȼ", .. glyphdisplay:: c /
-    "Stroked O", "Ø", .. glyphdisplay:: O /
-    "Stroked C", "Ȼ", .. glyphdisplay:: C /
-    "Stroked T", "Ⱦ", .. glyphdisplay:: T /
-    "Stroked E", "Ɇ", .. glyphdisplay:: E /
-    "Stroked e", "ɇ", .. glyphdisplay:: e /
-    "Stroked G / Guaraní", "₲", .. glyphdisplay:: G /
-    "Stroked m / mil", "₥", .. glyphdisplay:: m /
-    "Dotted m", "ṁ", .. glyphdisplay:: m i
-    "Barred J", "Ɉ", .. glyphdisplay:: J -
-    "Barred j", "ɉ", .. glyphdisplay:: j -
-    "Armed 7", " ", .. glyphdisplay:: 7 -
-    "Barred 2", "ƻ", .. glyphdisplay:: 2 -
-    "Barred K / Kip", "₭", .. glyphdisplay:: K -
-    "Double barred N / Naira", "₦", .. glyphdisplay:: N =
-    "Double barred W / Won", "₩", .. glyphdisplay:: W =
-    "Double barred Y / Yen", "¥", .. glyphdisplay:: Y =
-    "Double barred A / Austral", "₳", .. glyphdisplay:: A =
+    "Exclamation mark", "!", .. glyphdecomposition:: ' .
+    "Circled plus", "⊕", .. glyphdecomposition:: o +
+    "Circled minus", "⊖", .. glyphdecomposition:: o -
+    "Circled multiply", "⊗", .. glyphdecomposition:: o x
+    "Interrobang", "‽", .. glyphdecomposition:: ' ?
+    "Theta", "ϴ", .. glyphdecomposition:: 0 o
+    "Phi", "Φ", .. glyphdecomposition:: I o
+    "Division / Obelus", "÷", .. glyphdecomposition:: : -
+    "Six pointed star", "✶", .. glyphdecomposition:: x -
+    "Eight pointed star", "❋", .. glyphdecomposition:: + x
+    "Not equal", "≠", .. glyphdecomposition:: = /
+    "Five pointed star", "☆", .. glyphdecomposition:: A x
+    "Cent", "ȼ", .. glyphdecomposition:: c /
+    "Stroked O", "Ø", .. glyphdecomposition:: O /
+    "Stroked C", "Ȼ", .. glyphdecomposition:: C /
+    "Stroked T", "Ⱦ", .. glyphdecomposition:: T /
+    "Stroked E", "Ɇ", .. glyphdecomposition:: E /
+    "Stroked e", "ɇ", .. glyphdecomposition:: e /
+    "Stroked G / Guaraní", "₲", .. glyphdecomposition:: G /
+    "Stroked m / mil", "₥", .. glyphdecomposition:: m /
+    "Dotted m", "ṁ", .. glyphdecomposition:: m i
+    "Barred J", "Ɉ", .. glyphdecomposition:: J -
+    "Barred j", "ɉ", .. glyphdecomposition:: j -
+    "Armed 7", " ", .. glyphdecomposition:: 7 -
+    "Barred 2", "ƻ", .. glyphdecomposition:: 2 -
+    "Barred K / Kip", "₭", .. glyphdecomposition:: K -
+    "Double barred N / Naira", "₦", .. glyphdecomposition:: N =
+    "Double barred W / Won", "₩", .. glyphdecomposition:: W =
+    "Double barred Y / Yen", "¥", .. glyphdecomposition:: Y =
+    "Double barred A / Austral", "₳", .. glyphdecomposition:: A =
 
 And below are some combinations that are worthy of mention, but I haven't associated with existing characters.
 
@@ -50,38 +50,33 @@ And below are some combinations that are worthy of mention, but I haven't associ
     :header: "Constructions"
     :widths: 10
 
-    .. glyphdisplay:: = I
-    .. glyphdisplay:: - I
-    .. glyphdisplay:: = T
-    .. glyphdisplay:: - T
-    .. glyphdisplay:: " -
-    .. glyphdisplay:: ' -
-    .. glyphdisplay:: " a
-    .. glyphdisplay:: " o
-    .. glyphdisplay:: " e
-    .. glyphdisplay:: " =
-    .. glyphdisplay:: ' =
-    .. glyphdisplay:: ( )
-    .. glyphdisplay:: ( ) •
-    .. glyphdisplay:: O X
-    .. glyphdisplay:: O =
-    .. glyphdisplay:: O -
-    .. glyphdisplay:: X -
-    .. glyphdisplay:: U -
-    .. glyphdisplay:: U =
-    .. glyphdisplay:: h -
-    .. glyphdisplay:: D -
-    .. glyphdisplay:: 3 I
-    .. glyphdisplay:: : 0
-    .. glyphdisplay:: : H
-    .. glyphdisplay:: : " _
-    .. glyphdisplay:: H I
-    .. glyphdisplay:: 5 7
-    .. glyphdisplay:: ' com
-    .. glyphdisplay:: ? com
-    .. glyphdisplay:: ' ? com
-
-.. dotand:: '
-.. dotand:: /
-.. dotand:: 0
-.. dotand:: A
+    .. glyphdecomposition:: = I
+    .. glyphdecomposition:: - I
+    .. glyphdecomposition:: = T
+    .. glyphdecomposition:: - T
+    .. glyphdecomposition:: " -
+    .. glyphdecomposition:: ' -
+    .. glyphdecomposition:: " a
+    .. glyphdecomposition:: " o
+    .. glyphdecomposition:: " e
+    .. glyphdecomposition:: " =
+    .. glyphdecomposition:: ' =
+    .. glyphdecomposition:: ( )
+    .. glyphdecomposition:: ( ) •
+    .. glyphdecomposition:: O X
+    .. glyphdecomposition:: O =
+    .. glyphdecomposition:: O -
+    .. glyphdecomposition:: X -
+    .. glyphdecomposition:: U -
+    .. glyphdecomposition:: U =
+    .. glyphdecomposition:: h -
+    .. glyphdecomposition:: D -
+    .. glyphdecomposition:: 3 I
+    .. glyphdecomposition:: : 0
+    .. glyphdecomposition:: : H
+    .. glyphdecomposition:: : " _
+    .. glyphdecomposition:: H I
+    .. glyphdecomposition:: 5 7
+    .. glyphdecomposition:: ' com
+    .. glyphdecomposition:: ? com
+    .. glyphdecomposition:: ' ? com
