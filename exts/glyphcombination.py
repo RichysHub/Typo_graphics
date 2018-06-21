@@ -22,6 +22,11 @@ def align(argument):
     return directives.choice(argument, ('left', 'center', 'right'))
 
 
+def presentation(argument):
+    """Conversion function for the "presentation" option."""
+    return directives.choice(argument, ('list', 'composition', 'decomposition'))
+
+
 typograph = Typograph()
 
 
@@ -37,15 +42,17 @@ class Glyphcombination(Directive):
     separated by whitespace
     'com' provided as alternative to ','
 
-    ##content is included as a caption, in the same fashion as figure directive
-    ##has option align, which matches figure directive
+    content is included as a caption, in the same fashion as figure directive
+    has align option: left, center, or right
+    has presentation option: list, composition, or decomposition
     """
     has_content = True
     required_arguments = 1
     optional_arguments = 0
     final_argument_whitespace = True
     option_spec = {
-        'align': align
+        'align': align,
+        'presentation': presentation,
     }
 
     def run(self):
@@ -60,10 +67,8 @@ class Glyphcombination(Directive):
                 'Ignoring "glyphcombination" directive with invalid glyph, {}'.format(ke),
                 line=self.lineno)]
 
-        glyph = reduce(add, glyphs)
-
         node = glyphcombination()
-        node['glyph'] = glyph
+        node['glyphs'] = glyphs
         node['options'] = self.options
 
         if self.content:
@@ -76,39 +81,54 @@ class Glyphcombination(Directive):
         return [node]
 
 
-def render_glyphcombination(self, glyph):
+def render_glyphcombination(self, glyphs, options):
 
-    components = glyph.components
-    number_components = len(components)
-    if number_components == 1:
-        return glyph.image
+    presentation_choice = options.get('presentation', 'list')
+
+    if presentation_choice == 'composition':
+        # combine all the glyphs, and just take the result
+        glyph = reduce(add, glyphs)
+        glyphs = glyph
+
+    if presentation_choice == 'decomposition':
+        if len(glyphs) == 1:
+            # this is a weird case, but we can handle it gracefully
+            glyphs = glyph
+        else:
+            # we combine the glyphs, and peel out the components so that they are sorted
+            glyph = reduce(add, glyphs)
+            glyphs = glyph.components
+            # add the glyph on the end, to show the result
+            glyphs.append(glyph)
+
+    number_glyphs = len(glyphs)
+
+    if number_glyphs == 1:
+        # handles composition, list of 1, decomposition of 1
+        return glyphs[0].image
     else:
-        glyph_width, glyph_height = glyph.image.size
-        out_width = ((2 * number_components) + 1) * glyph_width
-        out_image = Image.new(glyph.image.mode, (out_width, glyph_height), "white")
+        glyph_width, glyph_height = glyphs[0].image.size
+        out_width = ((2 * number_glyphs) - 1) * glyph_width
+        out_image = Image.new(glyphs[0].image.mode, (out_width, glyph_height), "white")
 
-        for index, component in enumerate(components):
+        for index, glyph in enumerate(glyphs):
             box = (2 * index * glyph_width, 0, ((2 * index) + 1) * glyph_width, glyph_height)
-            out_image.paste(component.image, box)
-
-        out_image.paste(glyph.image, (2 * number_components * glyph_width, 0,
-                                      ((2 * number_components) + 1) * glyph_width, glyph_height))
+            out_image.paste(glyph.image, box)
 
     return out_image
 
 
-def make_glyphcombination_files(self, node, glyph, prefix='glyphcombination'):
+def make_glyphcombination_files(self, node, glyphs, options, prefix='glyphcombination'):
 
     # if the image has already been made, take it from the cache
-    hashkey = glyph.name.encode('utf-8')
+    hashkey = b''.join(glyph.name.encode('utf-8') for glyph in glyphs)
     filename = '{}-{}.{}'.format(prefix, sha(hashkey).hexdigest(), "png")
 
     relative_filename = posixpath.join(self.builder.imgpath, filename)
     output_filename = path.join(self.builder.outdir, '_images', filename)
 
     if not path.isfile(output_filename):  # if image not already created
-
-        image = render_glyphcombination(self, glyph)
+        image = render_glyphcombination(self, glyphs, options)
 
         if image is None:
             relative_filename = None
@@ -119,9 +139,9 @@ def make_glyphcombination_files(self, node, glyph, prefix='glyphcombination'):
     return relative_filename
 
 
-def render_glyphcombination_html(self, node, glyph, options, prefix='glyphcombination'):
+def render_glyphcombination_html(self, node, glyphs, options, prefix='glyphcombination'):
 
-    relative_filename = make_glyphcombination_files(self, node, glyph, prefix)
+    relative_filename = make_glyphcombination_files(self, node, glyphs, options, prefix)
     if 'caption' not in node:
         atts = {'class': 'glyphcombination',
                 'src': relative_filename}
@@ -133,7 +153,7 @@ def render_glyphcombination_html(self, node, glyph, options, prefix='glyphcombin
 
 
 def html_visit_glyphcombination(self, node):
-    render_glyphcombination_html(self, node, node['glyph'], node['options'])
+    render_glyphcombination_html(self, node, node['glyphs'], node['options'])
 
 
 class Dotand(Glyphcombination):
