@@ -146,7 +146,17 @@ def html_visit_glyphcombination(self, node):
     render_glyphcombination_html(self, node, node['glyph'], node['options'])
 
 
+class Dotand(Glyphcombination):
+
+    def run(self):
+        print(self.arguments)
+        self.arguments = ['. ' + self.arguments[0]]
+        print(self.arguments)
+        return super().run()
+
+
 def setup(app):
     app.add_node(glyphcombination,
                  html=(html_visit_glyphcombination, None))
     app.add_directive('glyphcombination', Glyphcombination)
+    app.add_directive('dotand', Dotand)
