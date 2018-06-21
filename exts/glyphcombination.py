@@ -1,15 +1,17 @@
 import posixpath
+from functools import reduce
 from hashlib import sha1 as sha
+from operator import add
 from os import path
 
 from PIL import Image
 from docutils import nodes
 from docutils.parsers.rst import directives
+from sphinx.ext.graphviz import figure_wrapper
 from sphinx.util import ensuredir
 from sphinx.util.compat import Directive
 from typo_graphics import Typograph
 
-from sphinx.ext.graphviz import figure_wrapper
 
 # sphinx extension to allow for easy inclusion of glyph construction images
 # code based on sphinxcontrib-proceduralimage
@@ -48,25 +50,17 @@ class Glyphcombination(Directive):
 
     def run(self):
 
-        arguments = self.arguments[0]
-
         # have to provide an alternative entry method for ',' for csv-table usage
-        base, *arguments = arguments.replace(',', 'com').split()
+        arguments = self.arguments[0].replace('com', ',').split()
 
         try:
-            glyph = typograph.glyphs[base]
-        except KeyError:
+            glyphs = [typograph.glyphs[argument] for argument in arguments]
+        except KeyError as ke:
             return [self.state_machine.reporter.warning(
-                'Ignoring "glyphcombination" directive with invalid required glyph, {}'.format(base),
+                'Ignoring "glyphcombination" directive with invalid glyph, {}'.format(ke),
                 line=self.lineno)]
 
-        for character in arguments:
-            try:
-                glyph += typograph.glyphs[character]
-            except KeyError:
-                return [self.state_machine.reporter.warning(
-                    'Ignoring "glyphcombination" directive with invalid optional glyph, {}'.format(character),
-                    line=self.lineno)]
+        glyph = reduce(add, glyphs)
 
         node = glyphcombination()
         node['glyph'] = glyph
@@ -104,8 +98,8 @@ def render_glyphcombination(self, glyph):
 
 
 def make_glyphcombination_files(self, node, glyph, prefix='glyphcombination'):
-    # if the image has already been made, take it from the cache
 
+    # if the image has already been made, take it from the cache
     hashkey = glyph.name.encode('utf-8')
     filename = '{}-{}.{}'.format(prefix, sha(hashkey).hexdigest(), "png")
 
