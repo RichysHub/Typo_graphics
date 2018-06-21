@@ -43,7 +43,7 @@ and the components that constitute it.
     "Double barred W / Won", "₩", .. glyphcombination:: W =
     "Double barred Y / Yen", "¥", .. glyphcombination:: Y =
     "Double barred A / Austral", "₳", .. glyphcombination:: A =
-    ""
+
 
 
 
@@ -84,7 +84,9 @@ And below are some combinations that are worthy of mention, but I haven't associ
     .. glyphcombination:: ? com
     .. glyphcombination:: ' ? com
 
-    .. dotand:: '
-    .. dotand:: /
-    .. dotand:: 0
-    .. dotand:: A
+
+.. dotand:: '
+.. dotand:: /
+.. dotand:: 0
+.. dotand:: A
+

@@ -190,7 +190,7 @@ html_static_path = ['_static']
 # Added to be true, disables on hover link icon.
 # Removed to fix an issue with glyphcombination figure captions realigning
 
-html_add_permalinks = False
+html_add_permalinks = ""
 
 # Custom sidebar templates, maps document names to template names.
 #
