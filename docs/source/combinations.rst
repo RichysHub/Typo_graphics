@@ -83,3 +83,8 @@ And below are some combinations that are worthy of mention, but I haven't associ
     .. glyphcombination:: ' com
     .. glyphcombination:: ? com
     .. glyphcombination:: ' ? com
+
+    .. dotand:: '
+    .. dotand:: /
+    .. dotand:: 0
+    .. dotand:: A
