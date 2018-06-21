@@ -30,11 +30,11 @@ def presentation(argument):
 typograph = Typograph()
 
 
-class glyphcombination(nodes.General, nodes.Element):
+class glyphdisplay(nodes.General, nodes.Element):
     pass
 
 
-class Glyphcombination(Directive):
+class Glyphdisplay(Directive):
     """
     Directive to generate an image of a glyph decomposition.
 
@@ -64,10 +64,10 @@ class Glyphcombination(Directive):
             glyphs = [typograph.glyphs[argument] for argument in arguments]
         except KeyError as ke:
             return [self.state_machine.reporter.warning(
-                'Ignoring "glyphcombination" directive with invalid glyph, {}'.format(ke),
+                'Ignoring "glyphdisplay" directive with invalid glyph, {}'.format(ke),
                 line=self.lineno)]
 
-        node = glyphcombination()
+        node = glyphdisplay()
         node['glyphs'] = glyphs
         node['options'] = self.options
 
@@ -81,7 +81,7 @@ class Glyphcombination(Directive):
         return [node]
 
 
-def render_glyphcombination(self, glyphs, options):
+def render_glyphdisplay(self, glyphs, options):
 
     presentation_choice = options.get('presentation', 'list')
 
@@ -118,7 +118,7 @@ def render_glyphcombination(self, glyphs, options):
     return out_image
 
 
-def make_glyphcombination_files(self, node, glyphs, options, prefix='glyphcombination'):
+def make_glyphdisplay_files(self, node, glyphs, options, prefix='glyphdisplay'):
 
     # if the image has already been made, take it from the cache
     hashkey = b''.join(glyph.name.encode('utf-8') for glyph in glyphs)
@@ -128,7 +128,7 @@ def make_glyphcombination_files(self, node, glyphs, options, prefix='glyphcombin
     output_filename = path.join(self.builder.outdir, '_images', filename)
 
     if not path.isfile(output_filename):  # if image not already created
-        image = render_glyphcombination(self, glyphs, options)
+        image = render_glyphdisplay(self, glyphs, options)
 
         if image is None:
             relative_filename = None
@@ -139,11 +139,11 @@ def make_glyphcombination_files(self, node, glyphs, options, prefix='glyphcombin
     return relative_filename
 
 
-def render_glyphcombination_html(self, node, glyphs, options, prefix='glyphcombination'):
+def render_glyphdisplay_html(self, node, glyphs, options, prefix='glyphdisplay'):
 
-    relative_filename = make_glyphcombination_files(self, node, glyphs, options, prefix)
+    relative_filename = make_glyphdisplay_files(self, node, glyphs, options, prefix)
     if 'caption' not in node:
-        atts = {'class': 'glyphcombination',
+        atts = {'class': 'glyphdisplay',
                 'src': relative_filename}
         if node.get('align'):
             atts['class'] += " align-" + node['align']
@@ -152,11 +152,11 @@ def render_glyphcombination_html(self, node, glyphs, options, prefix='glyphcombi
     raise nodes.SkipNode
 
 
-def html_visit_glyphcombination(self, node):
-    render_glyphcombination_html(self, node, node['glyphs'], node['options'])
+def html_visit_glyphdisplay(self, node):
+    render_glyphdisplay_html(self, node, node['glyphs'], node['options'])
 
 
-class Dotand(Glyphcombination):
+class Dotand(Glyphdisplay):
 
     def run(self):
         self.arguments = ['. ' + self.arguments[0]]
@@ -164,7 +164,7 @@ class Dotand(Glyphcombination):
 
 
 def setup(app):
-    app.add_node(glyphcombination,
-                 html=(html_visit_glyphcombination, None))
-    app.add_directive('glyphcombination', Glyphcombination)
+    app.add_node(glyphdisplay,
+                 html=(html_visit_glyphdisplay, None))
+    app.add_directive('glyphdisplay', Glyphdisplay)
     app.add_directive('dotand', Dotand)
