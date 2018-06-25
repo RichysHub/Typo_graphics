@@ -1,3 +1,15 @@
+"""
+Sphinx extension for inclusion of images of glyphs and glyph constructions
+
+Provides two directives,
+glyphdisplay
+glyphdecomposition
+
+which are backed by one node, the glyphdisplay node
+
+Code based on sphinxcontrib-proceduralimage
+"""
+
 import posixpath
 from functools import reduce
 from hashlib import sha1 as sha
@@ -11,10 +23,6 @@ from sphinx.ext.graphviz import figure_wrapper
 from sphinx.util import ensuredir
 from sphinx.util.compat import Directive
 from typo_graphics import Typograph
-
-
-# sphinx extension to allow for easy inclusion of glyph construction images
-# code based on sphinxcontrib-proceduralimage
 
 
 def align(argument):
@@ -45,6 +53,16 @@ class Glyphdisplay(Directive):
     content is included as a caption, in the same fashion as figure directive
     has align option: left, center, or right
     has presentation option: list, composition, or decomposition
+
+    -list
+    glyphs provided are reproduced, in order
+
+    -composition
+    glyphs provided are all combined, and only this resulting glyph is shown
+
+    -decomposition
+    all glyphs are combined, this images is then shown preceded by the images of all component glyphs
+
     """
     has_content = True
     required_arguments = 1
@@ -82,6 +100,9 @@ class Glyphdisplay(Directive):
 
 
 def render_glyphdisplay(self, glyphs, options):
+    """
+    Given a set of glyphs, and the options for the directive, return the image for the directive
+    """
 
     presentation_choice = options.get('presentation', 'list')
 
@@ -91,10 +112,7 @@ def render_glyphdisplay(self, glyphs, options):
         glyphs = [glyph]
 
     if presentation_choice == 'decomposition':
-        if len(glyphs) == 1:
-            # this is a weird case, but we can handle it gracefully
-            glyphs = [glyph]
-        else:
+        if len(glyphs) > 1:
             # we combine the glyphs, and peel out the components so that they are sorted
             glyph = reduce(add, glyphs)
             glyphs = glyph.components
@@ -119,8 +137,12 @@ def render_glyphdisplay(self, glyphs, options):
 
 
 def make_glyphdisplay_files(self, node, glyphs, options, prefix='glyphdisplay'):
+    """
+    Given a set of glyphs and options, returns the relative filename for the resulting image
+    """
 
-    # if the image has already been made, take it from the cache
+    # Create a hash key, for uniquely saving each image.
+    # Options are included, so that a combined !, and a decomposed one result in differing hashes.
     hash_factors = [glyph.name for glyph in glyphs] + [*options]
     hashkey = b''.join(factor_part.encode('utf-8') for factor_part in hash_factors)
     filename = '{}-{}.{}'.format(prefix, sha(hashkey).hexdigest(), "png")
@@ -141,6 +163,9 @@ def make_glyphdisplay_files(self, node, glyphs, options, prefix='glyphdisplay'):
 
 
 def render_glyphdisplay_html(self, node, glyphs, options, prefix='glyphdisplay'):
+    """
+    From the node, glyphs and any options, correctly renders the node
+    """
 
     relative_filename = make_glyphdisplay_files(self, node, glyphs, options, prefix)
     if 'caption' not in node:
@@ -158,6 +183,11 @@ def html_visit_glyphdisplay(self, node):
 
 
 class Glyphdecomposition(Glyphdisplay):
+    """
+    Simple alias for a glyphdisplay node, for which the presentation is set to decomposition
+
+    Included so as to make the combinations page much less cumbersome in source
+    """
 
     def run(self):
         self.options.update({'presentation': 'decomposition'})
