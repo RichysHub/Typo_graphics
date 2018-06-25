@@ -63,9 +63,9 @@ class Glyphdisplay(Directive):
     -decomposition
     all glyphs are combined, this images is then shown preceded by the images of all component glyphs
 
-    has spacing option: [0, inf)
+    has spacing option, non negative integer
 
-    how many glyphs widths should be used as spacing between characetrs
+    how many glyphs widths should be used as spacing between characters
     default is 1
 
     """
@@ -135,13 +135,13 @@ def render_glyphdisplay(self, glyphs, options):
         glyph_width, glyph_height = glyphs[0].image.size
 
         out_width = number_glyphs * glyph_width + (number_glyphs - 1) * spacing * glyph_width
-        out_image = Image.new(glyphs[0].image.mode, (out_width, glyph_height), "white")
+        out_image = Image.new("RGB", (out_width, glyph_height), (252, 252, 252))
 
         spacing_factor = spacing + 1
 
         for index, glyph in enumerate(glyphs):
             box = (spacing_factor * index * glyph_width, 0, ((spacing_factor * index) + 1) * glyph_width, glyph_height)
-            out_image.paste(glyph.image, box)
+            out_image.paste(glyph.image.convert("RGB"), box)
 
     return out_image
 
