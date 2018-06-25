@@ -63,6 +63,11 @@ class Glyphdisplay(Directive):
     -decomposition
     all glyphs are combined, this images is then shown preceded by the images of all component glyphs
 
+    has spacing option: [0, inf)
+
+    how many glyphs widths should be used as spacing between characetrs
+    default is 1
+
     """
     has_content = True
     required_arguments = 1
@@ -71,6 +76,7 @@ class Glyphdisplay(Directive):
     option_spec = {
         'align': align,
         'presentation': presentation,
+        'spacing': directives.nonnegative_int,
     }
 
     def run(self):
@@ -104,7 +110,8 @@ def render_glyphdisplay(self, glyphs, options):
     Given a set of glyphs, and the options for the directive, return the image for the directive
     """
 
-    presentation_choice = options.get('presentation', 'list')
+    presentation_choice = options.get('presentation', 'list')  # default is list display
+    spacing = options.get('spacing', 1)  # by default, we space out the output with 1 glyph space
 
     if presentation_choice == 'composition':
         # combine all the glyphs, and just take the result
@@ -126,11 +133,14 @@ def render_glyphdisplay(self, glyphs, options):
         return glyphs[0].image
     else:
         glyph_width, glyph_height = glyphs[0].image.size
-        out_width = ((2 * number_glyphs) - 1) * glyph_width
+
+        out_width = number_glyphs * glyph_width + (number_glyphs - 1) * spacing * glyph_width
         out_image = Image.new(glyphs[0].image.mode, (out_width, glyph_height), "white")
 
+        spacing_factor = spacing + 1
+
         for index, glyph in enumerate(glyphs):
-            box = (2 * index * glyph_width, 0, ((2 * index) + 1) * glyph_width, glyph_height)
+            box = (spacing_factor * index * glyph_width, 0, ((spacing_factor * index) + 1) * glyph_width, glyph_height)
             out_image.paste(glyph.image, box)
 
     return out_image
