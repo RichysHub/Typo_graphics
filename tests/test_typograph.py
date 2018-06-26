@@ -154,7 +154,39 @@ class TestTypograph(unittest.TestCase):
         self.assertLessEqual(minimum_value, maximum_value)
 
     def test_from_glyph_sheet(self):
-        pass
+        """
+        Glyphs should be extracted from glyph sheet into typograph.glyphs
+        """
+
+        horizontal, vertical = 8, 4
+        number_glyphs = horizontal * vertical
+        glyph_width, glyph_height = (25, 50)
+        glyph_sheet = Image.new("L", (horizontal * glyph_width, vertical * glyph_height))
+
+        glyph_images = []
+
+        for horizontal_index in range(horizontal):
+            for vertical_index in range(vertical):
+                glyph_image = Image.new("L", (glyph_width, glyph_height), "white")
+                glyph_image.putpixel((horizontal_index, vertical_index), 0)  # black pixel
+
+                glyph_images.append(glyph_image)
+
+                box = (horizontal_index * glyph_width, vertical_index * glyph_height,
+                       (horizontal_index + 1) * glyph_width, (vertical_index + 1) * glyph_height)
+
+                glyph_sheet.paste(glyph_image, box)
+
+        typograph = Typograph.from_glyph_sheet(glyph_sheet, number_glyphs=number_glyphs,
+                                               glyph_dimensions=(glyph_width, glyph_height))
+
+        self.assertEqual(len(typograph.glyphs), number_glyphs)
+        for glyph in typograph.glyphs.values():
+            self.assertIn(glyph.image, glyph_images)
+
+    @staticmethod
+    def empty_glyph_sheet():
+        return Image.new("RGBA", (200, 200))
 
     def test_from_glyph_sheet_duplicate_names(self):
         """
@@ -164,11 +196,42 @@ class TestTypograph(unittest.TestCase):
 
         names = ['a', 'b', 'c', 'd', 'a']
 
-        glyph_sheet = Image.new("RGBA", (225, 50))
+        glyph_sheet = self.empty_glyph_sheet()
         with self.assertRaises(ValueError):
             Typograph.from_glyph_sheet(glyph_sheet=glyph_sheet, number_glyphs=5,
-                                       glyph_dimensions=(25, 50), spacing=(25, 50),
-                                       glyph_names=names)
+                                       glyph_dimensions=(25, 50), glyph_names=names)
+
+    def test_from_glyph_sheet_missing_number_given_names(self):
+        """
+        If the number of glyphs is not given, but the names are, we can use the length of names
+
+        No error should be raised, and the correct number of glyphs should be extracted
+        """
+
+        names = ["a", "b", "c", "d"]
+        glyph_sheet = self.empty_glyph_sheet()
+        typograph = Typograph.from_glyph_sheet(glyph_sheet, glyph_dimensions=(25, 50), glyph_names=names)
+
+        self.assertEqual(len(typograph.glyphs), len(names))
+
+    def test_from_glyph_sheet_missing_number_missing_names(self):
+        """
+        If the number of glyphs is not given, nor are the names, a TypeError should be raised
+        """
+
+        glyph_sheet = self.empty_glyph_sheet()
+        with self.assertRaises(TypeError):
+            Typograph.from_glyph_sheet(glyph_sheet, glyph_dimensions=(25, 50))
+
+    def test_from_glyph_sheet_missing_glyph_dimensions_missing_grid_size(self):
+        """
+        Either glyph dimensions or grid size need to be specified, else a TypeError should be raised
+        """
+
+        names = ["a", "b", "c", "d"]
+        glyph_sheet = self.empty_glyph_sheet()
+        with self.assertRaises(TypeError):
+            Typograph.from_glyph_sheet(glyph_sheet, glyph_names=names)
 
     def test_from_directory(self):
         pass

@@ -120,7 +120,7 @@ class Typograph:
         self._recalculate_glyphs()
 
     @classmethod
-    def from_glyph_sheet(cls, glyph_sheet, number_glyphs, glyph_dimensions=None, grid_size=None,
+    def from_glyph_sheet(cls, glyph_sheet, number_glyphs=None, glyph_dimensions=None, grid_size=None,
                          glyph_names=None, spacing=(0, 0), **kwargs):
         """
         Create :class:`Typograph` object with glyphs as extracted from `glyph_sheet`
@@ -129,8 +129,9 @@ class Typograph:
 
         :param glyph_sheet: glyph sheet :class:`~PIL.Image.Image`, to be split into glyphs.
         :type glyph_sheet: :class:`~PIL.Image.Image`
-        :param number_glyphs: total number of glyphs present in `glyph_sheet`.
-        :type number_glyphs: :class:`int`
+        :param number_glyphs: total number of glyphs present in `glyph_sheet`,
+         if omitted, glyph_names must be present, and its length will be used.
+        :type number_glyphs: :class:`int` or None
         :param glyph_dimensions: pixel dimensions of glyphs given as (width, height).
         :type glyph_dimensions: (:class:`int`, :class:`int`)
         :param grid_size: if given, number of (rows, columns) that glyphs are arranged in.
@@ -151,7 +152,14 @@ class Typograph:
             raise TypeError("from_glyph_sheet() missing required keyword argument "
                             "'grid_size' or 'glyph_dimensions'")
 
-        if len(glyph_names) != len(set(glyph_names)):
+        if number_glyphs is None:
+            if glyph_names is None:
+                raise TypeError("from_glyph_sheet() missing required keyword argument "
+                                "'number_glyphs' or 'glyph_names'")
+            else:
+                number_glyphs = len(glyph_names)
+
+        if glyph_names and (len(glyph_names) != len(set(glyph_names))):
             duplicates = [name for name, count in Counter(glyph_names).items() if count > 1]
             raise ValueError("duplicate names in glyph_names: {}.".format(duplicates))
 
