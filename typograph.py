@@ -57,8 +57,6 @@ May be unpacked, or accessed using member names
 :type instructions: :class:`string`
 """
 
-# TODO
-# self.value_extrema is currently being overridden in preprocess
 
 class Typograph:
     """
