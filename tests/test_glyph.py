@@ -9,8 +9,6 @@ class TestGlyph(unittest.TestCase):
     def setUp(self):
         """
         Basic set up, we make a few glyphs, keeping hold of the images and names we use
-
-
         """
         self.a_image = Image.open('../Glyphs/a.png')
         self.a_name = 'a'
@@ -116,37 +114,75 @@ class TestGlyph(unittest.TestCase):
         image is combined
         components combined and sorted
         samples maintained
-
-        cannot add glyph to anything else
-        cannot add glyphs with unequal samples
         """
 
+        # returns glyph
         combined_glyph = self.a_glyph + self.z_glyph
         self.assertIsInstance(combined_glyph, Glyph)
 
+        # name in combined
         combined_name = combined_glyph.name
         self.assertEqual(combined_name, self.a_name + ' ' + self.z_name)
 
+        # image is combined
         combined_image = combined_glyph.image
         self.assertIsInstance(combined_image, Image.Image)
         self.assertEqual(combined_image, ImageChops.darker(self.a_image, self.z_image))
 
+        # components combined and sorted
         combined_components = combined_glyph.components
         self.assertEqual(len(combined_components), 2)
-        self.assertEqual(combined_components[0], self.a_glyph)
-        self.assertEqual(combined_components[1], self.z_glyph)
+        first_component, second_component = combined_components
+        self.assertEqual(first_component, self.a_glyph)
+        self.assertEqual(second_component, self.z_glyph)
 
-        self.assertEqual(combined_glyph.samples, self.a_glyph.samples)
+        # samples is maintained
+        self.assertTupleEqual(combined_glyph.samples, self.a_glyph.samples)
 
+    def test_add_high_samples(self):
+        """
+        Two glyphs may be added together if the samples are the same, but non default
+        Here we have higher sample glyphs, which are the same as each other
+        Should add, resulting in a glyph with same high samples
+        """
+
+        self.assertTupleEqual(self.k_glyph.samples, self.f_glyph.samples)
         high_sample_glyph = self.k_glyph + self.f_glyph
         self.assertTupleEqual(high_sample_glyph.samples, self.k_glyph.samples)
 
+    def test_add_with_int(self):
+        """
+        Cannot add a glyph with an integer
+        Attempting to do so should raise a TypeError
+        """
+
         with self.assertRaises(TypeError):
             self.a_glyph + 42
+
+    def test_add_with_string(self):
+        """
+        Cannot add a glyph with a string
+        Attempting to do so should raise a TypeError
+        """
+
         with self.assertRaises(TypeError):
             self.a_glyph + 'foo'
+
+    def test_add_with_image(self):
+        """
+        Cannot add a glyph with an image
+        Attempting to do so should raise a TypeError
+        """
+
         with self.assertRaises(TypeError):
             self.a_glyph + self.z_image
+
+    def test_add_unequal_samples(self):
+        """
+        Cannot add glyphs with unequal samples
+        Attempting to do so should raise a ValueError
+        """
+        self.assertNotEqual(self.a_glyph.samples, self.k_glyph.samples)
 
         with self.assertRaises(ValueError):
             self.a_glyph + self.k_glyph
@@ -192,6 +228,7 @@ class TestGlyph(unittest.TestCase):
         a_variant = Glyph(name=self.a_name + ' ', image=self.a_image)
 
         self.assertNotEqual(self.a_glyph, a_variant)
+
 
 if __name__ == '__main__':
     unittest.main()

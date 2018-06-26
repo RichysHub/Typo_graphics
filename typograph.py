@@ -159,7 +159,7 @@ class Typograph:
             else:
                 number_glyphs = len(glyph_names)
 
-        if glyph_names and (len(glyph_names) != len(set(glyph_names))):
+        if glyph_names and len(glyph_names) != len(set(glyph_names)):
             duplicates = [name for name, count in Counter(glyph_names).items() if count > 1]
             raise ValueError("duplicate names in glyph_names: {}.".format(duplicates))
 
@@ -224,9 +224,11 @@ class Typograph:
         :return:  dictionary of images, keyed with glyph names.
         :rtype: {:class:`str`: :class:`~PIL.Image.Image`}
         """
-        with suppress(FileNotFoundError):  # look for a name_map.json, but continue if not found
+        try:  # look for a name_map.json
             with open(os.path.join(glyph_directory, 'name_map.json'), 'r', encoding="utf-8") as fp:
                 glyph_names = json.load(fp)
+        except FileNotFoundError:  # didn't find it, sub a blank name_map
+            glyph_names = {}
 
         glyph_images = {}
 
