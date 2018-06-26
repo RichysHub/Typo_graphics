@@ -21,10 +21,10 @@ and the components that constitute it.
     "Theta", "ϴ", .. glyphdecomposition:: 0 o
     "Phi", "Φ", .. glyphdecomposition:: I o
     "Division / Obelus", "÷", .. glyphdecomposition:: : -
+    "Five pointed star", "☆", .. glyphdecomposition:: A x
     "Six pointed star", "✶", .. glyphdecomposition:: x -
     "Eight pointed star", "❋", .. glyphdecomposition:: + x
     "Not equal", "≠", .. glyphdecomposition:: = /
-    "Five pointed star", "☆", .. glyphdecomposition:: A x
     "Cent", "ȼ", .. glyphdecomposition:: c /
     "Stroked O", "Ø", .. glyphdecomposition:: O /
     "Stroked C", "Ȼ", .. glyphdecomposition:: C /
@@ -80,3 +80,7 @@ And below are some combinations that are worthy of mention, but I haven't associ
     .. glyphdecomposition:: ' com
     .. glyphdecomposition:: ? com
     .. glyphdecomposition:: ' ? com
+    .. glyphdecomposition:: C =
+    .. glyphdecomposition:: E =
+    .. glyphdecomposition:: f i
+    .. glyphdecomposition:: 0 l
