@@ -126,8 +126,9 @@ class Typograph:
 
         Allows for a single :class:`~PIL.Image.Image` to be used to provide glyph images.
 
-        :param glyph_sheet: glyph sheet :class:`~PIL.Image.Image`, to be split into glyphs.
-        :type glyph_sheet: :class:`~PIL.Image.Image`
+        :param glyph_sheet: glyph sheet :class:`~PIL.Image.Image`, to be split into glyphs,
+         a filename for such image, or an open file object
+        :type glyph_sheet: :class:`~PIL.Image.Image` or :class:`string` or open file
         :param number_glyphs: total number of glyphs present in `glyph_sheet`,
          if omitted, glyph_names must be present, and its length will be used.
         :type number_glyphs: :class:`int` or None
@@ -147,6 +148,53 @@ class Typograph:
         :raises TypeError: if neither `grid_size` or `glyph_dimensions` are specified.
         :raises ValueError: if duplicates in glyph_names
         """
+
+        typewriter = None
+        carriage_width = None
+
+        if not isinstance(glyph_sheet, Image.Image):
+            # handle open file objects, and paths
+
+            if isinstance(glyph_sheet, (bytes, str)):
+                # is path of some description
+                path_name = glyph_sheet
+            else:
+                # assume it's an open file object
+                path_name = glyph_sheet.name
+
+            base_path, _ = os.path.splitext(path_name)
+            meta_path = base_path + '.json'
+
+            with suppress(FileNotFoundError):
+                with open(meta_path, 'r', encoding="utf-8") as fp:
+                    meta_data = json.load(fp)
+
+                # nicer style available, though will have to handle joint-responsible things separately
+                # for argument in [number_glyphs, glyph_dimensions, grid_size, glyph_names, spacing]:
+                if number_glyphs is None:
+                    number_glyphs = meta_data.get('number_glyphs', None)
+
+                if (glyph_dimensions is None) and (grid_size is None):
+                    glyph_dimensions = meta_data.get('glyph_dimensions', None)
+                    grid_size = meta_data.get('grid_size', None)
+
+                if glyph_names is None:
+                    glyph_names = meta_data.get('glyph_names', None)
+
+                if spacing is None:
+                    spacing = meta_data.get('spacing', None)
+
+                if typewriter is None:
+                    typewriter = meta_data.get('typewriter', None)
+
+                if carriage_width is None:
+                    carriage_width = meta_data.get('carriage_width', None)
+
+            # TODO: loading the image last is a bit eeeeeeh
+            # If it errors, better to do it earlier. Could just store the 'glyph_sheet' var to something else
+
+            glyph_sheet = Image.open(glyph_sheet)
+
         if (glyph_dimensions is None) and (grid_size is None):
             raise TypeError("from_glyph_sheet() missing required keyword argument "
                             "'grid_size' or 'glyph_dimensions'")
@@ -195,6 +243,9 @@ class Typograph:
 
                 if len(glyph_images) == number_glyphs:
                     return cls(glyph_images=glyph_images, **kwargs)
+
+    def _get_glyphs_from_glyph_sheet(self):
+        pass
 
     @classmethod
     def from_directory(cls, glyph_directory, **kwargs):

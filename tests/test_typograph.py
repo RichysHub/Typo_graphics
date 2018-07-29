@@ -314,6 +314,27 @@ class TestTypograph(unittest.TestCase):
         with self.assertRaises(TypeError):
             Typograph.from_glyph_sheet(sheet.glyph_sheet, glyph_names=sheet.glyph_names)
 
+    # TODO
+    def test_from_glyph_sheet_path(self):
+        pass
+
+    # TODO
+    def test_from_glyph_sheet_invalid_path(self):
+        pass
+
+    # TODO
+    def test_from_glyph_sheet_file_object(self):
+        pass
+
+    # TODO
+    # no meta file when loading glyph sheet
+    # --> info provided
+    # --> info not provided
+    # --> some info provided
+    # Something other than file object, image, or string path
+    # carriage width smaller than a registered max_size. warning?
+    # trust given arguments over meta file
+
     def tearDown(self):
         for path in self.teardown_files:
             os.unlink(path)
