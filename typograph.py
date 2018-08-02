@@ -120,7 +120,7 @@ class Typograph:
 
     @classmethod
     def from_glyph_sheet(cls, glyph_sheet, number_glyphs=None, glyph_dimensions=None, grid_size=None,
-                         glyph_names=None, spacing=(0, 0), **kwargs):
+                         glyph_names=None, spacing=None, **kwargs):
         """
         Create :class:`Typograph` object with glyphs as extracted from `glyph_sheet`
 
@@ -173,22 +173,29 @@ class Typograph:
                 # for argument in [number_glyphs, glyph_dimensions, grid_size, glyph_names, spacing]:
                 if number_glyphs is None:
                     number_glyphs = meta_data.get('number_glyphs', None)
+                    print(number_glyphs)
 
                 if (glyph_dimensions is None) and (grid_size is None):
                     glyph_dimensions = meta_data.get('glyph_dimensions', None)
                     grid_size = meta_data.get('grid_size', None)
+                    print(glyph_dimensions)
+                    print(grid_size)
 
                 if glyph_names is None:
                     glyph_names = meta_data.get('glyph_names', None)
+                    print(glyph_names)
 
                 if spacing is None:
                     spacing = meta_data.get('spacing', None)
+                    print(spacing)
 
                 if typewriter is None:
                     typewriter = meta_data.get('typewriter', None)
+                    print(typewriter)
 
                 if carriage_width is None:
                     carriage_width = meta_data.get('carriage_width', None)
+                    print(carriage_width)
 
             # TODO: loading the image last is a bit eeeeeeh
             # If it errors, better to do it earlier. Could just store the 'glyph_sheet' var to something else
@@ -211,6 +218,8 @@ class Typograph:
             raise ValueError("duplicate names in glyph_names: {}.".format(duplicates))
 
         sheet_width, sheet_height = glyph_sheet.size
+        if spacing is None:
+            spacing = (0, 0)
         spacing_x, spacing_y = spacing
 
         if grid_size is not None:
