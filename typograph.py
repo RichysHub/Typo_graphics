@@ -120,7 +120,7 @@ class Typograph:
 
     @classmethod
     def from_glyph_sheet(cls, glyph_sheet, number_glyphs=None, glyph_dimensions=None, grid_size=None,
-                         glyph_names=None, spacing=None, **kwargs):
+                         glyph_names=None, spacing=None, typewriter=None, carriage_width=None, **kwargs):
         """
         Create :class:`Typograph` object with glyphs as extracted from `glyph_sheet`
 
@@ -141,6 +141,10 @@ class Typograph:
         :param spacing: tuple of integer pixel spacing between adjacent glyphs,
          as number of pixels between glyphs horizontally and vertically.
         :type spacing: (:class:`int`, :class:`int`)
+        :param typewriter: name of typewriter for which output is created.
+        :type typewriter: :class:`str`
+        :param carriage_width: maximum width of glyphs typeable on the typewriter carriage.
+        :type carriage_width: :class:`int`
         :param kwargs: optional keyword arguments as for :class:`Typograph`.
         :return: An :class:`Typograph` object using glyphs images extracted from `glyph_sheet`
         :rtype: :class:`Typograph`
@@ -148,9 +152,6 @@ class Typograph:
         :raises TypeError: if neither `grid_size` or `glyph_dimensions` are specified.
         :raises ValueError: if duplicates in glyph_names
         """
-
-        typewriter = None
-        carriage_width = None
 
         if not isinstance(glyph_sheet, Image.Image):
             # handle open file objects, and paths
