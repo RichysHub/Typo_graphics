@@ -118,6 +118,7 @@ class Typograph:
         self.standalone_glyphs = {}
         self._recalculate_glyphs()
 
+    # TODO: typewriter and carriage_width are useful for other methods of creating a Typograph object. May be moved
     @classmethod
     def from_glyph_sheet(cls, glyph_sheet, number_glyphs=None, glyph_dimensions=None, grid_size=None,
                          glyph_names=None, spacing=None, typewriter=None, carriage_width=None, **kwargs):
@@ -154,54 +155,12 @@ class Typograph:
         """
 
         if not isinstance(glyph_sheet, Image.Image):
-            # handle open file objects, and paths
-
-            if isinstance(glyph_sheet, (bytes, str)):
-                # is path of some description
-                path_name = glyph_sheet
-            else:
-                # assume it's an open file object
-                path_name = glyph_sheet.name
-
-            base_path, _ = os.path.splitext(path_name)
-            meta_path = base_path + '.json'
-
-            with suppress(FileNotFoundError):
-                with open(meta_path, 'r', encoding="utf-8") as fp:
-                    meta_data = json.load(fp)
-
-                # nicer style available, though will have to handle joint-responsible things separately
-                # for argument in [number_glyphs, glyph_dimensions, grid_size, glyph_names, spacing]:
-                if number_glyphs is None:
-                    number_glyphs = meta_data.get('number_glyphs', None)
-                    print(number_glyphs)
-
-                if (glyph_dimensions is None) and (grid_size is None):
-                    glyph_dimensions = meta_data.get('glyph_dimensions', None)
-                    grid_size = meta_data.get('grid_size', None)
-                    print(glyph_dimensions)
-                    print(grid_size)
-
-                if glyph_names is None:
-                    glyph_names = meta_data.get('glyph_names', None)
-                    print(glyph_names)
-
-                if spacing is None:
-                    spacing = meta_data.get('spacing', None)
-                    print(spacing)
-
-                if typewriter is None:
-                    typewriter = meta_data.get('typewriter', None)
-                    print(typewriter)
-
-                if carriage_width is None:
-                    carriage_width = meta_data.get('carriage_width', None)
-                    print(carriage_width)
-
-            # TODO: loading the image last is a bit eeeeeeh
-            # If it errors, better to do it earlier. Could just store the 'glyph_sheet' var to something else
-
-            glyph_sheet = Image.open(glyph_sheet)
+            # handle open file objects, and paths, retrieving data from any meta file
+            # Bit messy
+            (glyph_sheet, number_glyphs, glyph_dimensions, grid_size,
+             glyph_names, spacing, typewriter, carriage_width) = cls._parse_glyph_sheet_file(
+                glyph_sheet, number_glyphs, glyph_dimensions, grid_size,
+                glyph_names, spacing, typewriter, carriage_width)
 
         if (glyph_dimensions is None) and (grid_size is None):
             raise TypeError("from_glyph_sheet() missing required keyword argument "
@@ -253,6 +212,57 @@ class Typograph:
 
                 if len(glyph_images) == number_glyphs:
                     return cls(glyph_images=glyph_images, **kwargs)
+
+    @staticmethod
+    def _parse_glyph_sheet_file(glyph_sheet, number_glyphs=None, glyph_dimensions=None, grid_size=None,
+                                glyph_names=None, spacing=None, typewriter=None, carriage_width=None):
+
+        glyph_sheet_image = Image.open(glyph_sheet)
+
+        if isinstance(glyph_sheet, (bytes, str)):
+            # is path of some description
+            path_name = glyph_sheet
+        else:
+            # assume it's an open file object
+            path_name = glyph_sheet.name
+
+        base_path, _ = os.path.splitext(path_name)
+        meta_path = base_path + '.json'
+
+        with suppress(FileNotFoundError):
+            with open(meta_path, 'r', encoding="utf-8") as fp:
+                meta_data = json.load(fp)
+
+            # nicer style available, though will have to handle joint-responsible things separately
+            # for argument in [number_glyphs, glyph_dimensions, grid_size, glyph_names, spacing]:
+            if number_glyphs is None:
+                number_glyphs = meta_data.get('number_glyphs', None)
+                print(number_glyphs)
+
+            if (glyph_dimensions is None) and (grid_size is None):
+                glyph_dimensions = meta_data.get('glyph_dimensions', None)
+                grid_size = meta_data.get('grid_size', None)
+                print(glyph_dimensions)
+                print(grid_size)
+
+            if glyph_names is None:
+                glyph_names = meta_data.get('glyph_names', None)
+                print(glyph_names)
+
+            if spacing is None:
+                spacing = meta_data.get('spacing', None)
+                print(spacing)
+
+            if typewriter is None:
+                typewriter = meta_data.get('typewriter', None)
+                print(typewriter)
+
+            if carriage_width is None:
+                carriage_width = meta_data.get('carriage_width', None)
+                print(carriage_width)
+
+        return (glyph_sheet_image, number_glyphs, glyph_dimensions, grid_size,
+                glyph_names, spacing, typewriter, carriage_width)
 
     def _get_glyphs_from_glyph_sheet(self):
         pass
