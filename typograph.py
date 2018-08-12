@@ -101,8 +101,8 @@ class Typograph:
         self.sample_x, self.sample_y = samples
         if glyph_images is None:
             from typo_graphics import package_directory
-            glyph_directory = os.path.join(package_directory, './Glyphs')
-            glyph_images = self._get_glyphs_from_directory(glyph_directory)
+            glyph_sheet = os.path.join(package_directory, './Glyphs/SR100.png')
+            glyph_images = self._get_glyphs_from_glyph_sheet(glyph_sheet)
 
         self.glyphs = {}
 
@@ -264,6 +264,7 @@ class Typograph:
         return (glyph_sheet_image, number_glyphs, glyph_dimensions, grid_size,
                 glyph_names, spacing, typewriter, carriage_width)
 
+    @staticmethod
     def _get_glyphs_from_glyph_sheet(self):
         pass
 
