@@ -1,4 +1,4 @@
-﻿{
+{
     "carriage_width": 101,
     "glyph_names": [
         "2",
@@ -48,6 +48,7 @@
         "@",
         "£",
         "_",
+        "&",
         "'",
         "(",
         ")",
@@ -83,11 +84,11 @@
         "M",
         "%"
     ],
-    "typewriter": "Imperial",
     "glyph_dimensions": [
         25,
         50
     ],
+    "typewriter": "Imperial",
     "spacing": [
         25,
         50
