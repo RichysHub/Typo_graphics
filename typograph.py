@@ -80,7 +80,7 @@ class Typograph:
      - :attr:`tree_sets`, list of :class:`~typo_graphics.typograph.TreeSet` objects containing all combination glyphs,
         and associated values.
     """
-    def __init__(self, glyph_images=None, samples=(3, 3), glyph_depth=2):
+    def __init__(self, glyph_images=None, samples=(3, 3), glyph_depth=2, typewriter=None, carriage_width=None):
         """
         Create :class:`Typograph` object, optionally pass glyph images to use.
 
@@ -93,16 +93,28 @@ class Typograph:
         :type samples: (:class:`int`, :class:`int`) or :class:`int`
         :param glyph_depth: maximum number of glyphs to stack into single characters.
         :type glyph_depth: :class:`int`
+        :param typewriter: name of typewriter for which output is created.
+        :type typewriter: :class:`str`
+        :param carriage_width: maximum width of glyphs typeable on the typewriter carriage.
+        :type carriage_width: :class:`int`
         """
         if isinstance(samples, int):
             samples = (samples, samples)
 
         self.samples = samples
         self.sample_x, self.sample_y = samples
+        self.typewriter = typewriter
+        self.carriage_width = carriage_width
         if glyph_images is None:
             from typo_graphics import package_directory
             glyph_sheet = os.path.join(package_directory, './Glyphs/SR100.png')
-            glyph_images = self._get_glyphs_from_glyph_sheet(glyph_sheet)
+            glyph_images, typewriter, carriage_width = self._extract_from_glyph_sheet(glyph_sheet)
+
+            # Check they were not given to the image-less Typograph() call
+            if self.typewriter is None:
+                self.typewriter = typewriter
+            if self.carriage_width is None:
+                self.carriage_width = carriage_width
 
         self.glyphs = {}
 
@@ -121,14 +133,14 @@ class Typograph:
     # TODO: typewriter and carriage_width are useful for other methods of creating a Typograph object. May be moved
     @classmethod
     def from_glyph_sheet(cls, glyph_sheet, number_glyphs=None, glyph_dimensions=None, grid_size=None,
-                         glyph_names=None, spacing=None, typewriter=None, carriage_width=None, **kwargs):
+                         glyph_names=None, spacing=None, **kwargs):
         """
         Create :class:`Typograph` object with glyphs as extracted from `glyph_sheet`
 
         Allows for a single :class:`~PIL.Image.Image` to be used to provide glyph images.
 
         :param glyph_sheet: glyph sheet :class:`~PIL.Image.Image`, to be split into glyphs,
-         a filename for such image, or an open file object
+         a filename for such image, or an open binary file object.
         :type glyph_sheet: :class:`~PIL.Image.Image` or :class:`string` or open file
         :param number_glyphs: total number of glyphs present in `glyph_sheet`,
          if omitted, glyph_names must be present, and its length will be used.
@@ -142,10 +154,6 @@ class Typograph:
         :param spacing: tuple of integer pixel spacing between adjacent glyphs,
          as number of pixels between glyphs horizontally and vertically.
         :type spacing: (:class:`int`, :class:`int`)
-        :param typewriter: name of typewriter for which output is created.
-        :type typewriter: :class:`str`
-        :param carriage_width: maximum width of glyphs typeable on the typewriter carriage.
-        :type carriage_width: :class:`int`
         :param kwargs: optional keyword arguments as for :class:`Typograph`.
         :return: An :class:`Typograph` object using glyphs images extracted from `glyph_sheet`
         :rtype: :class:`Typograph`
@@ -154,13 +162,55 @@ class Typograph:
         :raises ValueError: if duplicates in glyph_names
         """
 
+        glyph_images, typewriter, carriage_width = cls._extract_from_glyph_sheet(glyph_sheet=glyph_sheet,
+                                                                                 number_glyphs=number_glyphs,
+                                                                                 glyph_dimensions=glyph_dimensions,
+                                                                                 grid_size=grid_size,
+                                                                                 glyph_names=glyph_names,
+                                                                                 spacing=spacing)
+
+        # We update the kwargs, if these values were not given
+        meta_data = {'typewriter': typewriter, 'carriage_width': carriage_width}
+        meta_data.update(kwargs)
+        return cls(glyph_images=glyph_images, **meta_data)
+
+    @staticmethod
+    def _extract_from_glyph_sheet(glyph_sheet, number_glyphs=None, glyph_dimensions=None, grid_size=None,
+                                  glyph_names=None, spacing=None):
+
+        """
+        Given an image, or file for that image, split out individual glyph images from a glyph sheet.
+
+        :param glyph_sheet: glyph sheet :class:`~PIL.Image.Image`, to be split into glyphs,
+         a filename for such image, or an open binary file object.
+        :type glyph_sheet: :class:`~PIL.Image.Image` or :class:`string` or open file
+        :param number_glyphs: total number of glyphs present in `glyph_sheet`,
+         if omitted, glyph_names must be present, and its length will be used.
+        :type number_glyphs: :class:`int` or None
+        :param glyph_dimensions: pixel dimensions of glyphs given as (width, height).
+        :type glyph_dimensions: (:class:`int`, :class:`int`)
+        :param grid_size: if given, number of (rows, columns) that glyphs are arranged in.
+        :type grid_size: (:class:`int`, :class:`int`)
+        :param glyph_names: list of unique glyph names listed left to right, top to bottom.
+        :type glyph_names: [:class:`str`]
+        :param spacing: tuple of integer pixel spacing between adjacent glyphs,
+         as number of pixels between glyphs horizontally and vertically.
+        :type spacing: (:class:`int`, :class:`int`)
+        :return: tuple containing: list of glyph :class:`~PIL.Image.Image` objects, string name of typewriter,
+         and total width of typewriter carriage.
+        :raises FileNotFoundError: if image path does not resolve.
+        """
+
         if not isinstance(glyph_sheet, Image.Image):
             # handle open file objects, and paths, retrieving data from any meta file
             # Bit messy
             (glyph_sheet, number_glyphs, glyph_dimensions, grid_size,
-             glyph_names, spacing, typewriter, carriage_width) = cls._parse_glyph_sheet_file(
-                glyph_sheet, number_glyphs, glyph_dimensions, grid_size,
-                glyph_names, spacing, typewriter, carriage_width)
+             glyph_names, spacing, typewriter, carriage_width) = Typograph._parse_glyph_sheet_file(
+             glyph_sheet, number_glyphs, glyph_dimensions, grid_size,
+             glyph_names, spacing)
+        else:
+            typewriter = None
+            carriage_width = None
 
         if (glyph_dimensions is None) and (grid_size is None):
             raise TypeError("from_glyph_sheet() missing required keyword argument "
@@ -211,11 +261,34 @@ class Typograph:
                 glyph_images.update({name: glyph})
 
                 if len(glyph_images) == number_glyphs:
-                    return cls(glyph_images=glyph_images, **kwargs)
+                    return glyph_images, typewriter, carriage_width
 
     @staticmethod
     def _parse_glyph_sheet_file(glyph_sheet, number_glyphs=None, glyph_dimensions=None, grid_size=None,
-                                glyph_names=None, spacing=None, typewriter=None, carriage_width=None):
+                                glyph_names=None, spacing=None):
+        """
+        Handle opening of file, loading any associated meta file, and extracting meta data.
+
+        :param glyph_sheet: glyph sheet :class:`~PIL.Image.Image`, to be split into glyphs,
+         a filename for such image, or an open binary file object.
+        :type glyph_sheet: :class:`~PIL.Image.Image` or :class:`string` or open file
+
+        :param number_glyphs: total number of glyphs present in `glyph_sheet`,
+         if omitted, glyph_names must be present, and its length will be used.
+        :type number_glyphs: :class:`int` or None
+        :param glyph_dimensions: pixel dimensions of glyphs given as (width, height).
+        :type glyph_dimensions: (:class:`int`, :class:`int`)
+        :param grid_size: if given, number of (rows, columns) that glyphs are arranged in.
+        :type grid_size: (:class:`int`, :class:`int`)
+        :param glyph_names: list of unique glyph names listed left to right, top to bottom.
+        :type glyph_names: [:class:`str`]
+        :param spacing: tuple of integer pixel spacing between adjacent glyphs,
+         as number of pixels between glyphs horizontally and vertically.
+        :type spacing: (:class:`int`, :class:`int`)
+        :return: tuple of :class:`~PIL.Image.Image` glyph image, followed by extracted values of number_glyphs,
+         glyph_dimensions, grid_size, glyph_names and spacing, if no value was given
+        :raises FileNotFoundError: if image path does not resolve.
+        """
 
         glyph_sheet_image = Image.open(glyph_sheet)
 
@@ -229,44 +302,30 @@ class Typograph:
         base_path, _ = os.path.splitext(path_name)
         meta_path = base_path + '.json'
 
+        meta_data = {}
         with suppress(FileNotFoundError):
             with open(meta_path, 'r', encoding="utf-8") as fp:
                 meta_data = json.load(fp)
 
-            # nicer style available, though will have to handle joint-responsible things separately
-            # for argument in [number_glyphs, glyph_dimensions, grid_size, glyph_names, spacing]:
-            if number_glyphs is None:
-                number_glyphs = meta_data.get('number_glyphs', None)
-                print(number_glyphs)
+        if number_glyphs is None:
+            number_glyphs = meta_data.get('number_glyphs', None)
 
-            if (glyph_dimensions is None) and (grid_size is None):
-                glyph_dimensions = meta_data.get('glyph_dimensions', None)
-                grid_size = meta_data.get('grid_size', None)
-                print(glyph_dimensions)
-                print(grid_size)
+        if (glyph_dimensions is None) and (grid_size is None):
+            glyph_dimensions = meta_data.get('glyph_dimensions', None)
+            grid_size = meta_data.get('grid_size', None)
 
-            if glyph_names is None:
-                glyph_names = meta_data.get('glyph_names', None)
-                print(glyph_names)
+        if glyph_names is None:
+            glyph_names = meta_data.get('glyph_names', None)
 
-            if spacing is None:
-                spacing = meta_data.get('spacing', None)
-                print(spacing)
+        if spacing is None:
+            spacing = meta_data.get('spacing', None)
 
-            if typewriter is None:
-                typewriter = meta_data.get('typewriter', None)
-                print(typewriter)
+        typewriter = meta_data.get('typewriter', None)
 
-            if carriage_width is None:
-                carriage_width = meta_data.get('carriage_width', None)
-                print(carriage_width)
+        carriage_width = meta_data.get('carriage_width', None)
 
         return (glyph_sheet_image, number_glyphs, glyph_dimensions, grid_size,
                 glyph_names, spacing, typewriter, carriage_width)
-
-    @staticmethod
-    def _get_glyphs_from_glyph_sheet(self):
-        pass
 
     @classmethod
     def from_directory(cls, glyph_directory, **kwargs):

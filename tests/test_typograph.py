@@ -179,7 +179,8 @@ class TestTypograph(unittest.TestCase):
 
         return glyph_images
 
-    def glyph_sheet(self):
+    @staticmethod
+    def glyph_sheet():
         """
         Create a GlyphSheet object, containing the glyph sheet image, and all the required metadata to test
         """
@@ -195,7 +196,7 @@ class TestTypograph(unittest.TestCase):
         glyph_sheet = Image.new("L", (total_width, glyph_height))
 
         glyph_names = []
-        glyph_images = self.glyph_images(number_glyphs, glyph_dimensions)
+        glyph_images = TestTypograph.glyph_images(number_glyphs, glyph_dimensions)
 
         for i, glyph_image in enumerate(glyph_images):
             glyph_names.append(ascii_uppercase[i])
@@ -314,26 +315,190 @@ class TestTypograph(unittest.TestCase):
         with self.assertRaises(TypeError):
             Typograph.from_glyph_sheet(sheet.glyph_sheet, glyph_names=sheet.glyph_names)
 
-    # TODO
     def test_from_glyph_sheet_path(self):
-        pass
+        """
+        Glyph sheet should be retrievable and parse-able from a file path
+        """
 
-    # TODO
+        directory = tempfile.mkdtemp(prefix="Typo_")
+        self.teardown_dirs.append(directory)
+
+        sheet = self.glyph_sheet()
+
+        glyph_sheet_image = sheet.glyph_sheet
+        glyph_sheet_path = os.path.join(directory, 'glyph_sheet.png')
+        glyph_sheet_image.save(glyph_sheet_path)
+        self.teardown_files.append(glyph_sheet_path)
+
+        typograph = Typograph.from_glyph_sheet(glyph_sheet_path, glyph_names=sheet.glyph_names,
+                                               spacing=sheet.spacing, glyph_dimensions=sheet.glyph_dimensions,
+                                               number_glyphs=sheet.number_glyphs)
+
+        for name, image in zip(sheet.glyph_names, sheet.glyph_images):
+            self.assertIn(name, typograph.glyphs)
+            glyph = typograph.glyphs[name]
+
+            self.assertIsInstance(glyph, Glyph)
+            self.assertEqual(glyph.image, image)
+
     def test_from_glyph_sheet_invalid_path(self):
-        pass
+        """
+        Invalid path should raise a FileNotFoundError
+        """
+        directory = tempfile.mkdtemp(prefix="Typo_")
+        self.teardown_dirs.append(directory)
 
-    # TODO
+        sheet = self.glyph_sheet()
+        glyph_sheet_path = os.path.join(directory, 'glyph_sheet.png')
+
+        with self.assertRaises(FileNotFoundError):
+            Typograph.from_glyph_sheet(glyph_sheet_path, glyph_names=sheet.glyph_names, spacing=sheet.spacing,
+                                       glyph_dimensions=sheet.glyph_dimensions, number_glyphs=sheet.number_glyphs)
+
     def test_from_glyph_sheet_file_object(self):
-        pass
+        """
+        Glyph sheet should be retrievable and parse-able from an open binary file object
+        """
+        directory = tempfile.mkdtemp(prefix="Typo_")
+        self.teardown_dirs.append(directory)
+
+        sheet = self.glyph_sheet()
+
+        glyph_sheet_image = sheet.glyph_sheet
+        glyph_sheet_path = os.path.join(directory, 'glyph_sheet.png')
+        glyph_sheet_image.save(glyph_sheet_path)
+        self.teardown_files.append(glyph_sheet_path)
+
+        with open(glyph_sheet_path, 'rb') as fp:
+            typograph = Typograph.from_glyph_sheet(fp, glyph_names=sheet.glyph_names, spacing=sheet.spacing,
+                                                   glyph_dimensions=sheet.glyph_dimensions,
+                                                   number_glyphs=sheet.number_glyphs)
+
+        for name, image in zip(sheet.glyph_names, sheet.glyph_images):
+            self.assertIn(name, typograph.glyphs)
+            glyph = typograph.glyphs[name]
+
+            self.assertIsInstance(glyph, Glyph)
+            self.assertEqual(glyph.image, image)
+
+    def test_from_glyph_sheet_extract_meta_data_path(self):
+        """
+        Meta data should be extracted from a matching names .json in the same directory, here with path
+        """
+        directory = tempfile.mkdtemp(prefix="Typo_")
+        self.teardown_dirs.append(directory)
+
+        sheet = self.glyph_sheet()
+        glyph_sheet_image = sheet.glyph_sheet
+        glyph_sheet_path = os.path.join(directory, 'glyph_sheet.png')
+        glyph_sheet_image.save(glyph_sheet_path)
+        meta_data = {'typewriter': 'TESTWRITER',
+                     'carriage_width': 200,
+                     'glyph_names': sheet.glyph_names,
+                     'glyph_dimensions': sheet.glyph_dimensions,
+                     'spacing': sheet.spacing}
+        meta_data_path = os.path.join(directory, 'glyph_sheet.json')
+
+        with open(meta_data_path, 'w', encoding='utf-8') as fp:
+            json.dump(meta_data, fp, ensure_ascii=False, indent=4)
+
+        self.teardown_files.append(glyph_sheet_path)
+        self.teardown_files.append(meta_data_path)
+
+        typograph = Typograph.from_glyph_sheet(glyph_sheet_path)
+
+        self.assertEqual(typograph.typewriter, meta_data['typewriter'])
+        self.assertEqual(typograph.carriage_width, meta_data['carriage_width'])
+
+        for name, image in zip(sheet.glyph_names, sheet.glyph_images):
+            self.assertIn(name, typograph.glyphs)
+            glyph = typograph.glyphs[name]
+
+            self.assertIsInstance(glyph, Glyph)
+            self.assertEqual(glyph.image, image)
+
+    def test_from_glyph_sheet_extract_meta_data_file_object(self):
+        """
+        Meta data should be extracted from a matching names .json in the same directory, here with file object
+        """
+        directory = tempfile.mkdtemp(prefix="Typo_")
+        self.teardown_dirs.append(directory)
+
+        sheet = self.glyph_sheet()
+        glyph_sheet_image = sheet.glyph_sheet
+        glyph_sheet_path = os.path.join(directory, 'glyph_sheet.png')
+        glyph_sheet_image.save(glyph_sheet_path)
+        meta_data = {'typewriter': 'TESTWRITER',
+                     'carriage_width': 200,
+                     'glyph_names': sheet.glyph_names,
+                     'glyph_dimensions': sheet.glyph_dimensions,
+                     'spacing': sheet.spacing}
+        meta_data_path = os.path.join(directory, 'glyph_sheet.json')
+
+        with open(meta_data_path, 'w', encoding='utf-8') as fp:
+            json.dump(meta_data, fp, ensure_ascii=False, indent=4)
+
+        self.teardown_files.append(glyph_sheet_path)
+        self.teardown_files.append(meta_data_path)
+
+        with open(glyph_sheet_path, 'rb') as fp:
+            typograph = Typograph.from_glyph_sheet(fp)
+
+        self.assertEqual(typograph.typewriter, meta_data['typewriter'])
+        self.assertEqual(typograph.carriage_width, meta_data['carriage_width'])
+
+        for name, image in zip(sheet.glyph_names, sheet.glyph_images):
+            self.assertIn(name, typograph.glyphs)
+            glyph = typograph.glyphs[name]
+
+            self.assertIsInstance(glyph, Glyph)
+            self.assertEqual(glyph.image, image)
+
+    def test_from_glyph_sheet_ignore_redundant_meta_data(self):
+        """
+        Meta data should never take prescience over newly provided data
+        """
+        directory = tempfile.mkdtemp(prefix="Typo_")
+        self.teardown_dirs.append(directory)
+
+        sheet = self.glyph_sheet()
+        glyph_sheet_image = sheet.glyph_sheet
+        glyph_sheet_path = os.path.join(directory, 'glyph_sheet.png')
+        glyph_sheet_image.save(glyph_sheet_path)
+        meta_data = {'typewriter': 'TESTWRITER',
+                     'carriage_width': 200,
+                     'glyph_names': sheet.glyph_names,
+                     'glyph_dimensions': sheet.glyph_dimensions,
+                     'spacing': sheet.spacing}
+        meta_data_path = os.path.join(directory, 'glyph_sheet.json')
+
+        with open(meta_data_path, 'w', encoding='utf-8') as fp:
+            json.dump(meta_data, fp, ensure_ascii=False, indent=4)
+
+        self.teardown_files.append(glyph_sheet_path)
+        self.teardown_files.append(meta_data_path)
+
+        new_names = ['NEW' + name for name in sheet.glyph_names]
+        new_data = {'typewriter': 'NEWWRITER',
+                    'carriage_width': 103,
+                    'glyph_names': new_names,
+                    'glyph_dimensions': sheet.glyph_dimensions,
+                    'spacing': sheet.spacing}
+
+        typograph = Typograph.from_glyph_sheet(glyph_sheet_path, **new_data)
+
+        self.assertEqual(typograph.typewriter, new_data['typewriter'])
+        self.assertEqual(typograph.carriage_width, new_data['carriage_width'])
+
+        for name, image in zip(new_names, sheet.glyph_images):
+            self.assertIn(name, typograph.glyphs)
+            glyph = typograph.glyphs[name]
+
+            self.assertIsInstance(glyph, Glyph)
+            self.assertEqual(glyph.image, image)
 
     # TODO
-    # no meta file when loading glyph sheet
-    # --> info provided
-    # --> info not provided
-    # --> some info provided
-    # Something other than file object, image, or string path
     # carriage width smaller than a registered max_size. warning?
-    # trust given arguments over meta file
 
     def tearDown(self):
         for path in self.teardown_files:

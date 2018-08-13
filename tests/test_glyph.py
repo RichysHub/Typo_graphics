@@ -1,7 +1,7 @@
 import unittest
 
 from PIL import Image, ImageChops
-from typo_graphics import Glyph
+from typo_graphics import Glyph, Typograph
 
 
 class TestGlyph(unittest.TestCase):
@@ -10,19 +10,22 @@ class TestGlyph(unittest.TestCase):
         """
         Basic set up, we make a few glyphs, keeping hold of the images and names we use
         """
-        self.a_image = Image.open('../Glyphs/a.png')
+
+        # Now using Typograph to provide images, as glyph images removed from source
+        typograph = Typograph()
+        self.a_image = typograph.glyphs['a'].image
         self.a_name = 'a'
         self.a_glyph = Glyph(name=self.a_name, image=self.a_image)
 
-        self.z_image = Image.open('../Glyphs/z.png')
+        self.z_image = typograph.glyphs['z'].image
         self.z_name = 'z'
         self.z_glyph = Glyph(name=self.z_name, image=self.z_image)
 
-        self.k_image = Image.open('../Glyphs/k.png')
+        self.k_image = typograph.glyphs['k'].image
         self.k_name = 'k'
         self.k_glyph = Glyph(name=self.k_name, image=self.k_image, samples=(5, 8))
 
-        self.f_image = Image.open('../Glyphs/f.png')
+        self.f_image = typograph.glyphs['f'].image
         self.f_name = 'f'
         self.f_glyph = Glyph(name=self.f_name, image=self.f_image, samples=(5, 8))
 
