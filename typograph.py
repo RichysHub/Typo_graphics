@@ -84,7 +84,7 @@ class Typograph:
      - :attr:`tree_sets`, list of :class:`~typo_graphics.typograph.TreeSet` objects containing all combination glyphs,
         and associated values.
     """
-    def __init__(self, glyph_images=None, samples=(3, 3), glyph_depth=2, typewriter=None, carriage_width=None):
+    def __init__(self, *, glyph_images=None, samples=(3, 3), glyph_depth=2, typewriter=None, carriage_width=None):
         """
         Create :class:`Typograph` object, optionally pass glyph images to use.
 
