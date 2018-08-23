@@ -2,6 +2,7 @@ import json
 import os
 import tempfile
 import unittest
+from unittest.mock import patch
 from collections import namedtuple
 from string import ascii_uppercase, punctuation
 
@@ -9,7 +10,7 @@ from PIL import Image
 from numpy import ndarray
 from scipy.spatial import cKDTree
 from scipy.special import comb
-from typo_graphics import Typograph, Glyph
+from typo_graphics import Typograph, Glyph, package_directory
 from typo_graphics.typograph import TreeSet
 
 GlyphSheet = namedtuple("GlyphSheet", ["glyph_sheet", "glyph_dimensions", "spacing", "glyph_images",
@@ -166,6 +167,39 @@ class TestTypograph(unittest.TestCase):
         self.assertIsInstance(maximum_value, float)
 
         self.assertLessEqual(minimum_value, maximum_value)
+
+    def test_empty_init(self):
+        """
+        Creating an instance of Typograph with no arguments should extract from SR100 glyph sheet
+        """
+        with patch.object(Typograph, '_extract_from_glyph_sheet',
+                          wraps=Typograph._extract_from_glyph_sheet) as mock_extract:
+            typograph = Typograph()
+            mock_extract.assert_called_once_with(os.path.join(package_directory, './Glyphs/SR100.png'))
+
+    def test_typewriter_lookup(self):
+        """
+        Not passing glyph_images, but passing a typewriter string should extract from that typewriter
+        """
+        for typewriter in Typograph.inbuilt_typewriters:
+            with self.subTest(typewriter=typewriter):
+                with patch.object(Typograph, '_extract_from_glyph_sheet',
+                                  wraps=Typograph._extract_from_glyph_sheet) as mock_extract:
+                    typograph = Typograph(typewriter=typewriter)
+                    correct_path = Typograph.glyph_sheet_paths[typewriter]
+                    mock_extract.assert_called_once_with(os.path.join(package_directory, correct_path))
+
+    def test_typewriter_lookup_invalid_name(self):
+        """
+        Invalid typewriter names should resolve to extracting from SR100
+        """
+
+        typewriter = 'TEST'
+        self.assertNotIn(typewriter, Typograph.inbuilt_typewriters)
+        with patch.object(Typograph, '_extract_from_glyph_sheet',
+                          wraps=Typograph._extract_from_glyph_sheet) as mock_extract:
+            typograph = Typograph(typewriter=typewriter)
+            mock_extract.assert_called_once_with(os.path.join(package_directory, './Glyphs/SR100.png'))
 
     @staticmethod
     def glyph_images(number_of_images, glyph_dimensions):

@@ -68,6 +68,10 @@ class Typograph:
     Class methods :meth:`~Typograph.from_glyph_sheet` and
     :meth:`~Typograph.from_directory` present other initialisation options.
 
+    Class attribues:
+     - :attr:`inbuilt_typewriters`, list of inbuilt typewriters for which glyphs can be loaded.
+     - :attr:`glyph_sheet_paths`, dictionary of paths to inbuilt typewriter glyph sheets.
+
     Exposes :meth:`~Typograph.image_to_text` , which can be used to convert any supplied image into glyph format.
 
     Exposes following instance attributes:
@@ -84,7 +88,7 @@ class Typograph:
         """
         Create :class:`Typograph` object, optionally pass glyph images to use.
 
-        Defaults to using glyphs from the ./Glyphs directory.
+        Defaults to using glyphs for the SR100 typewriter inbuilt glyph set.
 
         :param glyph_images: dictionary of images, keyed with glyph names.
         :type glyph_images: {:class:`str`: :class:`~PIL.Image.Image`}
@@ -93,7 +97,9 @@ class Typograph:
         :type samples: (:class:`int`, :class:`int`) or :class:`int`
         :param glyph_depth: maximum number of glyphs to stack into single characters.
         :type glyph_depth: :class:`int`
-        :param typewriter: name of typewriter for which output is created.
+        :param typewriter: name of typewriter for which output is created. If glyph images are not provided, this name
+         is used to look for an inbuilt typewriter's glyph set.
+         Valid values for which are given in :attr:`Typograph.inbuilt_typewriters`.
         :type typewriter: :class:`str`
         :param carriage_width: maximum width of glyphs typeable on the typewriter carriage.
         :type carriage_width: :class:`int`
@@ -107,12 +113,18 @@ class Typograph:
         self.carriage_width = carriage_width
         if glyph_images is None:
             from typo_graphics import package_directory
-            glyph_sheet = os.path.join(package_directory, './Glyphs/SR100.png')
-            glyph_images, typewriter, carriage_width = self._extract_from_glyph_sheet(glyph_sheet)
 
-            # Check they were not given to the image-less Typograph() call
-            if self.typewriter is None:
-                self.typewriter = typewriter
+            if typewriter is None or typewriter.lower() not in map(str.lower, self.inbuilt_typewriters):
+                typewriter = 'SR100'
+
+            typewriter = typewriter.lower()
+
+            path_lookup = {name.lower(): path for name, path in self.glyph_sheet_paths.items()}
+            glyph_sheet_path = path_lookup[typewriter]
+            glyph_sheet = os.path.join(package_directory, glyph_sheet_path)
+            glyph_images, self.typewriter, carriage_width = self._extract_from_glyph_sheet(glyph_sheet)
+
+            # Carriage width is explicitly allowed to be overridden in the init
             if self.carriage_width is None:
                 self.carriage_width = carriage_width
 
@@ -129,6 +141,12 @@ class Typograph:
         self.glyph_depth = glyph_depth
         self.standalone_glyphs = {}
         self._recalculate_glyphs()
+
+    glyph_sheet_paths = {'SR100': './Glyphs/SR100.png',
+                         'Imperial': './Glyphs/Imperial.png',
+                         'Super Riter': './Glyphs/Super Riter.png',
+                         }
+    inbuilt_typewriters = list(glyph_sheet_paths.keys())
 
     # TODO: typewriter and carriage_width are useful for other methods of creating a Typograph object. May be moved
     @classmethod
