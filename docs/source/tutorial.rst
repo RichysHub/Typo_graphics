@@ -34,7 +34,7 @@ you can examine the glyphs by their names:
 
     typograph.glyphs['9'].show()
 
-.. figure:: ../../Glyphs/9.png
+.. glyphdisplay:: 9
     :align: center
 
     Glyph image for the character ``9``.
@@ -221,8 +221,9 @@ with their images overlaid. We can show this, using the SR100 :class:`Glyph` obj
     exclamation_mark = full_stop + apostrophe
     exclamation_mark.show()
 
-.. figure:: ../../../Doc_Images/exclamation_mark.png
+.. glyphdisplay:: ' .
     :align: center
+    :presentation: composition
 
     Exclamation mark :class:`Glyph` image, composed from an apostrophe and a full stop.
 
@@ -472,7 +473,7 @@ Glyphs can be removed by name, as follows:
     capital_m.show()
     lowercase_m.show()
 
-.. figure:: ../../../Doc_Images/M_and_m.png
+.. glyphdisplay:: M m
     :align: center
 
     Capital and lowercase m glyphs, removed from :class:`Typograph` instance.
