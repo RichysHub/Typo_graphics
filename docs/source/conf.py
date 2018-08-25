@@ -27,10 +27,16 @@
 #
 # needs_sphinx = '1.0'
 
+import sys
+import os
+
+sys.path.insert(0, os.path.abspath('../../exts'))
+
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    'glyphdisplay',
     'sphinx.ext.autodoc',
     'sphinx.ext.intersphinx',
     'sphinx.ext.imgmath',
@@ -180,6 +186,11 @@ html_static_path = ['_static']
 # typographically correct entities.
 #
 # html_use_smartypants = True
+
+# Added to be true, disables on hover link icon.
+# Removed to fix an issue with glyphdisplay figure captions realigning
+
+html_add_permalinks = ""
 
 # Custom sidebar templates, maps document names to template names.
 #

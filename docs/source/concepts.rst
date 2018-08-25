@@ -71,14 +71,14 @@ where 0 would be an entirely black glyph, and 255, an entirely white one.
 
 Very empty characters, like the full stop would have a very high value.
 
-.. figure:: ../../Glyphs/dot.png
+.. glyphdisplay:: .
     :align: center
 
     The full stop, a very empty character.
 
 Whereas very full characters, like the dollar sign, are much heavier with ink.
 
-.. figure:: ../../Glyphs/dollar.png
+.. glyphdisplay:: $
     :align: center
 
     The dollar sign, a very heavy character.
@@ -90,7 +90,7 @@ That glyph would be our closest match, and would be used for that region of the 
 Extending this, consider the case in which it is (1, 2), that is to say, 1 sample across and 2 down.
 In this case, our fingerprint images now give the concepts of upper half value, and lower half value.
 
-.. figure:: ../../Glyphs/under.png
+.. glyphdisplay:: _
     :align: center
 
     The underscore, a very bottom heavy character.
@@ -98,7 +98,7 @@ In this case, our fingerprint images now give the concepts of upper half value, 
 Characters that are very bottom heavy, such as the underscore will have be dark in the lower half, and near white in the upper.
 The reverse of this would be true of upper heavy characters such as quotation marks.
 
-.. figure:: ../../Glyphs/quote.png
+.. glyphdisplay:: "
     :align: center
 
     The quotation mark, a very top heavy character.
