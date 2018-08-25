@@ -55,7 +55,7 @@ to the :meth:`~Typograph.image_to_text` method, as follows:
     result = typograph.image_to_text(target_image)
 
 
-.. figure:: ../../../Doc_Images/aus_shep_crop.png
+.. figure:: ./Images/aus_shep_crop.png
     :align: center
 
     Input image of Australian shepherd dog.
@@ -69,7 +69,7 @@ From this object we can extract the instructions and our reference output image.
 
     print(result.instructions)
 
-.. literalinclude:: ../../../Doc_Images/aus_shep_crop-instructions.txt
+.. literalinclude:: ./Files/aus_shep_crop-instructions.txt
     :language: text
     :lines: 1-16
 
@@ -80,7 +80,7 @@ The entire image is rendered here with 32 lines, 60 characters wide.
 
         result.output.show()
 
-.. figure:: ../../../Doc_Images/aus_shep_crop-output.png
+.. figure:: ./Images/aus_shep_crop-output.png
     :align: center
 
     Reference image from conversion, useful for preview, and for help when typing. Best viewed at a slight distance.
@@ -117,7 +117,7 @@ For example, if you can only fit 30 characters width, and 20 high on the page, w
 
     result.output.show()
 
-.. figure:: ../../../Doc_Images/aus_shep_30-output.png
+.. figure:: ./Images/aus_shep_30-output.png
     :align: center
 
     Image of Australian shepherd within a 30 glyph width.
@@ -136,7 +136,7 @@ Very small scales
 At very small scales, the ability to represent all the features of an image with glyphs becomes harder and harder.
 The results may surprise you, however. The following is a demonstration of recreating a triangle as it rotates.
 
-.. figure:: ../../../Doc_Images/rotating_triangle.gif
+.. figure:: ./Images/rotating_triangle.gif
     :align: center
 
     From left to right: scanned image of typewritten image, the input image,
@@ -170,7 +170,7 @@ The following reproduces the dog image we have seen previously, but without stac
 
     result.output.show()
 
-.. figure:: ../../../Doc_Images/aus_shep_single_depth-output.png
+.. figure:: ./Images/aus_shep_single_depth-output.png
     :align: center
 
     Reproducing the Australian shepherd dog image, with no glyph overtyping.
@@ -274,7 +274,7 @@ The following image set shows the original transparent image, followed by the re
 3. `background_glyph` is the :ref:`spacebar glyph <spacebar_glyph>` we created earlier.
 4. `background_glyph` is the forward slash character, /.
 
-.. figure:: ../../../Doc_Images/Transparency.png
+.. figure:: ./Images/Transparency.png
     :align: center
 
     Transparent image, recreated with different background glyphs.
@@ -318,15 +318,15 @@ otherwise glyphs will be named in accordance with their file names.
 
 ``name_map.json`` is simply the serialisation of a dictionary, with key, value pairs corresponding to filenames
 (without extension) and the desired string name.
-The name map for the SR100 glyphs is used to correct the names of capital letters (``A.png`` and ``a.png`` are deemed equal by Windows for example),
+Name maps are useful to correct the names of capital letters (``A.png`` and ``a.png`` are deemed equal by Windows for example),
 as well as including non-valid filename characters such as the question mark.
 
-.. literalinclude:: ../../Glyphs/name_map.json
+.. literalinclude:: ./Files/name_map.json
     :language: json
     :encoding: utf-8
 
 ``name_map.json`` is to use "utf-8" encoding, and as such, unicode characters are allowed, if they are a better match.
-For the SR100 set, • is used for the dot to separate shillings and pence.
+For example, in the SR100 set, • would be used for the dot to separate shillings and pence.
 
 Not all characters need be listed in the name map, anything not listed will simply continue to use the filename, sans extension.
 This is why ``a`` does not feature, its image is stored as ``a.png``.

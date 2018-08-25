@@ -11,7 +11,7 @@ Inspiration
 This project began when I purchased a Silver Reed SR100 Tabulator typewriter, second hand, for just £1.25.
 I had never owned a typewriter before, and I picked it up out of some latent interest in the mechanics, and of typography.
 
-.. figure:: ../../../Doc_Images/SR100.png
+.. figure:: ./Images/SR100.png
     :scale: 75%
     :align: center
 
@@ -23,7 +23,7 @@ Some of the characters that are missing can be made by overtyping, typing a char
 moving the carriage back, and typing another.
 To type a ``!``, one must first type ``'``, backspace, and overtype ``.``.
 
-.. figure:: ../../../Doc_Images/Exclamation.png
+.. figure:: ./Images/Exclamation.png
     :align: center
 
     Exclamation mark from apostrophe and full stop.
@@ -32,7 +32,7 @@ This got me interested in what other combinations exist.
 I tried to type out a few such combinations, but with 82 glyphs on the typewriter, attempting to type all would a large task.
 Of those I had typed, I found ``:`` and ``-`` would form a ``÷``, but in general it was hard to spot anything of much use.
 
-.. figure:: ../../../Doc_Images/Obelus.png
+.. figure:: ./Images/Obelus.png
     :align: center
 
     Obelus from hyphen and colon.
@@ -41,7 +41,7 @@ Trying to find reference material online for what combinations would form what c
 What I did find, was instructions to produce a soldier from O, X, &, /, W, and _ using variable line spacing.
 A quick and easy way to make something unusual from a typewriter.
 
-.. figure:: ../../../Doc_Images/Soldiers.png
+.. figure:: ./Images/Soldiers.png
     :align: center
 
     Soldiers, formed by stacking characters using variable line spacing.
@@ -104,14 +104,14 @@ and a number prepended to each to indicate how many times that characters should
 
 Here is an extract from the instructions for the :ref:`single depth Australian shepherd <shep_single>`:
 
-.. literalinclude:: ../../../Doc_Images/aus_shep_single_depth-instructions.txt
+.. literalinclude:: ./Files/aus_shep_single_depth-instructions.txt
     :language: text
     :lines: 1-10
 
 If overtyping is used by the image, and therefore a single image line requires two or more typing passes,
 line numbers have letter(s) appended. An example of this can be seen in the instructions for the :ref:`Australian shepherd <aus_shep>`.
 
-.. literalinclude:: ../../../Doc_Images/aus_shep_crop-instructions.txt
+.. literalinclude:: ./Files/aus_shep_crop-instructions.txt
     :language: text
     :lines: 1-10
 
