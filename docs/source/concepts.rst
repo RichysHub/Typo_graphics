@@ -337,7 +337,7 @@ But, once again, a counterexample can be found. I am unsure if an easier counter
 
     &\nRightarrow \begin{matrix} 2A & 1sp & 2A \\ 1C & 3B & 1C \\ 1D & 3sp & 1D \end{matrix}
 
-Here the saving looks small, but this is just 4 composite glyphs. When lines grow to 60 characters, it may well become an issue.
+Here the saving looks small, but this is just 5 composite glyphs. When lines grow to 60 characters, it may well become an issue.
 It looks like this method, with modification might be viable, but keeping track of the list of most common glyphs seems a lot of busywork.
 
 Left comparison
