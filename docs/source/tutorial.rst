@@ -201,7 +201,7 @@ The following creates a new glyph, with a solid white image, representing pressi
     from PIL import Image
     from typo_graphics import Glyph
 
-    blank_image = Image.new((25, 48), "white")
+    blank_image = Image.new((25, 50), "white")
     space = Glyph(name='sp', image=blank_image)
 
 When instantiated in this way, the :attr:`~Glyph.components` with contain only a reference to ``self``.
@@ -297,7 +297,17 @@ By default Typo_graphics will use the glyph images scanned from my Silver Reed S
 These will work perfectly well for typewriters with the same or similar glyphs,
 but customisation to the specific machine will produce best results.
 
-In order to use a new set of glyphs, they must be passed to the :class:`~Typograph` upon creation.
+The sets of glyphs from several other typewriters may also be used. To access these, simply provide a valid typewriter name
+as the value of the keyword argument `typewriter`, when instantiating the :class:`~Typograph` object.
+A list of available inbuilt typewriters can be seen in :attr:`Typograph.inbuilt_typewriters`.
+
+.. code-block:: python
+
+    from typo_graphics import Typograph
+
+    typograph = Typograph(typewriter="Imperial")
+
+Outside of using the inbuilt glyph sets, a new set of glyph images must be passed to the :class:`~Typograph` upon creation.
 There are three ways to instantiate this class, each corresponding to a different way to pass glyph information.
 
 Passing glyphs to Typograph
@@ -338,14 +348,28 @@ The glyph sheet format allows you to contain all your glyph images, within one i
 The most common use case would be for the glyph sheet to be a scan of a typed page of glyphs.
 This would require only minor manipulation, to align the image with the page, and remove excess space.
 
+For example, the glyph images for the SR100 set are contained within the following image:
+
+.. figure:: ../../Glyphs/SR100.png
+    :align: center
+
+    Glyph sheet for the SR100 typewriter.
+
+
 :meth:`~Typograph.from_glyph_sheet` will parse the glyph sheet, splitting it up into the individual glyphs.
 
-In addition to the image, the total number of glyphs must be passed as an integer, as well as some information on how the glyphs are arranged.
-Either the dimensions of the grid can be specified, ie. 9 rows, of a maximum of 10 glyphs would be passed as the tuple, (10,9).
+The image can be passed to :meth:`~Typograph.from_glyph_sheet` in several ways. If passed directly as an
+:class:`~PIL.Image.Image` object, some meta data needs to also be specified. If, instead, it is passed as an open
+binary file object, or as a file path, then the meta data may be stored in a json file alongside the image.
+
+The total number of glyphs must be passed as an integer, as well as some information on how the glyphs are arranged.
+The dimensions of the grid can be specified, ie. 9 rows, of a maximum of 10 glyphs would be passed as the tuple, (10,9).
 Alternatively, the size of the glyphs in (width in pixels, height in pixels) can be passed.
 
 In both cases, the spacing between glyphs must also be given. Glyph names can be passed as a list from top left to bottom right,
 if omitted names will be assigned sequentially.
+
+Passing the image object directly:
 
 .. code-block:: python
 
@@ -355,8 +379,39 @@ if omitted names will be assigned sequentially.
     glyph_sheet = Image.open("glyph_sheet.png")
     number_glyphs = 82
     grid_size = (10, 9)
+    spacing = (25, 50)
 
-    typograph.from_glyph_sheet(glyph_sheet=glyph_sheet, number_glyphs=number_glyphs, grid_size=grid_size)
+    typograph = Typograph.from_glyph_sheet(glyph_sheet=glyph_sheet, number_glyphs=number_glyphs, grid_size=grid_size, spacing=spacing)
+
+As noted previously, if the glyph sheet is instead passed as an open binary file object, or a file path, a meta file may
+be stored alongside the image. This meta file may contain details such as the names of the glyphs,
+and will be automatically loaded. Overriding values may still be passed.
+
+Opening from a file path:
+
+.. code-block:: python
+
+    from typo_graphics import Typograph
+
+    typograph = Typograph.from_glyph_sheet("./Path/To/Glyph/Sheet.png")
+
+Opening from an open binary file object:
+
+.. code-block:: python
+
+    from typo_graphics import Typograph
+
+    with open("./Path/To/Glyph/Sheet.png", 'rb', encoding="utf-8") as binary_file_object:
+        typograph = Typograph.from_glyph_sheet(binary_file_object)
+
+In both these cases, the meta file would be located at "./Path/To/Glyph/Sheet.json", and would be a serialised dictionary
+for values such as the spacing, names of glyphs, and so on.
+
+.. literalinclude:: ../../Glyphs/SR100.json
+    :language: json
+    :encoding: utf-8
+
+The name of the typewriter, and the maximal carriage width may also be stored in such meta files.
 
 Manipulating Typograph's glyphs
 -------------------------------
@@ -376,7 +431,7 @@ but how do we get our :class:`Typograph` object to use it in images?
     from PIL import Image
     from typo_graphics import Glyph, Typograph
 
-    blank_image = Image.new((25, 48), "white")
+    blank_image = Image.new((25, 50), "white")
     space = Glyph(name='sp', image=blank_image)
     typograph = Typograph()
 
@@ -424,7 +479,7 @@ a reminder that this is **not recommended**, for performance reasons detailed ab
     from PIL import Image
     from typo_graphics import Glyph, Typograph
 
-    blank_image = Image.new((25, 48), "white")
+    blank_image = Image.new((25, 50), "white")
     space = Glyph(name='sp', image=blank_image)
     typograph = Typograph()
 
