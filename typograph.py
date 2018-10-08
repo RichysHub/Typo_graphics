@@ -82,7 +82,6 @@ class Typograph:
 
     Exposes :meth:`~Typograph.image_to_text` , which can be used to convert any supplied image into glyph format.
     """
-
     def __init__(self, glyph_images=None, samples=(3, 3), glyph_depth=2):
         """
         Create :class:`Typograph` object, optionally pass glyph images to use.
@@ -97,7 +96,6 @@ class Typograph:
         :param glyph_depth: maximum number of glyphs to stack into single characters.
         :type glyph_depth: :class:`int`
         """
-
         if isinstance(samples, int):
             samples = (samples, samples)
 
@@ -149,9 +147,8 @@ class Typograph:
         :raises TypeError: if `number_glyphs` is not given.
         :raises TypeError: if neither `grid_size` or `glyph_dimensions` are specified.
         """
-
         if (glyph_dimensions is None) and (grid_size is None):
-            raise TypeError("from_glyphsheet() missing required keyword argument "
+            raise TypeError("from_glyph_sheet() missing required keyword argument "
                             "'grid_size' or 'glyph_dimensions'")
 
         sheet_width, sheet_height = glyph_sheet.size
@@ -356,7 +353,6 @@ class Typograph:
         :return: glyph removed or :class:`None`.
         :rtype: :class:`Glyph` or :class:`None`
         """
-
         if isinstance(glyph, Glyph):
             glyph = glyph.name
 
@@ -384,8 +380,9 @@ class Typograph:
         :param max_size: maximum size in glyphs across and down.
         :type max_size: (:class:`int`, :class:`int`)
         :param resize_mode: any resize mode as able to be used by :meth:`~PIL.Image.Image.resize`.
-        :return: An :class:`~PIL.Image.Image` object cropped to fit within `max_size`
-        :rtype: :class:`~PIL.Image.Image`
+        :return: Tuple of an :class:`~PIL.Image.Image` object cropped to fit within `max_size`,
+         and the `max_size` tuple, to match return signature of :meth:`~Typograph._scale_to_max_size`.
+        :rtype: (:class:`~PIL.Image.Image`, (:class:`int`, :class:`int`))
         """
         current_aspect = image.width / image.height
         max_width, max_height = max_size
@@ -405,13 +402,30 @@ class Typograph:
         return image, max_size
 
     def _scale_to_max_size(self, image, max_size, resize_mode):
+        """
+        Return copy of image, scaled to fit within `max_size`.
 
+        Values of ``None`` in `max_size` are treated as infinite available space in that dimension.
+        If (``None``, ``None``), will match input image size to nearest whole glyph in each dimension.
+
+        :param image:  An :class:`~PIL.Image.Image` object.
+        :type image: :class:`~PIL.Image.Image`
+        :param max_size: maximum size in glyphs across and down.
+        :type max_size: (:class:`int` or ``None``, :class:`int` or ``None``)
+        :param resize_mode: any resize mode as able to be used by :meth:`~PIL.Image.Image.resize`.
+        :return: Tuple of an :class:`~PIL.Image.Image` object scaled to fit within `max_size`,
+         and a tuple of actual dimensions in glyphs. This elements of this tuple are, by definition, equal to or smaller
+         than those in `max_size`.
+        :rtype: (:class:`~PIL.Image.Image`, (:class:`int`, :class:`int`))
+        """
         max_width, max_height = max_size
-        scale_factor = (image.width * self.glyph_height) / (image.height * self.glyph_width)
+        image_aspect = image.width / image.height
+        glyph_aspect = self.glyph_width / self.glyph_height
+        scale_factor = image_aspect / glyph_aspect
 
         if max_width is None and max_height is None:
-            result_height = image.height
-            result_width = image.width
+            result_width = image.width / self.glyph_width
+            result_height = image.height / self.glyph_height
         elif max_width is None:
             result_height = max_height
             result_width = max_height * scale_factor
@@ -448,7 +462,6 @@ class Typograph:
         :return: image after preprocessing has been applied.
         :rtype: :class:`~PIL.Image.Image`
         """
-
         if background_glyph is not None:
             image_bands = image.getbands()
             if "A" in image_bands:
@@ -477,11 +490,11 @@ class Typograph:
 
     def _chunk(self, image_data, target_width):
         """
-        Separate `image_data` into chunks, according to :attr:`~Glyph.sample_x` and :attr:`~Glyph.self.sample_y`
+        Separate `image_data` into chunks, according to :attr:`~Glyph.sample_x` and :attr:`~Glyph.self.sample_y`.
 
         Working from left to right, top to bottom of data representing an input image,
-                produces lists of data corresponding to a region of the full image
-                that are :attr:`~Glyph.sample_x` by :attr:`~Glyph.sample_y` in size.
+        produces lists of data corresponding to a region of the full image
+        that are :attr:`~Glyph.sample_x` by :attr:`~Glyph.sample_y` in size.
 
         :param image_data: list of image data specifying pixel values in range 0->255.
         :type image_data: [:class:`int`]
@@ -551,7 +564,6 @@ class Typograph:
          Distance is given as Euclidian distance in :attr:`~Glyph.sample_x` * :attr:`~Glyph.sample_y` dimensional value space.
         :rtype: (:class:`Glyph`, :class:`float`)
         """
-
         # TODO: may want to easy out if we're at glyph depth of 1?
 
         background_distance = None
@@ -590,7 +602,6 @@ class Typograph:
             distance_diff = distance - best_distance
             stack_size_diff = best_tree_set.stack_size - tree_set.stack_size
             rmd = self._root_mean_square_distance(target, tree_set)
-
             if (distance_diff / (stack_size_diff * rmd)) < cutoff:
                 return tree_set.glyph_set[index], distance
 
@@ -761,7 +772,7 @@ class Typograph:
                 yield "".join(s)
             size += 1
 
-    def image_to_text(self, image, max_size=(60, 60), cutoff=0.3, resize_mode=Image.LANCZOS, clip_limit=0.02,
+    def image_to_text(self, image, max_size=(60, 60), cutoff=0, resize_mode=Image.LANCZOS, clip_limit=0.02,
                       enhance_contrast=True, rescale_intensity=True, instruction_spacer=None, background_glyph=None,
                       fit_mode="Scale"):
         """
@@ -770,8 +781,15 @@ class Typograph:
         :param image: input :class:`~PIL.Image.Image` to be processed and converted.
         :type image: :class:`~PIL.Image.Image`
         :param max_size: maximum size for glyph version of image.
-         Given as total number of glyphs to be used across and down.
-        :type max_size: (:class:`int`, :class:`int`)
+         Given as total number of glyphs able to be used across and down.
+         If `fit_mode` is "Scale",
+         values of ``None`` in `max_size` are treated as infinite available space in that dimension.
+         If (``None``, ``None``), will match input image size to nearest whole glyph in each dimension.
+        :type max_size: (:class:`int` or ``None``, :class:`int` or ``None``)
+        :param fit_mode: mode used to adjust image to fit within `max_size`. May be "Scale" to scale image to fit,
+         or "Crop" to minimally crop image, maintaining center.
+         "Crop" cannot be used with ``None`` values in `max_size`.
+        :type fit_mode: :class:`string`
         :param resize_mode: any resize mode as able to be used by :meth:`~PIL.Image.Image.resize`.
         :param clip_limit: clip limit as used by :func:`~skimage.exposure.equalize_adapthist`.
         :type clip_limit: :class:`float`
@@ -789,7 +807,6 @@ class Typograph:
          after preprocessing.
         :rtype: :class:`~typo_graphics.typograph.typed_art`
         """
-
         if fit_mode.lower() == "crop":
             if None in max_size:
                 raise TypeError("Crop fit mode requires both maximum dimensions be specified,"
@@ -823,9 +840,7 @@ class Typograph:
         :return: a :class:`~typo_graphics.typograph.typed_art` object, containing construction, output and instructions.
         :rtype: :class:`~typo_graphics.typograph.typed_art`
         """
-
         target_width, target_height = target_size
-
         image_data = list(image.getdata())
         target_parts = self._chunk(image_data, target_width=target_width)
 
