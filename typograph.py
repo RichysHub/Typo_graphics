@@ -373,21 +373,24 @@ class Typograph:
 
     # ~~ IMAGE PROCESSING ~~
 
-    @staticmethod
-    def _fit_to_aspect(image, aspect_ratio):
+    def _crop_to_max_size(self, image, max_size, resize_mode):
         """
-        Return copy of image, cropped to `aspect_ratio`.
+        Return copy of image, cropped to fit within `max_size`.
 
         Cropping is applied evenly to both sides of image, so as to preserve center.
 
         :param image:  An :class:`~PIL.Image.Image` object.
         :type image: :class:`~PIL.Image.Image`
-        :param aspect_ratio: target aspect ratio of width / height.
-        :type aspect_ratio: :class:`float`
-        :return: An :class:`~PIL.Image.Image` object cropped to target aspect ratio.
+        :param max_size: maximum size in glyphs across and down.
+        :type max_size: (:class:`int`, :class:`int`)
+        :param resize_mode: any resize mode as able to be used by :meth:`~PIL.Image.Image.resize`.
+        :return: An :class:`~PIL.Image.Image` object cropped to fit within `max_size`
         :rtype: :class:`~PIL.Image.Image`
         """
         current_aspect = image.width / image.height
+        max_width, max_height = max_size
+        aspect_ratio = (self.glyph_width * max_width) / (self.glyph_height * max_height)
+
         if current_aspect < aspect_ratio:  # Image too tall
             perfect_height = image.width / aspect_ratio
             edge = (image.height - perfect_height) / 2
@@ -397,9 +400,37 @@ class Typograph:
             edge = (image.width - perfect_width) / 2
             image = image.crop((edge, 0, perfect_width + edge, image.height))
 
-        return image
+        image = image.resize((max_width * self.sample_x, max_height * self.sample_y), resize_mode)
 
-    def _preprocess(self, image, target_size, resize_mode, clip_limit, enhance_contrast, rescale_intensity, background_glyph):
+        return image, max_size
+
+    def _scale_to_max_size(self, image, max_size, resize_mode):
+
+        max_width, max_height = max_size
+        scale_factor = (image.width * self.glyph_height) / (image.height * self.glyph_width)
+
+        if max_width is None and max_height is None:
+            result_height = image.height
+            result_width = image.width
+        elif max_width is None:
+            result_height = max_height
+            result_width = max_height * scale_factor
+        elif max_height is None:
+            result_width = max_width
+            result_height = max_width / scale_factor
+        else:
+            result_width = max_width
+            result_height = max_width / scale_factor
+            if result_height > max_height:
+                result_height = max_height
+                result_width = max_height * scale_factor
+
+        result_width, result_height = int(result_width), int(result_height)
+        image = image.resize((result_width * self.sample_x, result_height * self.sample_y), resize_mode)
+
+        return image, (result_width, result_height)
+
+    def _preprocess(self, image, target_size, clip_limit, enhance_contrast, rescale_intensity, background_glyph):
         """
         Preprocess input image to better be reproduced by glyphs.
 
@@ -408,7 +439,6 @@ class Typograph:
         :param target_size: output size for glyph version of image.
          Given as total number of glyphs to be used across and down.
         :type target_size: (:class:`int`, :class:`int`)
-        :param resize_mode: any resize mode as able to be used by :meth:`~PIL.Image.Image.resize`.
         :param clip_limit: clip limit as used by :func:`~skimage.exposure.equalize_adapthist`.
         :type clip_limit: :class:`float`
         :param enhance_contrast: enable or disable use of :func:`~skimage.exposure.equalize_adapthist` on input image.
@@ -419,36 +449,31 @@ class Typograph:
         :rtype: :class:`~PIL.Image.Image`
         """
 
-        target_width, target_height = target_size
-        desired_aspect = (self.glyph_width * target_width) / (self.glyph_height * target_height)
-        image = self._fit_to_aspect(image, desired_aspect)
-
-        sized_picture = image.resize((target_width * self.sample_x, target_height * self.sample_y), resize_mode)
         if background_glyph is not None:
-            image_bands = sized_picture.getbands()
+            image_bands = image.getbands()
             if "A" in image_bands:
-                alpha_channel = sized_picture.split()[image_bands.index("A")]
+                alpha_channel = image.split()[image_bands.index("A")]
             else:
-                alpha_channel = Image.new("L", sized_picture.size, "white")
-        sized_picture = sized_picture.convert("L")
+                alpha_channel = Image.new("L", image.size, "white")
+        greyscale_image = image.convert("L")
 
         if enhance_contrast or rescale_intensity:
-            sized_picture = np.asarray(sized_picture)
+            image_array = np.asarray(greyscale_image)
 
             if min(target_size) > 1 and enhance_contrast:
-                sized_picture = exposure.equalize_adapthist(sized_picture, clip_limit=clip_limit)
+                image_array = exposure.equalize_adapthist(image_array, clip_limit=clip_limit)
 
             # TODO Something is screwy with the current contrast methods, need to investigate
             self.value_extrema = (150, 250)
 
             if rescale_intensity:
-                sized_picture = exposure.rescale_intensity(sized_picture, out_range=self.value_extrema)
+                image_array = exposure.rescale_intensity(image_array, out_range=self.value_extrema)
 
-            sized_picture = Image.fromarray(sized_picture.astype("uint8"))
+            greyscale_image = Image.fromarray(image_array.astype("uint8"))
 
         if background_glyph is not None:
-            sized_picture.putalpha(alpha_channel)
-        return sized_picture
+            greyscale_image.putalpha(alpha_channel)
+        return greyscale_image
 
     def _chunk(self, image_data, target_width):
         """
@@ -736,16 +761,17 @@ class Typograph:
                 yield "".join(s)
             size += 1
 
-    def image_to_text(self, image, target_size=(60, 60), cutoff=0.3, resize_mode=Image.LANCZOS, clip_limit=0.02,
-                      enhance_contrast=True, rescale_intensity=True, instruction_spacer=None, background_glyph=None):
+    def image_to_text(self, image, max_size=(60, 60), cutoff=0.3, resize_mode=Image.LANCZOS, clip_limit=0.02,
+                      enhance_contrast=True, rescale_intensity=True, instruction_spacer=None, background_glyph=None,
+                      fit_mode="Scale"):
         """
         Convert image into a glyph version, using the instance's glyphs.
 
         :param image: input :class:`~PIL.Image.Image` to be processed and converted.
         :type image: :class:`~PIL.Image.Image`
-        :param target_size: output size for glyph version of image.
+        :param max_size: maximum size for glyph version of image.
          Given as total number of glyphs to be used across and down.
-        :type target_size: (:class:`int`, :class:`int`)
+        :type max_size: (:class:`int`, :class:`int`)
         :param resize_mode: any resize mode as able to be used by :meth:`~PIL.Image.Image.resize`.
         :param clip_limit: clip limit as used by :func:`~skimage.exposure.equalize_adapthist`.
         :type clip_limit: :class:`float`
@@ -764,9 +790,17 @@ class Typograph:
         :rtype: :class:`~typo_graphics.typograph.typed_art`
         """
 
-        preprocessed_image = self._preprocess(image=image, target_size=target_size, resize_mode=resize_mode,
-                                              clip_limit=clip_limit, enhance_contrast=enhance_contrast,
-                                              rescale_intensity=rescale_intensity, background_glyph=background_glyph)
+        if fit_mode.lower() == "crop":
+            if None in max_size:
+                raise TypeError("Crop fit mode requires both maximum dimensions be specified,"
+                                " received max_size={}".format(max_size))
+            image, target_size = self._crop_to_max_size(image=image, max_size=max_size, resize_mode=resize_mode)
+        else:
+            image, target_size = self._scale_to_max_size(image=image, max_size=max_size, resize_mode=resize_mode)
+
+        preprocessed_image = self._preprocess(image=image, target_size=target_size, clip_limit=clip_limit,
+                                              enhance_contrast=enhance_contrast, rescale_intensity=rescale_intensity,
+                                              background_glyph=background_glyph)
 
         calc, output, inst_str = self._convert(image=preprocessed_image, target_size=target_size, cutoff=cutoff,
                                                instruction_spacer=instruction_spacer, background_glyph=background_glyph)
