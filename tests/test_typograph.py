@@ -1,17 +1,30 @@
+import json
+import os
+import tempfile
 import unittest
+from collections import namedtuple
+from string import ascii_uppercase, punctuation
 
-from numpy import ndarray
 from PIL import Image
+from numpy import ndarray
 from scipy.spatial import cKDTree
 from scipy.special import comb
 from typo_graphics import Typograph, Glyph
 from typo_graphics.typograph import TreeSet
+
+GlyphSheet = namedtuple("GlyphSheet", ["glyph_sheet", "glyph_dimensions", "spacing", "glyph_images",
+                                       "glyph_names", "grid_size", "number_glyphs"])
+
+GlyphDirectory = namedtuple("GlyphDirectory", ["directory", "glyph_file_names", "glyph_end_names", "number_glyphs",
+                                               "glyph_images"])
 
 
 class TestTypograph(unittest.TestCase):
 
     def setUp(self):
         self.typograph = Typograph()
+        self.teardown_files = []
+        self.teardown_dirs = []
 
     def test_samples(self):
         """
@@ -35,6 +48,7 @@ class TestTypograph(unittest.TestCase):
     def test_glyphs(self):
         """
         Typograph.glyphs should be a dictionary of glyphs
+
         each glyph should be keyed by name
         glyphs should have correct number of samples
 
@@ -153,40 +167,105 @@ class TestTypograph(unittest.TestCase):
 
         self.assertLessEqual(minimum_value, maximum_value)
 
-    def test_from_glyph_sheet(self):
-        """
-        Glyphs should be extracted from glyph sheet into typograph.glyphs
-        """
-
-        horizontal, vertical = 8, 4
-        number_glyphs = horizontal * vertical
-        glyph_width, glyph_height = (25, 50)
-        glyph_sheet = Image.new("L", (horizontal * glyph_width, vertical * glyph_height))
+    @staticmethod
+    def glyph_images(number_of_images, glyph_dimensions):
 
         glyph_images = []
 
-        for horizontal_index in range(horizontal):
-            for vertical_index in range(vertical):
-                glyph_image = Image.new("L", (glyph_width, glyph_height), "white")
-                glyph_image.putpixel((horizontal_index, vertical_index), 0)  # black pixel
+        for i in range(number_of_images):
+            glyph_image = Image.new("L", glyph_dimensions, "white")
+            glyph_image.putpixel((i % number_of_images, i // number_of_images), 0)
+            glyph_images.append(glyph_image)
 
-                glyph_images.append(glyph_image)
+        return glyph_images
 
-                box = (horizontal_index * glyph_width, vertical_index * glyph_height,
-                       (horizontal_index + 1) * glyph_width, (vertical_index + 1) * glyph_height)
+    def glyph_sheet(self):
+        """
+        Create a GlyphSheet object, containing the glyph sheet image, and all the required metadata to test
+        """
 
-                glyph_sheet.paste(glyph_image, box)
+        glyph_dimensions = (25, 50)
+        spacing = (25, 50)
+        number_glyphs = 5
+        glyph_width, glyph_height = glyph_dimensions
+        spacing_width, spacing_height = spacing
+        grid_size = (number_glyphs, 1)
 
-        typograph = Typograph.from_glyph_sheet(glyph_sheet, number_glyphs=number_glyphs,
-                                               glyph_dimensions=(glyph_width, glyph_height))
+        total_width = (glyph_width * number_glyphs) + (spacing_width * (number_glyphs - 1))
+        glyph_sheet = Image.new("L", (total_width, glyph_height))
 
-        self.assertEqual(len(typograph.glyphs), number_glyphs)
-        for glyph in typograph.glyphs.values():
-            self.assertIn(glyph.image, glyph_images)
+        glyph_names = []
+        glyph_images = self.glyph_images(number_glyphs, glyph_dimensions)
 
-    @staticmethod
-    def empty_glyph_sheet():
-        return Image.new("RGBA", (200, 200))
+        for i, glyph_image in enumerate(glyph_images):
+            glyph_names.append(ascii_uppercase[i])
+
+            glyph_sheet.paste(glyph_image, (i * (glyph_width + spacing[0]), 0,
+                                            ((i + 1) * glyph_width) + (i * spacing[0]), glyph_height))
+
+        sheet = GlyphSheet(glyph_names=glyph_names, spacing=spacing, glyph_sheet=glyph_sheet,
+                           glyph_dimensions=glyph_dimensions, grid_size=grid_size,
+                           number_glyphs=number_glyphs, glyph_images=glyph_images)
+
+        return sheet
+
+    def test_from_glyph_sheet_grid_size(self):
+        """
+        Using the grid size, are glyphs correctly extracted from the Glyph sheet?
+        """
+
+        sheet = self.glyph_sheet()
+
+        typograph = Typograph.from_glyph_sheet(glyph_sheet=sheet.glyph_sheet, glyph_names=sheet.glyph_names,
+                                               number_glyphs=sheet.number_glyphs, spacing=sheet.spacing,
+                                               grid_size=sheet.grid_size)
+
+        self.assertEqual(len(typograph.glyphs), sheet.number_glyphs)
+
+        for name, image in zip(sheet.glyph_names, sheet.glyph_images):
+            self.assertIn(name, typograph.glyphs)
+            glyph = typograph.glyphs[name]
+
+            self.assertIsInstance(glyph, Glyph)
+            self.assertEqual(glyph.image, image)
+
+    def test_from_glyph_sheet_grid_dimensions(self):
+        """
+        Using the grid dimensions, are glyphs correctly extracted from the Glyph sheet?
+        """
+
+        sheet = self.glyph_sheet()
+
+        typograph = Typograph.from_glyph_sheet(glyph_sheet=sheet.glyph_sheet, glyph_names=sheet.glyph_names,
+                                               number_glyphs=sheet.number_glyphs, spacing=sheet.spacing,
+                                               glyph_dimensions=sheet.glyph_dimensions)
+
+        self.assertEqual(len(typograph.glyphs), sheet.number_glyphs)
+
+        for name, image in zip(sheet.glyph_names, sheet.glyph_images):
+            self.assertIn(name, typograph.glyphs)
+            glyph = typograph.glyphs[name]
+
+            self.assertIsInstance(glyph, Glyph)
+            self.assertEqual(glyph.image, image)
+
+    def test_from_glyph_sheet_missing_names(self):
+        """
+        If no names are provided, glyphs should be given sequential placeholder names
+        """
+
+        sheet = self.glyph_sheet()
+
+        typograph = Typograph.from_glyph_sheet(glyph_sheet=sheet.glyph_sheet, number_glyphs=sheet.number_glyphs,
+                                               spacing=sheet.spacing, grid_size=sheet.grid_size)
+
+        self.assertEqual(len(typograph.glyphs), sheet.number_glyphs)
+
+        for i in range(sheet.number_glyphs):
+            glyph_name = "g{}".format(i)
+            self.assertIn(glyph_name, typograph.glyphs)
+            glyph = typograph.glyphs[glyph_name]
+            self.assertIsInstance(glyph, Glyph)
 
     def test_from_glyph_sheet_duplicate_names(self):
         """
@@ -194,12 +273,14 @@ class TestTypograph(unittest.TestCase):
         If duplicates are found in the list, a ValueError should be raised.
         """
 
-        names = ['a', 'b', 'c', 'd', 'a']
+        sheet = self.glyph_sheet()
 
-        glyph_sheet = self.empty_glyph_sheet()
+        names = sheet.glyph_names[:-1]
+        names += names[0]
+
         with self.assertRaises(ValueError):
-            Typograph.from_glyph_sheet(glyph_sheet=glyph_sheet, number_glyphs=5,
-                                       glyph_dimensions=(25, 50), glyph_names=names)
+            Typograph.from_glyph_sheet(glyph_sheet=sheet.glyph_sheet, number_glyphs=sheet.number_glyphs,
+                                       glyph_dimensions=sheet.glyph_dimensions, glyph_names=names)
 
     def test_from_glyph_sheet_missing_number_given_names(self):
         """
@@ -208,33 +289,188 @@ class TestTypograph(unittest.TestCase):
         No error should be raised, and the correct number of glyphs should be extracted
         """
 
-        names = ["a", "b", "c", "d"]
-        glyph_sheet = self.empty_glyph_sheet()
-        typograph = Typograph.from_glyph_sheet(glyph_sheet, glyph_dimensions=(25, 50), glyph_names=names)
+        sheet = self.glyph_sheet()
 
-        self.assertEqual(len(typograph.glyphs), len(names))
+        typograph = Typograph.from_glyph_sheet(sheet.glyph_sheet,
+                                               glyph_dimensions=sheet.glyph_dimensions, glyph_names=sheet.glyph_names)
+
+        self.assertEqual(len(typograph.glyphs), len(sheet.glyph_names))
 
     def test_from_glyph_sheet_missing_number_missing_names(self):
         """
         If the number of glyphs is not given, nor are the names, a TypeError should be raised
         """
 
-        glyph_sheet = self.empty_glyph_sheet()
+        sheet = self.glyph_sheet()
         with self.assertRaises(TypeError):
-            Typograph.from_glyph_sheet(glyph_sheet, glyph_dimensions=(25, 50))
+            Typograph.from_glyph_sheet(sheet.glyph_sheet, glyph_dimensions=sheet.glyph_dimensions)
 
     def test_from_glyph_sheet_missing_glyph_dimensions_missing_grid_size(self):
         """
         Either glyph dimensions or grid size need to be specified, else a TypeError should be raised
         """
 
-        names = ["a", "b", "c", "d"]
-        glyph_sheet = self.empty_glyph_sheet()
+        sheet = self.glyph_sheet()
         with self.assertRaises(TypeError):
-            Typograph.from_glyph_sheet(glyph_sheet, glyph_names=names)
+            Typograph.from_glyph_sheet(sheet.glyph_sheet, glyph_names=sheet.glyph_names)
+
+    def tearDown(self):
+        for path in self.teardown_files:
+            os.unlink(path)
+        for dir_ in self.teardown_dirs:
+            os.rmdir(dir_)
+
+    def glyph_directory(self):
+        directory = tempfile.mkdtemp(prefix="Typo_")
+        self.teardown_dirs.append(directory)
+
+        glyph_dimensions = (25, 50)
+        number_glyphs = 5
+        glyph_images = self.glyph_images(number_glyphs, glyph_dimensions)
+        glyph_file_names = []
+        glyph_end_names = []
+
+        for file_name, end_name, image in zip(ascii_uppercase, punctuation, glyph_images):
+            glyph_file_names.append(file_name)
+            glyph_end_names.append(end_name)
+            path = os.path.join(directory, file_name + '.png')
+            self.teardown_files.append(path)
+            image.save(path)
+
+        glyph_directory = GlyphDirectory(directory=directory, glyph_file_names=glyph_file_names,
+                                         glyph_end_names=glyph_end_names, number_glyphs=number_glyphs,
+                                         glyph_images=glyph_images)
+
+        return glyph_directory
 
     def test_from_directory(self):
-        pass
+        """
+        Glyph should be loaded from the directory, into typograph.glyphs
+        Names from the name map should be used for all
+        """
+
+        glyph_directory = self.glyph_directory()
+
+        directory = glyph_directory.directory
+        number_glyphs = glyph_directory.number_glyphs
+        glyph_file_names = glyph_directory.glyph_file_names
+        glyph_end_names = glyph_directory.glyph_end_names
+        glyph_images = glyph_directory.glyph_images
+
+        name_map = {file_name: end_name for file_name, end_name in zip(glyph_file_names, glyph_end_names)}
+
+        name_map_path = os.path.join(directory, 'name_map.json')
+        with open(name_map_path, 'w') as name_map_file:
+            json.dump(name_map, name_map_file)
+            self.teardown_files.append(name_map_path)
+
+        typograph = Typograph.from_directory(glyph_directory=directory)
+
+        self.assertEqual(len(typograph.glyphs), number_glyphs)
+
+        for file_name, end_name, image in zip(glyph_file_names, glyph_end_names, glyph_images):
+            self.assertIn(end_name, typograph.glyphs)
+            self.assertNotIn(file_name, typograph.glyphs)
+            glyph = typograph.glyphs[end_name]
+
+            # Have to do some pasting trickery to avoid having a PngImageFile object
+            pasted_image = Image.new("L", image.size)
+            pasted_image.paste(glyph.image, (0, 0, *image.size))
+
+            self.assertEqual(pasted_image, image)
+
+    def test_from_directory_partial_name_map(self):
+        """
+        If a name map only contains some of the file names,
+        others should continue to use that file name
+        """
+        glyph_directory = self.glyph_directory()
+
+        directory = glyph_directory.directory
+        number_glyphs = glyph_directory.number_glyphs
+        glyph_file_names = glyph_directory.glyph_file_names
+        glyph_end_names = glyph_directory.glyph_end_names
+        glyph_images = glyph_directory.glyph_images
+
+        cutoff = number_glyphs//2
+
+        name_map = {file_name: end_name for file_name, end_name in zip(glyph_file_names[:cutoff], glyph_end_names)}
+
+        name_map_path = os.path.join(directory, 'name_map.json')
+        with open(name_map_path, 'w') as name_map_file:
+            json.dump(name_map, name_map_file)
+            self.teardown_files.append(name_map_path)
+
+        glyph_end_names[cutoff:] = glyph_file_names[cutoff:]
+
+        typograph = Typograph.from_directory(glyph_directory=directory)
+        self.assertEqual(len(typograph.glyphs), number_glyphs)
+
+        for file_name, end_name, image in zip(glyph_file_names, glyph_end_names, glyph_images):
+            self.assertIn(end_name, typograph.glyphs)
+            glyph = typograph.glyphs[end_name]
+
+            # Have to do some pasting trickery to avoid having a PngImageFile object
+            pasted_image = Image.new("L", image.size)
+            pasted_image.paste(glyph.image, (0, 0, *image.size))
+
+            self.assertEqual(pasted_image, image)
+
+    def test_from_directory_empty_name_map(self):
+        """
+        If a name_map.json exists, but contains no entries, it should not affect behaviour
+        """
+        glyph_directory = self.glyph_directory()
+
+        directory = glyph_directory.directory
+        number_glyphs = glyph_directory.number_glyphs
+        glyph_file_names = glyph_directory.glyph_file_names
+        glyph_images = glyph_directory.glyph_images
+
+        name_map = {}
+
+        name_map_path = os.path.join(directory, 'name_map.json')
+        with open(name_map_path, 'w') as name_map_file:
+            json.dump(name_map, name_map_file)
+            self.teardown_files.append(name_map_path)
+
+        typograph = Typograph.from_directory(glyph_directory=directory)
+        self.assertEqual(len(typograph.glyphs), number_glyphs)
+
+        for file_name, image in zip(glyph_file_names, glyph_images):
+            self.assertIn(file_name, typograph.glyphs)
+            glyph = typograph.glyphs[file_name]
+
+            # Have to do some pasting trickery to avoid having a PngImageFile object
+            pasted_image = Image.new("L", image.size)
+            pasted_image.paste(glyph.image, (0, 0, *image.size))
+
+            self.assertEqual(pasted_image, image)
+
+    def test_from_directory_missing_name_map(self):
+        """
+        If no name_map.json exists, the FileNotFound error that would otherwise occur should be handled.
+        Glyphs should all be loaded, named according to file names
+        """
+        glyph_directory = self.glyph_directory()
+
+        directory = glyph_directory.directory
+        number_glyphs = glyph_directory.number_glyphs
+        glyph_file_names = glyph_directory.glyph_file_names
+        glyph_images = glyph_directory.glyph_images
+
+        typograph = Typograph.from_directory(glyph_directory=directory)
+        self.assertEqual(len(typograph.glyphs), number_glyphs)
+
+        for file_name, image in zip(glyph_file_names, glyph_images):
+            self.assertIn(file_name, typograph.glyphs)
+            glyph = typograph.glyphs[file_name]
+
+            # Have to do some pasting trickery to avoid having a PngImageFile object
+            pasted_image = Image.new("L", image.size)
+            pasted_image.paste(glyph.image, (0, 0, *image.size))
+
+            self.assertEqual(pasted_image, image)
 
     def test_standalone_glyphs(self):
         """
@@ -462,6 +698,37 @@ class TestTypograph(unittest.TestCase):
         self.assertIs(closest, target_glyph)
         self.assertEqual(distance, 0)
 
+    def test_find_closest_glyph_perfect_match_combination(self):
+        """
+        Perfect matching should work equally with a combination glyph
+        """
+
+        typograph = self.typograph
+
+        glyph_iter = iter(typograph.glyphs.values())
+        target_glyph = next(glyph_iter) + next(glyph_iter)
+        target = target_glyph.fingerprint.getdata()
+        closest, distance = typograph._find_closest_glyph(target=target, cutoff=0, background_glyph=None)
+
+        self.assertIsInstance(closest, Glyph)
+        self.assertEqual(closest, target_glyph)
+        self.assertEqual(distance, 0)
+
+    def test_find_closest_glyph_cutoff_1_combination_to_single(self):
+        """
+        With a cutoff value of 1, the matching should match a single glyph,
+        despite there being a perfect combination glyph match
+        """
+        typograph = self.typograph
+
+        glyph_iter = iter(typograph.glyphs.values())
+        target_glyph = next(glyph_iter) + next(glyph_iter)
+        target = target_glyph.fingerprint.getdata()
+        closest, distance = typograph._find_closest_glyph(target=target, cutoff=1, background_glyph=None)
+
+        self.assertIsInstance(closest, Glyph)
+        self.assertEqual(len(closest.components), 1)
+
     def test_find_closest_glyph_fully_transparent(self):
         """
         Using a perfect match, Typograph would otherwise match to that glyph.
@@ -486,6 +753,24 @@ class TestTypograph(unittest.TestCase):
         self.assertIsInstance(closest, Glyph)
         self.assertIs(closest, background_glyph)
         self.assertIsNone(distance)
+
+    def test_background_glyph_excluded_from_main_image(self):
+
+        typograph = self.typograph
+
+        glyphs = iter(typograph.glyphs.values())
+        background_glyph = next(glyphs)
+        background_glyph = typograph.remove_glyph(background_glyph)
+
+        target_image = background_glyph.fingerprint
+        alpha_channel = Image.new("L", target_image.size, "white")
+        target_image.putalpha(alpha_channel)
+        target = target_image.getdata()
+
+        closest, distance = typograph._find_closest_glyph(target=target, cutoff=0, background_glyph=background_glyph)
+
+        self.assertIsInstance(closest, Glyph)
+        self.assertIsNot(closest, background_glyph)
 
 
 if __name__ == '__main__':
