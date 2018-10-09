@@ -1,7 +1,8 @@
-from PIL import Image, ImageChops
-from contextlib import suppress
 import json
 import os
+from contextlib import suppress
+
+from PIL import Image, ImageChops
 
 
 class Glyph:
@@ -46,20 +47,6 @@ class Glyph:
             self.components = components
         else:
             self.components = [self]
-
-    # This has been largely replaced by the glyph loading code within Typograph. This will likely be removed in future
-    @classmethod
-    def from_file(cls, filename, **kwargs):
-        name = os.path.splitext(filename)[0]
-        # looks for name map, and any name alias
-        # TODO: probably better in whatever will be making the glyphs
-        # --> perhaps an extra override_name argument that defaults to None
-        with suppress(FileNotFoundError):
-            with open(os.path.join(GLYPH_DIR, 'name_map.json'), 'r') as fp:
-                glyph_names = json.load(fp)
-                name = glyph_names.get(name, name)
-        image = Image.open(os.path.join(GLYPH_DIR, filename))
-        return cls(name=name, image=image, **kwargs)
 
     def __add__(self, other):
         """
