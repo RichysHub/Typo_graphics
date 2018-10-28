@@ -145,6 +145,7 @@ class Typograph:
     glyph_sheet_paths = {'SR100': './Glyphs/SR100.png',
                          'Imperial': './Glyphs/Imperial.png',
                          'Super Riter': './Glyphs/Super Riter.png',
+                         'Blue Bird': './Glyphs/Blue Bird.png',
                          }
     inbuilt_typewriters = list(glyph_sheet_paths.keys())
 
