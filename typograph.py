@@ -146,6 +146,7 @@ class Typograph:
                          'Imperial': './Glyphs/Imperial.png',
                          'Super Riter': './Glyphs/Super Riter.png',
                          'Blue Bird': './Glyphs/Blue Bird.png',
+                         'Linea 98': './Glyphs/Linea 98.png',
                          }
     inbuilt_typewriters = list(glyph_sheet_paths.keys())
 
