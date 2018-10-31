@@ -147,6 +147,7 @@ class Typograph:
                          'Super Riter': './Glyphs/Super Riter.png',
                          'Blue Bird': './Glyphs/Blue Bird.png',
                          'Linea 98': './Glyphs/Linea 98.png',
+                         'Linea 98 half-linespace': './Glyphs/Linea 98 half-linespace.png',
                          }
     inbuilt_typewriters = list(glyph_sheet_paths.keys())
 
