@@ -6,6 +6,7 @@ if "%SPHINXBUILD%" == "" (
 	set SPHINXBUILD=sphinx-build
 )
 set BUILDDIR=build
+set GITHUBDOCS=../../gh-pages
 set ALLSPHINXOPTS=-d %BUILDDIR%/doctrees %SPHINXOPTS% source
 set I18NSPHINXOPTS=%SPHINXOPTS% source
 if NOT "%PAPER%" == "" (
@@ -40,6 +41,7 @@ if "%1" == "help" (
 	echo.  doctest    to run all doctests embedded in the documentation if enabled
 	echo.  coverage   to run coverage check of the documentation if enabled
 	echo.  dummy      to check syntax errors of document sources
+	echo.  github     to make HTML files and copy them for github pages
 	goto end
 )
 
@@ -276,6 +278,16 @@ if "%1" == "dummy" (
 	echo.
 	echo.Build finished. Dummy builder generates no files.
 	goto end
+)
+
+if "%1" == "github" (
+    %SPHINXBUILD% -b html %ALLSPHINXOPTS% %BUILDDIR%/html
+    if errorlevel 1 exit /b 1
+    echo.
+    copy /Y "%BUILDDIR%/html" "%GITHUBDOCS%"
+    echo. 2>"%DOCS%/.nojekyll"
+    echo.Build finished. The HTML pages are in %GITHUBDOCS%
+    goto end
 )
 
 :end

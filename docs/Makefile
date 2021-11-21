@@ -6,6 +6,7 @@ SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
 PAPER         =
 BUILDDIR      = build
+GITHUBDOCS    = ../../gh-pages
 
 # Internal variables.
 PAPEROPT_a4     = -D latex_paper_size=a4
@@ -43,6 +44,8 @@ help:
 	@echo "  doctest    to run all doctests embedded in the documentation (if enabled)"
 	@echo "  coverage   to run coverage check of the documentation (if enabled)"
 	@echo "  dummy      to check syntax errors of document sources"
+	@echo "  github     to make HTML files and copy them for github pages"
+
 
 .PHONY: clean
 clean:
@@ -223,3 +226,11 @@ dummy:
 	$(SPHINXBUILD) -b dummy $(ALLSPHINXOPTS) $(BUILDDIR)/dummy
 	@echo
 	@echo "Build finished. Dummy builder generates no files."
+
+.PHONY: github
+github:
+	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
+	@mv "$(BUILDDIR)/html" "$(GITHUBDOCS)"
+    @touch "$(GITHUBDOCS)/.nojekyll"
+	@echo
+	@echo "Build finished. The HTML pages are in $(GITHUBDOCS)."
