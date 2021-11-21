@@ -284,7 +284,7 @@ if "%1" == "github" (
     %SPHINXBUILD% -b html %ALLSPHINXOPTS% %BUILDDIR%/html
     if errorlevel 1 exit /b 1
     echo.
-    copy /Y "%BUILDDIR%/html" "%GITHUBDOCS%"
+    xcopy /Y /E "%BUILDDIR%/html" "%GITHUBDOCS%"
     echo. 2>"%DOCS%/.nojekyll"
     echo.Build finished. The HTML pages are in %GITHUBDOCS%
     goto end
