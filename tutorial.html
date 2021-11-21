@@ -1,0 +1,888 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Tutorial &mdash; Typo_graphics 0.3.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="author" title="About these documents"
+              href="about.html"/>
+    <link rel="top" title="Typo_graphics 0.3.0 documentation" href="index.html"/>
+        <link rel="next" title="Development" href="development.html"/>
+        <link rel="prev" title="Welcome to Typo_graphics" href="index.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Typo_graphics
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#basic-use">Basic use</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#simple-typograph-creation">Simple Typograph creation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#convert-image-to-glyphs">Convert image to glyphs</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#tuning-the-result">Tuning the result</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#larger-or-smaller-images">Larger or smaller images</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#very-small-scales">Very small scales</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#glyph-depth">Glyph depth</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#the-glyph-class">The Glyph class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-transparency">Using Transparency</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-a-different-set-of-glyphs">Using a different set of glyphs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#passing-glyphs-to-typograph">Passing glyphs to Typograph</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#working-from-a-directory-of-images">Working from a directory of images</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#using-a-glyph-sheet">Using a glyph sheet</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#manipulating-typograph-s-glyphs">Manipulating Typograph&#8217;s glyphs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#adding-glyphs">Adding glyphs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#standalone-glyphs">Standalone glyphs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#removing-glyphs">Removing glyphs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="concepts.html">Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="combinations.html">Combinations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="full_reference.html">Full Reference</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Typo_graphics</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Tutorial</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/tutorial.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="tutorial">
+<h1>Tutorial</h1>
+<p>This tutorial is aimed at introducing the concepts of Typo_graphics, and to get you started converting images to text.
+Starting with the most basic uses, and introducing some of the more complex capabilities.</p>
+<div class="section" id="basic-use">
+<h2>Basic use</h2>
+<p>The primary class of Typo_graphics is the <a class="reference internal" href="api.html#typo_graphics.Typograph" title="typo_graphics.Typograph"><code class="xref py py-class docutils literal"><span class="pre">Typograph</span></code></a> class.
+The <a class="reference internal" href="api.html#typo_graphics.Typograph" title="typo_graphics.Typograph"><code class="xref py py-class docutils literal"><span class="pre">Typograph</span></code></a> object encapsulates all the processing of glyphs need to transform an image.
+If we want to convert several images with the same settings, we need only creates one
+<a class="reference internal" href="api.html#typo_graphics.Typograph" title="typo_graphics.Typograph"><code class="xref py py-class docutils literal"><span class="pre">Typograph</span></code></a> object, which avoids repeat processing calculations.</p>
+<div class="section" id="simple-typograph-creation">
+<h3>Simple Typograph creation</h3>
+<p>The simplest way to create an instance is without any arguments passed:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">typo_graphics</span> <span class="kn">import</span> <span class="n">Typograph</span>
+
+<span class="n">typograph</span> <span class="o">=</span> <span class="n">Typograph</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This <a class="reference internal" href="api.html#typo_graphics.Typograph" title="typo_graphics.Typograph"><code class="xref py py-class docutils literal"><span class="pre">Typograph</span></code></a> object will use the default glyphs,
+you can examine the glyphs by their names:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">typograph</span><span class="o">.</span><span class="n">glyphs</span><span class="p">[</span><span class="s1">&#39;9&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="figure align-center" id="id1">
+<img class="glyphdisplay" src="_images/glyphdisplay-8321b8034fb867f7773fcb8c4a7fc1ac412e57ea.png">
+<p class="caption"><span class="caption-text">Glyph image for the character <code class="docutils literal"><span class="pre">9</span></code>.</span></p>
+</div>
+<p>The <code class="xref py py-attr docutils literal"><span class="pre">glyphs</span></code> dictionary will contain all 82 of the glyphs typeable with the SR100 typewriter.</p>
+</div>
+<div class="section" id="convert-image-to-glyphs">
+<h3>Convert image to glyphs</h3>
+<p>To convert an image into glyph form, we need only pass a PIL <a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/Image.html#PIL.Image.Image" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-class docutils literal"><span class="pre">Image</span></code></a> object
+to the <a class="reference internal" href="api.html#typo_graphics.Typograph.image_to_text" title="typo_graphics.Typograph.image_to_text"><code class="xref py py-meth docutils literal"><span class="pre">image_to_text()</span></code></a> method, as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+
+<span class="n">target_image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;dog.png&#39;</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">typograph</span><span class="o">.</span><span class="n">image_to_text</span><span class="p">(</span><span class="n">target_image</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="figure align-center" id="id2">
+<img alt="_images/aus_shep_crop.png" src="_images/aus_shep_crop.png" />
+<p class="caption"><span class="caption-text">Input image of Australian shepherd dog.</span></p>
+</div>
+<p id="aus-shep">This <cite>result</cite>, which will be a <a class="reference internal" href="full_reference.html#typo_graphics.typograph.TypedArt" title="typo_graphics.typograph.TypedArt"><code class="xref py py-class docutils literal"><span class="pre">TypedArt</span></code></a> object contains our output.
+From this object we can extract the instructions and our reference output image.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">instructions</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-text"><div class="highlight"><pre><span></span>00a| 23H 1G 1T 16H 1M 5H 1T 12H
+00b| 21l 1j 1l 2Z 15l 1j 1_ 5l 1Z 12l
+01a| 23H 1G 1T 18H 1T 16H
+01b| 7l 1j 13l 1j 1l 2Z 18l 1Z 16l
+02a| 16H 12 1I 1&quot; 1sp 2H 1M 1S 17H 2M 1F 2H 1G 1T 12H
+02b| 7l 1j 8l 1_ 1T 2Z 1I 1j 2_ 16l 1j 3_ 2l 2Z 12l
+03a| 16H 1&quot; 4Z 1&quot; 1H 1M 13H 1T 5&quot; 1T 16H
+03b| 5l 1j 2l 1j 7l 1_ 4sp 1B 1l 1_ 13l 4Z 1G 2Z 16l
+04a| 13H 1&quot; 1? 1T 1&quot; 2sp 1P 12 2Z 11&quot; 10Z 16H
+04b| 3l 1j 3l 3j 2l 13 1P 1H 4Z 2_ 3sp 7T 12sp 1T 16l
+05a| 9H 2&quot; 1G 1. 1- 1. 2Z 1N 1M 1/ 3Z 1P 1Z 3G 1. 2Z 5. 1G 7Z 1I 1? 1l 1j 12l
+05b| 7l 23 1P 1f 5sp 3_ 1L 1sp 1. 1sp 1_ 20sp 1T 15H
+06a| 5H 2&quot; 1Z 1G 2Z 1_ 3Z 3H 13 1G 3H 1L 1Z 2G 2Z 3S 1Z 15 3. 7Z 2S 3Z 11H
+06b| 5l 1Z 1_ 7sp 1_ 1l 13 1half 1E 1Z 2l 1j 1f 4sp 4_ 10sp 1. 1G 2_ 1sp 2T 11l
+07a| 3H 1P 2Z 1&quot; 2Z 1S 1H 1&quot; 1. 1H 1T 3H 1L 1. 1sp 1H 1&quot; 1G 4Z 5H 1L 1Z 2. 1G 3Z 1N 1P 1&#39; 1l 13 1M 1&quot; 2Z 10H
+07b| 3l 1f 2sp 4_ 1l 1j 1Z 1l 1Z 2l 1half 1T 2Z 1l 1Z 4sp 1T 1l 1j 3l 1f 6sp 1G 1_ 1f 3H 2_ 1sp 1T 10l
+</pre></div>
+</div>
+<p>The first 16 lines of the instructions file are shown here. As the image uses a glyph depth of two, this corresponds to 8 typed lines.
+The entire image is rendered here with 32 lines, 60 characters wide.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">result</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="figure align-center" id="id3">
+<img alt="_images/aus_shep_crop-output.png" src="_images/aus_shep_crop-output.png" />
+<p class="caption"><span class="caption-text">Reference image from conversion, useful for preview, and for help when typing. Best viewed at a slight distance.</span></p>
+</div>
+</div>
+</div>
+<div class="section" id="tuning-the-result">
+<h2>Tuning the result</h2>
+<p>In order to control the appearance of the image, several keyword arguments are available,
+for both <code class="xref py py-meth docutils literal"><span class="pre">image_text()</span></code>, and during the instantiation of <a class="reference internal" href="api.html#typo_graphics.Typograph" title="typo_graphics.Typograph"><code class="xref py py-class docutils literal"><span class="pre">Typograph</span></code></a>.</p>
+<p>A few are detailed here, see the <a class="reference internal" href="api.html#api"><span class="std std-ref">API Reference</span></a> for more details.</p>
+<div class="section" id="larger-or-smaller-images">
+<h3>Larger or smaller images</h3>
+<p>When converting an image, <a class="reference internal" href="api.html#typo_graphics.Typograph.image_to_text" title="typo_graphics.Typograph.image_to_text"><code class="xref py py-meth docutils literal"><span class="pre">image_to_text()</span></code></a> will make best use of the available space,
+scaling the image to best fit within the page. By default, the page is defined to have space for an image 60 characters wide,
+and 60 characters tall.</p>
+<p>These parameters can be altered by passing a tuple to <a class="reference internal" href="api.html#typo_graphics.Typograph.image_to_text" title="typo_graphics.Typograph.image_to_text"><code class="xref py py-meth docutils literal"><span class="pre">image_to_text()</span></code></a> as the keyword argument <cite>max_size</cite>.
+These dimensions specify a bounding box, (width, height) in glyphs, within which the image will be scaled.</p>
+<p>For example, if you can only fit 30 characters width, and 20 high on the page, we would alter the previous code to:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">from</span> <span class="nn">typo_graphics</span> <span class="kn">import</span> <span class="n">Typograph</span>
+
+<span class="n">typograph</span> <span class="o">=</span> <span class="n">Typograph</span><span class="p">()</span>
+<span class="n">target_image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;dog.png&#39;</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">typograph</span><span class="o">.</span><span class="n">image_to_text</span><span class="p">(</span><span class="n">target_image</span><span class="p">,</span> <span class="n">max_size</span><span class="o">=</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">20</span><span class="p">))</span>
+
+<span class="n">result</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="figure align-center" id="id4">
+<img alt="_images/aus_shep_30-output.png" src="_images/aus_shep_30-output.png" />
+<p class="caption"><span class="caption-text">Image of Australian shepherd within a 30 glyph width.</span></p>
+</div>
+<p>In specifying <cite>max_size</cite>, either one or both of the dimensions can be set to <code class="docutils literal"><span class="pre">None</span></code>.
+If a single dimension is <code class="docutils literal"><span class="pre">None</span></code>, it will be assumed to have infinite space, the image will be scaled to the other dimension.
+If both are <code class="docutils literal"><span class="pre">None</span></code>, the size of the input image will be closely matched in the output image.</p>
+<p>The default fit mode is to scale the image to within the bounds.
+If, instead the keyword argument of <cite>fit_mode</cite> is set to &#8220;Crop&#8221;, the image will be minimally cropped, centered on the image.
+Cropping requires both dimensions of <cite>max_size</cite> be specified.</p>
+</div>
+<div class="section" id="very-small-scales">
+<h3>Very small scales</h3>
+<p>At very small scales, the ability to represent all the features of an image with glyphs becomes harder and harder.
+The results may surprise you, however. The following is a demonstration of recreating a triangle as it rotates.</p>
+<div class="figure align-center" id="id5">
+<img alt="_images/rotating_triangle.gif" src="_images/rotating_triangle.gif" />
+<p class="caption"><span class="caption-text">From left to right: scanned image of typewritten image, the input image,
+the values for glyphs <a class="reference internal" href="api.html#typo_graphics.Typograph" title="typo_graphics.Typograph"><code class="xref py py-class docutils literal"><span class="pre">Typograph</span></code></a> has determined are the best match,
+and the glyphs rendered as <code class="xref py py-attr docutils literal"><span class="pre">output</span></code> with the outline of the triangle overlaid in blue.</span></p>
+</div>
+<p>I hope you will agree that the ability to convey motion within just 20 glyphs per frame is staggering.</p>
+</div>
+<div class="section" id="glyph-depth">
+<h3>Glyph depth</h3>
+<p>By default, <a class="reference internal" href="api.html#typo_graphics.Typograph" title="typo_graphics.Typograph"><code class="xref py py-class docutils literal"><span class="pre">Typograph</span></code></a> will stack the glyphs from the SR100 to a depth of 2, that is to say,
+it is allowed to add one glyph on top of another, but cannot add more than that.</p>
+<p>This stacking drastically increases the possible glyphs, and helps to create darker glyphs than are typeable.
+You can control the depth to which glyphs are stacking, by passing an integer to the keyword argument, <cite>glyph_depth</cite>.</p>
+<p id="shep-single">The following reproduces the dog image we have seen previously, but without stacking glyphs, by setting <cite>glyph_depth</cite> to 1.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">from</span> <span class="nn">typo_graphics</span> <span class="kn">import</span> <span class="n">Typograph</span>
+
+<span class="n">typograph</span> <span class="o">=</span> <span class="n">Typograph</span><span class="p">(</span><span class="n">glyph_depth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">target_image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;dog.png&#39;</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">typograph</span><span class="o">.</span><span class="n">image_to_text</span><span class="p">(</span><span class="n">target_image</span><span class="p">)</span>
+
+<span class="n">result</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="figure align-center" id="id6">
+<img alt="_images/aus_shep_single_depth-output.png" src="_images/aus_shep_single_depth-output.png" />
+<p class="caption"><span class="caption-text">Reproducing the Australian shepherd dog image, with no glyph overtyping.</span></p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This keyword is on instantiation, not use, as it affects how glyphs are processed and stored internally.</p>
+</div>
+</div>
+</div>
+<div class="section" id="the-glyph-class">
+<h2>The Glyph class</h2>
+<p>The <a class="reference internal" href="api.html#typo_graphics.Glyph" title="typo_graphics.Glyph"><code class="xref py py-class docutils literal"><span class="pre">Glyph</span></code></a> class is used extensively in Typo_graphics to encapsulate the options for what can be typed in a monospaced space.</p>
+<p>As we have already seen, by default <a class="reference internal" href="api.html#typo_graphics.Typograph" title="typo_graphics.Typograph"><code class="xref py py-class docutils literal"><span class="pre">Typograph</span></code></a> will construct <a class="reference internal" href="api.html#typo_graphics.Glyph" title="typo_graphics.Glyph"><code class="xref py py-class docutils literal"><span class="pre">Glyph</span></code></a> objects for all of the glyphs from my SR100.
+All the possible 2-glyph combinations thereof will also be created as <a class="reference internal" href="api.html#typo_graphics.Glyph" title="typo_graphics.Glyph"><code class="xref py py-class docutils literal"><span class="pre">Glyph</span></code></a> objects, but these are stored separately.</p>
+<p>Each glyph object contains an image of its glyph, <code class="xref py py-attr docutils literal"><span class="pre">image</span></code>. This can be viewed by calling <code class="xref py py-meth docutils literal"><span class="pre">show()</span></code> on the glyph.</p>
+<p>A <a class="reference internal" href="api.html#typo_graphics.Glyph" title="typo_graphics.Glyph"><code class="xref py py-class docutils literal"><span class="pre">Glyph</span></code></a> object can be created from a string name, and an <a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/Image.html#PIL.Image.Image" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-class docutils literal"><span class="pre">Image</span></code></a>.
+This name is used extensively in <a class="reference internal" href="api.html#typo_graphics.Typograph" title="typo_graphics.Typograph"><code class="xref py py-class docutils literal"><span class="pre">Typograph</span></code></a>, and is returned by the <code class="xref py py-meth docutils literal"><span class="pre">__str__()</span></code> method.</p>
+<p id="spacebar-glyph">The following creates a new glyph, with a solid white image, representing pressing the spaceabar:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">from</span> <span class="nn">typo_graphics</span> <span class="kn">import</span> <span class="n">Glyph</span>
+
+<span class="n">blank_image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">((</span><span class="mi">25</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span> <span class="s2">&quot;white&quot;</span><span class="p">)</span>
+<span class="n">space</span> <span class="o">=</span> <span class="n">Glyph</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sp&#39;</span><span class="p">,</span> <span class="n">image</span><span class="o">=</span><span class="n">blank_image</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>When instantiated in this way, the <code class="xref py py-attr docutils literal"><span class="pre">components</span></code> with contain only a reference to <code class="docutils literal"><span class="pre">self</span></code>.
+This is in contrast to when we create <a class="reference internal" href="api.html#typo_graphics.Glyph" title="typo_graphics.Glyph"><code class="xref py py-class docutils literal"><span class="pre">Glyph</span></code></a> objects by overlaying two glyphs atop one another.</p>
+<p>The action of overtyping is replicated by adding the two glyphs together. This will return a new <a class="reference internal" href="api.html#typo_graphics.Glyph" title="typo_graphics.Glyph"><code class="xref py py-class docutils literal"><span class="pre">Glyph</span></code></a>,
+with their images overlaid. We can show this, using the SR100 <a class="reference internal" href="api.html#typo_graphics.Glyph" title="typo_graphics.Glyph"><code class="xref py py-class docutils literal"><span class="pre">Glyph</span></code></a> objects loaded in with <a class="reference internal" href="api.html#typo_graphics.Typograph" title="typo_graphics.Typograph"><code class="xref py py-class docutils literal"><span class="pre">Typograph</span></code></a>.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">typo_graphics</span> <span class="kn">import</span> <span class="n">Glyph</span><span class="p">,</span> <span class="n">Typograph</span>
+
+<span class="n">typograph</span> <span class="o">=</span> <span class="n">Typograph</span><span class="p">()</span>
+<span class="n">full_stop</span> <span class="o">=</span> <span class="n">typograph</span><span class="o">.</span><span class="n">glyphs</span><span class="p">[</span><span class="s2">&quot;.&quot;</span><span class="p">]</span>
+<span class="n">apostrophe</span> <span class="o">=</span> <span class="n">typograph</span><span class="o">.</span><span class="n">glyphs</span><span class="p">[</span><span class="s2">&quot;&#39;&quot;</span><span class="p">]</span>
+
+<span class="n">exclamation_mark</span> <span class="o">=</span> <span class="n">full_stop</span> <span class="o">+</span> <span class="n">apostrophe</span>
+<span class="n">exclamation_mark</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="figure align-center" id="id7">
+<img class="glyphdisplay" src="_images/glyphdisplay-7a8a61d8d6bbf96f051218649ac71a1117d238eb.png">
+<p class="caption"><span class="caption-text">Exclamation mark <a class="reference internal" href="api.html#typo_graphics.Glyph" title="typo_graphics.Glyph"><code class="xref py py-class docutils literal"><span class="pre">Glyph</span></code></a> image, composed from an apostrophe and a full stop.</span></p>
+</div>
+<p>Combined glyphs are named according to their components, separated by whitespace.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">exclamation_mark</span><span class="o">.</span><span class="n">name</span>
+<span class="go">&quot;&#39; .&quot;</span>
+</pre></div>
+</div>
+<p>The <code class="xref py py-attr docutils literal"><span class="pre">components</span></code> attribute contains references to the glyphs that composed the combination glyphs,
+here the apostrophe, and the full stop. Components are sorted. This allows glyph addition to be commutative,
+so that order of addition is not important.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">glyph</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">glyph</span> <span class="ow">in</span> <span class="n">exclamation_mark</span><span class="o">.</span><span class="n">components</span><span class="p">]</span>
+<span class="go">[&quot;&#39;&quot;, &#39;.&#39;]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="using-transparency">
+<h2>Using Transparency</h2>
+<p>By default, <a class="reference internal" href="api.html#typo_graphics.Typograph" title="typo_graphics.Typograph"><code class="xref py py-class docutils literal"><span class="pre">Typograph</span></code></a> will ignore transparency in images.
+This can result in transparent regions being treated as if they were solid black.</p>
+<p><a class="reference internal" href="api.html#typo_graphics.Typograph.image_to_text" title="typo_graphics.Typograph.image_to_text"><code class="xref py py-meth docutils literal"><span class="pre">Typograph.image_to_text()</span></code></a> accepts the keyword argument <cite>background_glyph</cite>,
+which if not <code class="docutils literal"><span class="pre">None</span></code> will enable transparency.</p>
+<p>If a <a class="reference internal" href="api.html#typo_graphics.Glyph" title="typo_graphics.Glyph"><code class="xref py py-class docutils literal"><span class="pre">Glyph</span></code></a> object is passed to <cite>background_glyph</cite>, it will be tiled in any region deemed transparent.
+In the borders of the transparency, where the image is neither fully opaque, nor fully transparent,
+the background glyph is incorporated into the image.</p>
+<p>The following creates a <a class="reference internal" href="api.html#typo_graphics.Typograph" title="typo_graphics.Typograph"><code class="xref py py-class docutils literal"><span class="pre">Typograph</span></code></a> object, and uses it to convert a transparent image:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">from</span> <span class="nn">typo_graphics</span> <span class="kn">import</span> <span class="n">Typograph</span>
+
+<span class="n">typograph</span> <span class="o">=</span> <span class="n">Typograph</span><span class="p">()</span>
+<span class="n">plus</span> <span class="o">=</span> <span class="n">typograph</span><span class="o">.</span><span class="n">glyphs</span><span class="p">[</span><span class="s1">&#39;+&#39;</span><span class="p">]</span>
+
+<span class="n">target_image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;transparent.png&#39;</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">typograph</span><span class="o">.</span><span class="n">image_to_text</span><span class="p">(</span><span class="n">target_image</span><span class="p">,</span> <span class="n">background_glyph</span><span class="o">=</span><span class="n">plus</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>With this, the image is now overlaid atop a grid of + characters.</p>
+<p>The following image set shows the original transparent image, followed by the results when:</p>
+<ol class="arabic simple">
+<li>No <cite>background_glyph</cite> is given, and therefore transparency is not used.</li>
+<li><cite>background_glyph</cite> is the plus character, +.</li>
+<li><cite>background_glyph</cite> is the <a class="reference internal" href="#spacebar-glyph"><span class="std std-ref">spacebar glyph</span></a> we created earlier.</li>
+<li><cite>background_glyph</cite> is the forward slash character, /.</li>
+</ol>
+<div class="figure align-center" id="id8">
+<img alt="_images/Transparency.png" src="_images/Transparency.png" />
+<p class="caption"><span class="caption-text">Transparent image, recreated with different background glyphs.</span></p>
+</div>
+<p>Note how at the edges of the transparent shape, where characters are in places that are not fully transparent or opaque,
+the background glyph choice affects the glyphs used.
+As is default with <a class="reference internal" href="api.html#typo_graphics.Typograph" title="typo_graphics.Typograph"><code class="xref py py-class docutils literal"><span class="pre">Typograph</span></code></a>, these images are created with the SR100 glyph set,
+with glyphs stacked up to 2 per space.</p>
+<p>It should be noted that <cite>background_glyph</cite> is treated separately from other glyphs,
+and so will not be used in opaque regions of the image, unless also present in <code class="xref py py-attr docutils literal"><span class="pre">Typograph.glyphs</span></code>.</p>
+<p>This allows for instance, use of the spacebar glyph for transparency, without allowing the spacebar to be used in the main part of the image.</p>
+</div>
+<div class="section" id="using-a-different-set-of-glyphs">
+<h2>Using a different set of glyphs</h2>
+<p>Typo_graphics was designed to be as independent of font as possible, making few assumptions about characters other than that they are monospaced.
+By default Typo_graphics will use the glyph images scanned from my Silver Reed SR100.
+These will work perfectly well for typewriters with the same or similar glyphs,
+but customisation to the specific machine will produce best results.</p>
+<p>The sets of glyphs from several other typewriters may also be used. To access these, simply provide a valid typewriter name
+as the value of the keyword argument <cite>typewriter</cite>, when instantiating the <a class="reference internal" href="api.html#typo_graphics.Typograph" title="typo_graphics.Typograph"><code class="xref py py-class docutils literal"><span class="pre">Typograph</span></code></a> object.
+A list of available inbuilt typewriters can be seen in <code class="xref py py-attr docutils literal"><span class="pre">Typograph.inbuilt_typewriters</span></code>.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">typo_graphics</span> <span class="kn">import</span> <span class="n">Typograph</span>
+
+<span class="n">typograph</span> <span class="o">=</span> <span class="n">Typograph</span><span class="p">(</span><span class="n">typewriter</span><span class="o">=</span><span class="s2">&quot;Imperial&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Outside of using the inbuilt glyph sets, a new set of glyph images must be passed to the <a class="reference internal" href="api.html#typo_graphics.Typograph" title="typo_graphics.Typograph"><code class="xref py py-class docutils literal"><span class="pre">Typograph</span></code></a> upon creation.
+There are three ways to instantiate this class, each corresponding to a different way to pass glyph information.</p>
+<div class="section" id="passing-glyphs-to-typograph">
+<h3>Passing glyphs to Typograph</h3>
+<p><a class="reference internal" href="api.html#typo_graphics.Typograph" title="typo_graphics.Typograph"><code class="xref py py-class docutils literal"><span class="pre">Typograph</span></code></a> will accept a dictionary of <a class="reference internal" href="api.html#typo_graphics.Glyph" title="typo_graphics.Glyph"><code class="xref py py-class docutils literal"><span class="pre">Glyph</span></code></a> objects,
+keyed with the glyph names. This is ideal if you are generating the glyphs dynamically, or wish to preprocess glyphs.</p>
+<p>However, often we have our glyph images ready and stored. <a class="reference internal" href="api.html#typo_graphics.Typograph" title="typo_graphics.Typograph"><code class="xref py py-class docutils literal"><span class="pre">Typograph</span></code></a> offers two factory methods,
+for use in these cases.</p>
+</div>
+<div class="section" id="working-from-a-directory-of-images">
+<h3>Working from a directory of images</h3>
+<p><a class="reference internal" href="api.html#typo_graphics.Typograph.from_directory" title="typo_graphics.Typograph.from_directory"><code class="xref py py-meth docutils literal"><span class="pre">from_directory()</span></code></a> can be used if the glyphs are stored as separate images, within a directory.
+This method will look for a <code class="docutils literal"><span class="pre">json</span></code> format file in the same directory by the name of <code class="docutils literal"><span class="pre">name_map.json</span></code>,
+otherwise glyphs will be named in accordance with their file names.</p>
+<p><code class="docutils literal"><span class="pre">name_map.json</span></code> is simply the serialisation of a dictionary, with key, value pairs corresponding to filenames
+(without extension) and the desired string name.
+Name maps are useful to correct the names of capital letters (<code class="docutils literal"><span class="pre">A.png</span></code> and <code class="docutils literal"><span class="pre">a.png</span></code> are deemed equal by Windows for example),
+as well as including non-valid filename characters such as the question mark.</p>
+<div class="highlight-json"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;Au&quot;</span><span class="p">:</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Bu&quot;</span><span class="p">:</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Cu&quot;</span><span class="p">:</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Du&quot;</span><span class="p">:</span> <span class="s2">&quot;D&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Eu&quot;</span><span class="p">:</span> <span class="s2">&quot;E&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Fu&quot;</span><span class="p">:</span> <span class="s2">&quot;F&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Gu&quot;</span><span class="p">:</span> <span class="s2">&quot;G&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Hu&quot;</span><span class="p">:</span> <span class="s2">&quot;H&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Iu&quot;</span><span class="p">:</span> <span class="s2">&quot;I&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Ju&quot;</span><span class="p">:</span> <span class="s2">&quot;J&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Ku&quot;</span><span class="p">:</span> <span class="s2">&quot;K&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Lu&quot;</span><span class="p">:</span> <span class="s2">&quot;L&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Mu&quot;</span><span class="p">:</span> <span class="s2">&quot;M&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Nu&quot;</span><span class="p">:</span> <span class="s2">&quot;N&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Ou&quot;</span><span class="p">:</span> <span class="s2">&quot;O&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Pu&quot;</span><span class="p">:</span> <span class="s2">&quot;P&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Qu&quot;</span><span class="p">:</span> <span class="s2">&quot;Q&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Ru&quot;</span><span class="p">:</span> <span class="s2">&quot;R&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Su&quot;</span><span class="p">:</span> <span class="s2">&quot;S&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Tu&quot;</span><span class="p">:</span> <span class="s2">&quot;T&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Uu&quot;</span><span class="p">:</span> <span class="s2">&quot;U&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Vu&quot;</span><span class="p">:</span> <span class="s2">&quot;V&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Wu&quot;</span><span class="p">:</span> <span class="s2">&quot;W&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Xu&quot;</span><span class="p">:</span> <span class="s2">&quot;X&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Yu&quot;</span><span class="p">:</span> <span class="s2">&quot;Y&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Zu&quot;</span><span class="p">:</span> <span class="s2">&quot;Z&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;and&quot;</span><span class="p">:</span> <span class="s2">&quot;&amp;&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;apos&quot;</span><span class="p">:</span> <span class="s2">&quot;&#39;&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;cdot&quot;</span><span class="p">:</span> <span class="s2">&quot;•&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;colon&quot;</span><span class="p">:</span> <span class="s2">&quot;:&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;comma&quot;</span><span class="p">:</span> <span class="s2">&quot;,&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;dollar&quot;</span><span class="p">:</span> <span class="s2">&quot;$&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;dot&quot;</span><span class="p">:</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;equal&quot;</span><span class="p">:</span> <span class="s2">&quot;=&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;hyphen&quot;</span><span class="p">:</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;lbrac&quot;</span><span class="p">:</span> <span class="s2">&quot;(&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;percent&quot;</span><span class="p">:</span> <span class="s2">&quot;%&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;plus&quot;</span><span class="p">:</span> <span class="s2">&quot;+&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;pound&quot;</span><span class="p">:</span> <span class="s2">&quot;£&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;question&quot;</span><span class="p">:</span> <span class="s2">&quot;?&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;quote&quot;</span><span class="p">:</span> <span class="s2">&quot;\&quot;&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;rbrac&quot;</span><span class="p">:</span> <span class="s2">&quot;)&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;semicolon&quot;</span><span class="p">:</span> <span class="s2">&quot;;&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;slash&quot;</span><span class="p">:</span> <span class="s2">&quot;/&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;under&quot;</span><span class="p">:</span> <span class="s2">&quot;_&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">name_map.json</span></code> is to use &#8220;utf-8&#8221; encoding, and as such, unicode characters are allowed, if they are a better match.
+For example, in the SR100 set, • would be used for the dot to separate shillings and pence.</p>
+<p>Not all characters need be listed in the name map, anything not listed will simply continue to use the filename, sans extension.
+This is why <code class="docutils literal"><span class="pre">a</span></code> does not feature, its image is stored as <code class="docutils literal"><span class="pre">a.png</span></code>.</p>
+</div>
+<div class="section" id="using-a-glyph-sheet">
+<h3>Using a glyph sheet</h3>
+<p>The glyph sheet format allows you to contain all your glyph images, within one image, akin to a sprite sheet.
+The most common use case would be for the glyph sheet to be a scan of a typed page of glyphs.
+This would require only minor manipulation, to align the image with the page, and remove excess space.</p>
+<p>For example, the glyph images for the SR100 set are contained within the following image:</p>
+<div class="figure align-center" id="id9">
+<img alt="_images/SR1001.png" src="_images/SR1001.png" />
+<p class="caption"><span class="caption-text">Glyph sheet for the SR100 typewriter.</span></p>
+</div>
+<p><a class="reference internal" href="api.html#typo_graphics.Typograph.from_glyph_sheet" title="typo_graphics.Typograph.from_glyph_sheet"><code class="xref py py-meth docutils literal"><span class="pre">from_glyph_sheet()</span></code></a> will parse the glyph sheet, splitting it up into the individual glyphs.</p>
+<p>The image can be passed to <a class="reference internal" href="api.html#typo_graphics.Typograph.from_glyph_sheet" title="typo_graphics.Typograph.from_glyph_sheet"><code class="xref py py-meth docutils literal"><span class="pre">from_glyph_sheet()</span></code></a> in several ways. If passed directly as an
+<a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/Image.html#PIL.Image.Image" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-class docutils literal"><span class="pre">Image</span></code></a> object, some meta data needs to also be specified. If, instead, it is passed as an open
+binary file object, or as a file path, then the meta data may be stored in a json file alongside the image.</p>
+<p>The total number of glyphs must be passed as an integer, as well as some information on how the glyphs are arranged.
+The dimensions of the grid can be specified, ie. 9 rows, of a maximum of 10 glyphs would be passed as the tuple, (10,9).
+Alternatively, the size of the glyphs in (width in pixels, height in pixels) can be passed.</p>
+<p>In both cases, the spacing between glyphs must also be given. Glyph names can be passed as a list from top left to bottom right,
+if omitted names will be assigned sequentially.</p>
+<p>Passing the image object directly:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">from</span> <span class="nn">typo_graphics</span> <span class="kn">import</span> <span class="n">Typograph</span>
+
+<span class="n">glyph_sheet</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;glyph_sheet.png&quot;</span><span class="p">)</span>
+<span class="n">number_glyphs</span> <span class="o">=</span> <span class="mi">82</span>
+<span class="n">grid_size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+<span class="n">spacing</span> <span class="o">=</span> <span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+
+<span class="n">typograph</span> <span class="o">=</span> <span class="n">Typograph</span><span class="o">.</span><span class="n">from_glyph_sheet</span><span class="p">(</span><span class="n">glyph_sheet</span><span class="o">=</span><span class="n">glyph_sheet</span><span class="p">,</span> <span class="n">number_glyphs</span><span class="o">=</span><span class="n">number_glyphs</span><span class="p">,</span> <span class="n">grid_size</span><span class="o">=</span><span class="n">grid_size</span><span class="p">,</span> <span class="n">spacing</span><span class="o">=</span><span class="n">spacing</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>As noted previously, if the glyph sheet is instead passed as an open binary file object, or a file path, a meta file may
+be stored alongside the image. This meta file may contain details such as the names of the glyphs,
+and will be automatically loaded. Overriding values may still be passed.</p>
+<p>Opening from a file path:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">typo_graphics</span> <span class="kn">import</span> <span class="n">Typograph</span>
+
+<span class="n">typograph</span> <span class="o">=</span> <span class="n">Typograph</span><span class="o">.</span><span class="n">from_glyph_sheet</span><span class="p">(</span><span class="s2">&quot;./Path/To/Glyph/Sheet.png&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Opening from an open binary file object:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">typo_graphics</span> <span class="kn">import</span> <span class="n">Typograph</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;./Path/To/Glyph/Sheet.png&quot;</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">binary_file_object</span><span class="p">:</span>
+    <span class="n">typograph</span> <span class="o">=</span> <span class="n">Typograph</span><span class="o">.</span><span class="n">from_glyph_sheet</span><span class="p">(</span><span class="n">binary_file_object</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In both these cases, the meta file would be located at &#8221;./Path/To/Glyph/Sheet.json&#8221;, and would be a serialised dictionary
+for values such as the spacing, names of glyphs, and so on.</p>
+<div class="highlight-json"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;typewriter&quot;</span><span class="p">:</span> <span class="s2">&quot;SR100&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;glyph_dimensions&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="mi">25</span><span class="p">,</span>
+        <span class="mi">50</span>
+    <span class="p">],</span>
+    <span class="nt">&quot;spacing&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="mi">25</span><span class="p">,</span>
+        <span class="mi">50</span>
+    <span class="p">],</span>
+    <span class="nt">&quot;carriage_width&quot;</span><span class="p">:</span> <span class="mi">101</span><span class="p">,</span>
+    <span class="nt">&quot;glyph_names&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;A&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;B&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;C&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;D&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;E&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;F&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;G&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;H&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;I&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;J&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;K&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;L&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;M&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;N&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;O&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;P&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Q&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;R&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;S&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;T&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;U&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;V&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;W&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;X&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Y&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Z&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;a&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;b&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;c&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;d&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;e&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;f&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;g&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;h&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;i&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;j&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;k&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;l&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;m&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;n&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;o&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;p&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;q&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;r&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;s&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;t&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;u&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;v&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;w&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;x&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;y&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;z&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;2&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;3&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;4&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;5&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;6&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;7&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;8&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;9&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;-&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;=&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;+&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;:&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;,&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;half&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;third&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;(&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;)&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;%&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;\&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;/&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;$&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;£&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;_&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;•&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;&amp;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;&#39;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;?&quot;</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The name of the typewriter, and the maximal carriage width may also be stored in such meta files.</p>
+</div>
+</div>
+<div class="section" id="manipulating-typograph-s-glyphs">
+<h2>Manipulating Typograph&#8217;s glyphs</h2>
+<p>We&#8217;ve seen how we can create a <a class="reference internal" href="api.html#typo_graphics.Typograph" title="typo_graphics.Typograph"><code class="xref py py-class docutils literal"><span class="pre">Typograph</span></code></a> object using glyphs from several sources.
+However, what if we want to manipulate the glyphs post instantiation?
+<a class="reference internal" href="api.html#typo_graphics.Typograph" title="typo_graphics.Typograph"><code class="xref py py-class docutils literal"><span class="pre">Typograph</span></code></a> exposes two methods for this, <a class="reference internal" href="api.html#typo_graphics.Typograph.add_glyph" title="typo_graphics.Typograph.add_glyph"><code class="xref py py-meth docutils literal"><span class="pre">add_glyph()</span></code></a> and <a class="reference internal" href="api.html#typo_graphics.Typograph.remove_glyph" title="typo_graphics.Typograph.remove_glyph"><code class="xref py py-meth docutils literal"><span class="pre">remove_glyph()</span></code></a>.</p>
+<div class="section" id="adding-glyphs">
+<h3>Adding glyphs</h3>
+<p>We saw earlier how to make a <a class="reference internal" href="#spacebar-glyph"><span class="std std-ref">spacebar glyph</span></a>,
+but how do we get our <a class="reference internal" href="api.html#typo_graphics.Typograph" title="typo_graphics.Typograph"><code class="xref py py-class docutils literal"><span class="pre">Typograph</span></code></a> object to use it in images?</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">from</span> <span class="nn">typo_graphics</span> <span class="kn">import</span> <span class="n">Glyph</span><span class="p">,</span> <span class="n">Typograph</span>
+
+<span class="n">blank_image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">((</span><span class="mi">25</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span> <span class="s2">&quot;white&quot;</span><span class="p">)</span>
+<span class="n">space</span> <span class="o">=</span> <span class="n">Glyph</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sp&#39;</span><span class="p">,</span> <span class="n">image</span><span class="o">=</span><span class="n">blank_image</span><span class="p">)</span>
+<span class="n">typograph</span> <span class="o">=</span> <span class="n">Typograph</span><span class="p">()</span>
+
+<span class="n">typograph</span><span class="o">.</span><span class="n">add_glyph</span><span class="p">(</span><span class="n">space</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Any subsequent uses of <a class="reference internal" href="api.html#typo_graphics.Typograph.image_to_text" title="typo_graphics.Typograph.image_to_text"><code class="xref py py-meth docutils literal"><span class="pre">image_to_text()</span></code></a> will use the spacebar glyph above to compose the image.</p>
+<p>However, if we look for our glyph in <cite>typograph.glyphs</cite>, it will be surprisingly absent.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="s1">&#39;a&#39;</span> <span class="ow">in</span> <span class="n">typograph</span><span class="o">.</span><span class="n">glyphs</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s1">&#39;sp&#39;</span> <span class="ow">in</span> <span class="n">typograph</span><span class="o">.</span><span class="n">glyphs</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<p>So, what is going on? Well, by default <a class="reference internal" href="api.html#typo_graphics.Typograph.add_glyph" title="typo_graphics.Typograph.add_glyph"><code class="xref py py-meth docutils literal"><span class="pre">Typograph.add_glyph()</span></code></a> adds our glyph to a separate list of standalone glyphs.</p>
+</div>
+<div class="section" id="standalone-glyphs">
+<h3>Standalone glyphs</h3>
+<p>Any <a class="reference internal" href="api.html#typo_graphics.Glyph" title="typo_graphics.Glyph"><code class="xref py py-class docutils literal"><span class="pre">Glyph</span></code></a> objects, present in <code class="xref py py-attr docutils literal"><span class="pre">Typograph.glyphs</span></code> will be used in combinations.
+By default, <code class="xref py py-attr docutils literal"><span class="pre">glyph_depth</span></code> will be 2, meaning that <cite>typograph</cite> will have constructed and stored all 2-glyph combinations.</p>
+<p>The default behaviour of <a class="reference internal" href="api.html#typo_graphics.Typograph.add_glyph" title="typo_graphics.Typograph.add_glyph"><code class="xref py py-meth docutils literal"><span class="pre">add_glyph()</span></code></a>, however, is to not use the glyph in combinations.
+This might seem odd, but it allows glyphs like the spacebar glyph shown above to be added, and used, without combining them.</p>
+<p>In glyph addition, the spacebar acts similar to how zero does in regular arithmetic.
+Adding a spacebar glyph to any other glyph, doesn&#8217;t change that glyph&#8217;s appearance.
+Therefore, if we were to allow spacebar to combine, it would produce 82 additional 2-glyph combinations,
+that have the identical image to our base glyphs.</p>
+<p>By default, <a class="reference internal" href="api.html#typo_graphics.Typograph.add_glyph" title="typo_graphics.Typograph.add_glyph"><code class="xref py py-meth docutils literal"><span class="pre">add_glyph()</span></code></a> will in fact place the glyph within the attribute <code class="xref py py-attr docutils literal"><span class="pre">Typograph.standalone_glyphs</span></code>.
+These glyphs are treated in the same way when matching into an image, but are kept from combinations.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="s1">&#39;a&#39;</span> <span class="ow">in</span> <span class="n">typograph</span><span class="o">.</span><span class="n">standalone_glyphs</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s1">&#39;sp&#39;</span> <span class="ow">in</span> <span class="n">typograph</span><span class="o">.</span><span class="n">standalone_glyphs</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>If you <strong>do</strong> want your added glyph to be combined, this is as simple as passing <code class="docutils literal"><span class="pre">True</span></code> to the keyword argument <cite>use_in_combinations</cite>.
+The following would add the spacebar glyph into the general glyph pool, for use in combinations,
+a reminder that this is <strong>not recommended</strong>, for performance reasons detailed above.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">from</span> <span class="nn">typo_graphics</span> <span class="kn">import</span> <span class="n">Glyph</span><span class="p">,</span> <span class="n">Typograph</span>
+
+<span class="n">blank_image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">((</span><span class="mi">25</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span> <span class="s2">&quot;white&quot;</span><span class="p">)</span>
+<span class="n">space</span> <span class="o">=</span> <span class="n">Glyph</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sp&#39;</span><span class="p">,</span> <span class="n">image</span><span class="o">=</span><span class="n">blank_image</span><span class="p">)</span>
+<span class="n">typograph</span> <span class="o">=</span> <span class="n">Typograph</span><span class="p">()</span>
+
+<span class="n">typograph</span><span class="o">.</span><span class="n">add_glyph</span><span class="p">(</span><span class="n">space</span><span class="p">,</span> <span class="n">use_in_combinations</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="s1">&#39;sp&#39;</span> <span class="ow">in</span> <span class="n">typograph</span><span class="o">.</span><span class="n">standalone_glyphs</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s1">&#39;sp&#39;</span> <span class="ow">in</span> <span class="n">typograph</span><span class="o">.</span><span class="n">glyphs</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="api.html#typo_graphics.Typograph" title="typo_graphics.Typograph"><code class="xref py py-class docutils literal"><span class="pre">Typograph</span></code></a> will keep the two dictionaries of glyphs, <code class="xref py py-attr docutils literal"><span class="pre">Typograph.glyphs</span></code> and <code class="xref py py-attr docutils literal"><span class="pre">Typograph.standalone_glyphs</span></code> mutually exclusive.
+No glyph should appear in both. As such, adding a glyph to either will simultaneous search and remove it from the other.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="s1">&#39;sp&#39;</span> <span class="ow">in</span> <span class="n">typograph</span><span class="o">.</span><span class="n">glyphs</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">typograph</span><span class="o">.</span><span class="n">add_glyph</span><span class="p">(</span><span class="n">space</span><span class="p">,</span> <span class="n">use_in_combinations</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s1">&#39;sp&#39;</span> <span class="ow">in</span> <span class="n">typograph</span><span class="o">.</span><span class="n">glyphs</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s1">&#39;sp&#39;</span> <span class="ow">in</span> <span class="n">typograph</span><span class="o">.</span><span class="n">standalone_glyphs</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>Adding glyphs directly to either of these dictionaries, without using <a class="reference internal" href="api.html#typo_graphics.Typograph.add_glyph" title="typo_graphics.Typograph.add_glyph"><code class="xref py py-meth docutils literal"><span class="pre">add_glyph()</span></code></a> will produce erroneous behaviour.</p>
+</div>
+<div class="section" id="removing-glyphs">
+<h3>Removing glyphs</h3>
+<p>Let us imagine that in using typo_graphics, one of the keys to your typewriter has become stuck.
+As such, we now want not to include anything from that key in our images, we need remove them.</p>
+<p>Of course, we could remove the image from the directory, if using <a class="reference internal" href="api.html#typo_graphics.Typograph.from_directory" title="typo_graphics.Typograph.from_directory"><code class="xref py py-meth docutils literal"><span class="pre">from_directory()</span></code></a>,
+or we could edit the glyph sheet if using <a class="reference internal" href="api.html#typo_graphics.Typograph.from_glyph_sheet" title="typo_graphics.Typograph.from_glyph_sheet"><code class="xref py py-meth docutils literal"><span class="pre">from_glyph_sheet()</span></code></a>. However, there is an easier way.</p>
+<p>Say that the <code class="docutils literal"><span class="pre">M</span></code> key has become stuck, and we want to not use <code class="docutils literal"><span class="pre">M</span></code> or <code class="docutils literal"><span class="pre">m</span></code> glyphs.
+Glyphs can be removed by name, as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">typo_graphics</span> <span class="kn">import</span> <span class="n">Typograph</span>
+
+<span class="n">typograph</span> <span class="o">=</span> <span class="n">Typograph</span><span class="p">()</span>
+
+<span class="n">capital_m</span> <span class="o">=</span> <span class="n">typograph</span><span class="o">.</span><span class="n">remove_glyph</span><span class="p">(</span><span class="s2">&quot;M&quot;</span><span class="p">)</span>
+<span class="n">lowercase_m</span> <span class="o">=</span> <span class="n">typograph</span><span class="o">.</span><span class="n">remove_glyph</span><span class="p">(</span><span class="s2">&quot;m&quot;</span><span class="p">)</span>
+<span class="n">capital_m</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">lowercase_m</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="figure align-center" id="id10">
+<img class="glyphdisplay" src="_images/glyphdisplay-d66635bc30ad0bb105e11036665cb039f1073e5b.png">
+<p class="caption"><span class="caption-text">Capital and lowercase m glyphs, removed from <a class="reference internal" href="api.html#typo_graphics.Typograph" title="typo_graphics.Typograph"><code class="xref py py-class docutils literal"><span class="pre">Typograph</span></code></a> instance.</span></p>
+</div>
+<p>Removed glyphs are returned, in case they wish to be used, which is why we can show them here. If the glyph is not found,
+<code class="docutils literal"><span class="pre">None</span></code> will be returned instead.
+By doing this, we have removed these two glyphs from <code class="xref py py-attr docutils literal"><span class="pre">Typograph.glyphs</span></code>, which will now only contain 80 items, not the 82 it had prior.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">typograph</span><span class="o">.</span><span class="n">glyphs</span><span class="p">)</span>
+<span class="go">80</span>
+</pre></div>
+</div>
+<p>These glyphs will now not be used in future calls to <a class="reference internal" href="api.html#typo_graphics.Typograph.image_to_text" title="typo_graphics.Typograph.image_to_text"><code class="xref py py-meth docutils literal"><span class="pre">Typograph.image_to_text()</span></code></a>,
+neither alone or within combinations.</p>
+<p>Without additional arguments, <a class="reference internal" href="api.html#typo_graphics.Typograph.remove_glyph" title="typo_graphics.Typograph.remove_glyph"><code class="xref py py-meth docutils literal"><span class="pre">remove_glyph()</span></code></a> will remove the given glyph from both <cite>typograph.glyphs</cite> and <cite>typograph.standalone_glyphs</cite>,
+wherever it may appear. If, however, you wish to control the removal, the keyword argument <cite>remove_from</cite> can be specified.</p>
+<p>The following are valid values for <cite>remove_from</cite></p>
+<blockquote>
+<div><ul class="simple">
+<li><code class="docutils literal"><span class="pre">&quot;Combinations&quot;</span></code> or <code class="docutils literal"><span class="pre">&quot;C&quot;</span></code> to remove from combinations (<code class="xref py py-attr docutils literal"><span class="pre">Typograph.glyphs</span></code>).</li>
+<li><code class="docutils literal"><span class="pre">&quot;Standalone&quot;</span></code> or <code class="docutils literal"><span class="pre">&quot;S&quot;</span></code> to remove from standalone glyphs (<code class="xref py py-attr docutils literal"><span class="pre">Typograph.standalone_glyphs</span></code>).</li>
+<li><code class="docutils literal"><span class="pre">&quot;Both&quot;</span></code> or <code class="docutils literal"><span class="pre">&quot;B&quot;</span></code> to remove from both.</li>
+</ul>
+</div></blockquote>
+<p>Recall that <a class="reference internal" href="api.html#typo_graphics.Typograph" title="typo_graphics.Typograph"><code class="xref py py-class docutils literal"><span class="pre">Typograph</span></code></a> maintains that no glyph appear in both dictionaries simultaneously,
+and as such <code class="docutils literal"><span class="pre">&quot;Both&quot;</span></code> is to be interpreted as searching for the glyph in both, and removing it from any it appears in.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="s1">&#39;a&#39;</span> <span class="ow">in</span> <span class="n">typograph</span><span class="o">.</span><span class="n">glyphs</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">typograph</span><span class="o">.</span><span class="n">remove_glyph</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s2">&quot;Standalone&quot;</span><span class="p">)</span>
+<span class="go">None</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s1">&#39;a&#39;</span> <span class="ow">in</span> <span class="n">typograph</span><span class="o">.</span><span class="n">glyphs</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">typograph</span><span class="o">.</span><span class="n">remove_glyph</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s2">&quot;Combinations&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s1">&#39;a&#39;</span> <span class="ow">in</span> <span class="n">typograph</span><span class="o">.</span><span class="n">glyphs</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<p>One way to use <a class="reference internal" href="api.html#typo_graphics.Typograph.remove_glyph" title="typo_graphics.Typograph.remove_glyph"><code class="xref py py-meth docutils literal"><span class="pre">remove_glyph()</span></code></a> and <a class="reference internal" href="api.html#typo_graphics.Typograph.add_glyph" title="typo_graphics.Typograph.add_glyph"><code class="xref py py-meth docutils literal"><span class="pre">add_glyph()</span></code></a> together, is to extract a glyph, and insert a new one in its place.</p>
+<p>Propose that somehow your <code class="docutils literal"><span class="pre">M</span></code> key had, instead of sticking, suffered damage,
+and was now was typing a capital M at the equivalent of 10 pixels below the normal position.</p>
+<p>We will use <a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/ImageChops.html#PIL.ImageChops.offset" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-func docutils literal"><span class="pre">PIL.ImageChops.offset()</span></code></a> to implement this offsetting.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">PIL.ImageChops</span> <span class="kn">import</span> <span class="n">offset</span>
+<span class="kn">from</span> <span class="nn">typo_graphics</span> <span class="kn">import</span> <span class="n">Typograph</span><span class="p">,</span> <span class="n">Glyph</span>
+
+<span class="n">typograph</span> <span class="o">=</span> <span class="n">Typograph</span><span class="p">()</span>
+
+<span class="n">capital_m</span> <span class="o">=</span> <span class="n">typograph</span><span class="o">.</span><span class="n">remove_glyph</span><span class="p">(</span><span class="s1">&#39;M&#39;</span><span class="p">)</span>
+<span class="n">shifted_image</span> <span class="o">=</span> <span class="n">offset</span><span class="p">(</span><span class="n">capital_m</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">new_capital_m</span> <span class="o">=</span> <span class="n">Glyph</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;M&#39;</span><span class="p">,</span> <span class="n">image</span><span class="o">=</span><span class="n">shifted_image</span><span class="p">)</span>
+
+<span class="n">typograph</span><span class="o">.</span><span class="n">add_glyph</span><span class="p">(</span><span class="n">new_capital_m</span><span class="p">,</span> <span class="n">use_in_combinations</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="development.html" class="btn btn-neutral float-right" title="Development" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="Welcome to Typo_graphics" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Richard Spencer.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: ''
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

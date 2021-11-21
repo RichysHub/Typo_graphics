@@ -1,0 +1,580 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Concepts &mdash; Typo_graphics 0.3.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="author" title="About these documents"
+              href="about.html"/>
+    <link rel="top" title="Typo_graphics 0.3.0 documentation" href="index.html"/>
+        <link rel="next" title="Combinations" href="combinations.html"/>
+        <link rel="prev" title="About" href="about.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Typo_graphics
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Concepts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#glyphs">Glyphs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#samples">Samples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chunking">Chunking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#glyph-matching">Glyph matching</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#nearest-neighbour">Nearest neighbour</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#close-enough-matching">Close enough matching</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#centroid-calculation">Centroid calculation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#instruction-format">Instruction format</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#sorting-instructions">Sorting instructions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#sorted">Sorted</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#currently-using">Currently using</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#most-common">Most common</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#left-comparison">Left comparison</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="combinations.html">Combinations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="full_reference.html">Full Reference</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Typo_graphics</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Concepts</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/concepts.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="concepts">
+<h1>Concepts</h1>
+<p>This section contains some more in depth detail about the decisions involved in creating Typo_graphics,
+as well as some of the logic that built the foundations for some of the methods.
+This section will feature some mathematical rigour, where deemed necessary.</p>
+<div class="section" id="glyphs">
+<h2>Glyphs</h2>
+<p>Typewriters are, for the most part, monospace writing machines.
+As such they are only able of placing ink within a bounding box, the space of one glyph.</p>
+<p>Anything that can be typed, either with a single keypress, or by holding a modifier key such as Shift, is referred to as a glyph.
+Glyphs produced in this way are referred to as typeable. Typeable glyphs are what one would think of as a character on a typewriter.</p>
+<p>In addition to typeable glyphs, Typo_graphics considers composite glyphs. These are glyphs created by overtyping one glyph upon another.
+Typo_graphics considers only the problem of composing monospace glyphs, not duospace or variable width characters.</p>
+</div>
+<div class="section" id="samples">
+<h2>Samples</h2>
+<p>When considering the shape of a glyph, there is a certain amount of detail that can be ignored.
+When a glyph is created, a second image is made, scaled down. It is this image that is used internally for matching to the image.</p>
+<p>To what level this image is scaled down can affect the results obtained. By default, glyphs are scaled to an image 3 pixels by 3 pixels.
+Higher samples tend to take longer to process, but give more accurate results.
+Lower samples are much quicker, but will focus less on glyph shape, and more on average brightness of the glyph as a whole.</p>
+<p>With samples of (3, 3), each pixel will be an average value of that ninth of the input glyph image.
+This allows for concepts such as how bright the center ninth of the pixel is, which will be used when matching.</p>
+<p>This sample sized version of a glyphs image can be accessed with <code class="xref py py-attr docutils literal"><span class="pre">Glyph.fingerprint</span></code>.
+An additional version of this image, scaled back up to the original glyph size is also created, <code class="xref py py-attr docutils literal"><span class="pre">Glyph.fingerprint_display</span></code>.</p>
+</div>
+<div class="section" id="chunking">
+<h2>Chunking</h2>
+<p>In order to match glyphs, we must first split our image up into glyph size chunks.
+This is the action of <code class="xref py py-meth docutils literal"><span class="pre">Typograph._chunk()</span></code>, which takes the input image and renders regions of pixels,
+equal to the sample size of the glyphs.</p>
+<p>Each chunk of the image is treated entirely independently.
+This approach therefore does pose problems in extending the program to duospace fonts, or for half line spacing.
+In both of these cases, the chunks would have interdependency.</p>
+</div>
+<div class="section" id="glyph-matching">
+<h2>Glyph matching</h2>
+<p>Matching glyphs to parts of images is a nontrivial task.
+From chunking we have produced pixel chunks, corresponding to sample shaped regions of the input image.
+By default these will contain 9 values, ranging from 0 to 255.</p>
+<p>If we ignore the combination glyphs, the SR100 typewriter offers 82 typeable glyphs.
+While this may seem a lot, it pales in comparison to the 256^9 = 4,722,366,482,869,645,213,696 possible 9 pixel chunks.</p>
+<p>The matching problem, it was found, can be viewed as analogous to the nearest neighbour problem,
+and therefore tackled with known approaches.</p>
+<div class="section" id="nearest-neighbour">
+<h3>Nearest neighbour</h3>
+<p>How does matching a glyph to a set of pixels become a nearest neighbour problem?</p>
+<p>First let us consider the simplest case, where samples is (1, 1).
+In this case, nothing about glyph shape matters, all that goes into the calculation is the average luminosity value.
+This average value is effectively a brightness score, a position on the scale from 0 to 255,
+where 0 would be an entirely black glyph, and 255, an entirely white one.</p>
+<p>Very empty characters, like the full stop would have a very high value.</p>
+<div class="figure align-center" id="id2">
+<img class="glyphdisplay" src="_images/glyphdisplay-dea7a0ea7b6a37aa711c265e2598c1734ecdcfb2.png">
+<p class="caption"><span class="caption-text">The full stop, a very empty character.</span></p>
+</div>
+<p>Whereas very full characters, like the dollar sign, are much heavier with ink.</p>
+<div class="figure align-center" id="id3">
+<img class="glyphdisplay" src="_images/glyphdisplay-6fe5474040ed306e90b63ae868376d76a5ac66f0.png">
+<p class="caption"><span class="caption-text">The dollar sign, a very heavy character.</span></p>
+</div>
+<p>Analysing all the glyphs in the SR100 set, we could form a scale from 0 to 255.
+Whenever we want to match a pixel of the image, we would look for the glyph closest to the average value of said pixel.
+That glyph would be our closest match, and would be used for that region of the image.</p>
+<p>Extending this, consider the case in which it is (1, 2), that is to say, 1 sample across and 2 down.
+In this case, our fingerprint images now give the concepts of upper half value, and lower half value.</p>
+<div class="figure align-center" id="id4">
+<img class="glyphdisplay" src="_images/glyphdisplay-aa5c98a0f2b7feb1157a53c02a0341b310129a8d.png">
+<p class="caption"><span class="caption-text">The underscore, a very bottom heavy character.</span></p>
+</div>
+<p>Characters that are very bottom heavy, such as the underscore will have be dark in the lower half, and near white in the upper.
+The reverse of this would be true of upper heavy characters such as quotation marks.</p>
+<div class="figure align-center" id="id5">
+<img class="glyphdisplay" src="_images/glyphdisplay-17f94cad3d73af8a3638def9b745be673c0b2938.png">
+<p class="caption"><span class="caption-text">The quotation mark, a very top heavy character.</span></p>
+</div>
+<p>To match a glyph now, however, we have to consider the value of both halves, in conjunction.
+To visualise, we imagine that the typeable glyphs exist on a 2d plane,
+with the x axis being the lower half value, and the y axis the upper half value.</p>
+<p>Our image chunk is now a point in this 2D space, and we can use euclidean distance to find how far it is from every glyph.
+In doing so, we can pick the shortest &#8216;distance&#8217;, which is our closest glyph.</p>
+<p>Calculating the distance to every glyph, however, is very costly.
+This is an example of the nearest neighbour problem in two dimensions.
+Much more optimal approaches exist, such as the k-d tree that Typo_graphics utilises.</p>
+<p>As samples increases, so does the dimensionality of the nearest neighbour search.
+At (3, 3), we are using 9 dimensional space.
+The specific implementation of k-d tree, <code class="xref py py-class docutils literal"><span class="pre">cKDTree</span></code> openly admits its searches are not much more
+efficient than brute force for high numbers of dimensions. The value of high in this context is &gt;20,
+so it is advised that this is kept in mind when raising samples. This is an open problem.</p>
+</div>
+<div class="section" id="close-enough-matching">
+<h3>Close enough matching</h3>
+<p>When we include the combination glyphs that Typo_graphics uses, by default stacking to a depth of 2,
+often the best match is a 2-glyph stack. This would be expected just based on the number of each type,
+there is an order of magnitude more combination glyphs.</p>
+<p>However, typing a combination glyph is usually more work than typing a single glyph.
+The exact handling of this is imprecise, it does not include considerations of having to press the shift key,
+or perhaps having to switch to a specific mode on an electronic typewriter.
+It also assumes that advancing the carriage one space (normally just pressing the spacebar) is not an expensive action.</p>
+<p>What we can say, is that typing 2 glyphs is harder than 1.
+The most labour intensive way would be to type one glyph, backspace, and overtype another.
+We know, that to type two glyphs, will be at least as difficult as to type one glyph, then another.</p>
+<p>Assuming the backspace is just like any other key,
+the effort to type a 2-glyph stack is thus: <img class="math" src="_images/math/4d5e81de9abb6c29f77599be2aacc4ee94931384.png" alt="2 E_1 \leq E_2 \leq 3 E_1"/>.
+Where <img class="math" src="_images/math/acf7dd67470ba7df527d73b3155e6b5393730029.png" alt="E_1"/> is the effort to type a single glyph, and <img class="math" src="_images/math/5550d672b28cd7bf92aee39af06b8af5375662a6.png" alt="E_2"/> that of a 2-glyph stack.
+We will claim that <img class="math" src="_images/math/5550d672b28cd7bf92aee39af06b8af5375662a6.png" alt="E_2"/> will be equal to <img class="math" src="_images/math/acf7dd67470ba7df527d73b3155e6b5393730029.png" alt="E_1"/>, plus some &#8216;extra effort&#8217;, <img class="math" src="_images/math/ca4e54383e3e93d88cd4bf1b39f43f1ca9ced4d3.png" alt="\varepsilon"/>.</p>
+<p>We would only have elected to use the 2-glyph stack in the first place,
+if it were closer to the pixel chunk in the n-dimensional neighbour search space.
+As such, the value of <img class="math" src="_images/math/00da76c87bf6e28513da4ea2e8d334da97ee1c7f.png" alt="d_1 - d_2"/> is known to be positive,
+if <img class="math" src="_images/math/e591479fdd0dc40890cb70ebb153ffd59ecd62c0.png" alt="d_n"/> is the distance from the pixel chunk to the stack of <img class="math" src="_images/math/de7d02d736a02b08dc00c1bce2801b3479048241.png" alt="n"/> glyphs.</p>
+<p>In order to get a sense of scale for this <img class="math" src="_images/math/00da76c87bf6e28513da4ea2e8d334da97ee1c7f.png" alt="d_1 - d_2"/>, let us introduce <img class="math" src="_images/math/b2937204029257f4923ceaca1f935a818df46671.png" alt="\bar{d}"/>.
+This <img class="math" src="_images/math/b2937204029257f4923ceaca1f935a818df46671.png" alt="\bar{d}"/> is the distance from our pixel chunk to a glyph, on average.
+We will ignore the specifics on how we calculate <img class="math" src="_images/math/b2937204029257f4923ceaca1f935a818df46671.png" alt="\bar{d}"/> for now.</p>
+<p>We can say that if <img class="math" src="_images/math/d8055054dcd41ba9732af87100cb272e431bdd5e.png" alt="\dfrac{d_1 - d_2}{\bar{d}}"/> is small enough, the single stack is close enough,
+and it is easier to substitute the 2-glyph stack with it.
+Also, if it is a lot of extra effort to type the 2-glyph stack, we would accept a less close match.</p>
+<p>The proposed form is then,</p>
+<div class="math">
+<p><img src="_images/math/f0c558e39dbf61ddbe3500069d4e23f3c6d7964d.png" alt="\frac{d_1 - d_2}{\varepsilon \bar{d}} &lt; c"/></p>
+</div><p>Where <img class="math" src="_images/math/ef03cea226d9bb82b05c4f005017e7a22400443e.png" alt="c"/> is some tunable cutoff value.</p>
+<p>To generalise, to compare two stacks of <img class="math" src="_images/math/58a8bff51b7f58da36a77dd498d6ca0f1026ceb2.png" alt="a"/>, and <img class="math" src="_images/math/8558b1c5ac7c7c93bf15b92f8c154396566ad653.png" alt="b"/> glyphs, where <img class="math" src="_images/math/43d194ae47708878cabe46b9138aef2783a152f4.png" alt="a &gt; b"/>,</p>
+<div class="math">
+<p><img src="_images/math/fa6d914d8954ce4602fb086ecd3b6ad12136e869.png" alt="\frac{d_b - d_a}{\varepsilon (a - b) \bar{d}} &lt; c"/></p>
+</div><p>We can then combine the <img class="math" src="_images/math/ca4e54383e3e93d88cd4bf1b39f43f1ca9ced4d3.png" alt="\varepsilon"/> and <img class="math" src="_images/math/ef03cea226d9bb82b05c4f005017e7a22400443e.png" alt="c"/> parameters into a single cutoff value,</p>
+<div class="math">
+<p><img src="_images/math/397830b6353fbfd4c262e97893066c97e723de7b.png" alt="\frac{d_b - d_a}{(a - b) \bar{d}} &lt; \mathit{cutoff}"/></p>
+</div><p>This cutoff value is directly implemented as the keyword parameter <cite>cutoff</cite> for <a class="reference internal" href="api.html#typo_graphics.Typograph.image_to_text" title="typo_graphics.Typograph.image_to_text"><code class="xref py py-meth docutils literal"><span class="pre">image_to_text()</span></code></a>.
+The default value is 0, which will disable this &#8216;close-enough&#8217; evaluation.
+A value of 1 would result in only single glyphs being used.</p>
+</div>
+<div class="section" id="centroid-calculation">
+<h3>Centroid calculation</h3>
+<p>Calculating <img class="math" src="_images/math/b2937204029257f4923ceaca1f935a818df46671.png" alt="\bar{d}"/>, the distance of our chunk to a glyph, on average, if done naively, is a very costly procedure.
+For each chunk, of which we expect on the order of several thousand,
+we would have to calculate distances in 9 dimensional space to thousands of glyphs.</p>
+<p>In order to tackle this hefty workload in a smarter way, we employ use of a centroid.
+Upon creation of each <a class="reference internal" href="full_reference.html#typo_graphics.typograph.TreeSet" title="typo_graphics.typograph.TreeSet"><code class="xref py py-class docutils literal"><span class="pre">TreeSet</span></code></a>, the centroid of the glyphs in that collection is calculated.
+The centroid is defined as the average position in sample parameter space, so by default it will be a 9 dimensional point.</p>
+<p><img class="math" src="_images/math/b2937204029257f4923ceaca1f935a818df46671.png" alt="\bar{d}"/> is the Root Mean Square Distance (RMSD) to glyphs in the collection.
+To manually calculate this would be to calculate all distance squares, take a mean, and then square root.
+As stated before, this would be incredibly costly.</p>
+<p>We can introduce the centroid <img class="math" src="_images/math/01ee7887ee26bfb157a9dd5e4e4e6fc3b25904ac.png" alt="m"/>, to alleviate this issue.</p>
+<div class="math">
+<p><img src="_images/math/6a55124a9b6ccd97bd76134744a34424a7af057e.png" alt="\text{RMSD} &amp;= \sqrt{\frac{1}{N}\sum_{i=1}^N (x_i - p)^2}
+
+(x_i - p)^2 &amp;= (x_i - m + m - p)^2
+
+            &amp;= (x_i - m)^2 + (m - p)^2 + 2(x_i - m)(m - p)"/></p>
+</div><p>Where <img class="math" src="_images/math/e3cfb69a59237641bb51b900a4c565337bc259ba.png" alt="x_i"/> denote glyph positions, and <img class="math" src="_images/math/3d0f360ead6f0acd42eed2db89b45ac393075122.png" alt="p"/> our chunk point in the sample space.
+However, we know that <img class="math" src="_images/math/be241e06e7700a952b9d0ebb317b027966919316.png" alt="(m - p)"/> is constant,</p>
+<div class="math">
+<p><img src="_images/math/c4e0676e4cef72fa1b9321b2044b717e870f071c.png" alt="N (\text{RMSD})^2 &amp;= \sum_{i=1}^N (x_i - p)^2
+
+                  &amp;= N(m-p)^2 + \sum_{i=1}^N \{(x_i - m)^2 + 2(x_i - m)(m - p)\}
+
+                  &amp;= N(m-p)^2 + \sum_{i=1}^N (x_i - m)^2 + 2(m-p)\sum_{i=1}^N (x_i - m)"/></p>
+</div><p>But, by definition of the centroid, the second summation vanishes,</p>
+<div class="math">
+<p><img src="_images/math/1005f07973cfd447c48e00f86f7137cf9ec3a5d5.png" alt="\text{RMSD} = \sqrt{(m-p)^2 + \frac{1}{N}\sum_{i=1}^N (x_i - m)^2}"/></p>
+</div><p>The second term inside the square root is simply the mean square distance from centroid,
+which is a constant over the <a class="reference internal" href="full_reference.html#typo_graphics.typograph.TreeSet" title="typo_graphics.typograph.TreeSet"><code class="xref py py-class docutils literal"><span class="pre">TreeSet</span></code></a>, and can also be calculated at creation time.</p>
+<p>This derivation allows us to calculate <img class="math" src="_images/math/b2937204029257f4923ceaca1f935a818df46671.png" alt="\bar{d}"/>, needing only to calculate its distance from one point, the centroid.
+This approach is used in <code class="xref py py-meth docutils literal"><span class="pre">_root_mean_square_distance()</span></code>, used by <code class="xref py py-meth docutils literal"><span class="pre">_find_closest_glyph()</span></code>.</p>
+</div>
+</div>
+<div class="section" id="instruction-format">
+<h2>Instruction format</h2>
+<p>The instruction format, as is mentioned in <a class="reference internal" href="development.html#instruction-format"><span class="std std-ref">the inspiration section</span></a>,
+is heavily inspired by the Neill format. This format is very logical, but its creation presented some interesting problems.
+The main problem is how to organise the glyph instructions for 2 overtyped lines,
+creating the most concise set of instructions.</p>
+<div class="section" id="sorting-instructions">
+<h3>Sorting instructions</h3>
+<p>In this section, I will introduce a new notation for composite glyphs.
+Letters stacked vertically between brackets indicate a single glyph composed of those typeable glyphs.</p>
+<p>In this format, the exclamation mark we composed from an apostrophe and a full stop would be shown with two stacked glyphs.
+To underscore it, we would also add the underscore to the stack:</p>
+<div class="math">
+<p><img src="_images/math/1b91267e661fd1ce534b82642df4898586a56db4.png" alt="\text{!} = \TwoGlyph{'}{.}"/></p>
+</div><p>In general, I will use capital letters, though the logic is not dependent on the specific glyph components.
+Occasionally I will align glyph stacks of uneven length. In this situation, the instructions should have a spacer inserted.
+In fact, the spacer glyph used in these situations can be passed as the keyword argument <cite>instruction_spacer</cite> to <a class="reference internal" href="api.html#typo_graphics.Typograph.image_to_text" title="typo_graphics.Typograph.image_to_text"><code class="xref py py-meth docutils literal"><span class="pre">image_to_text()</span></code></a>.
+The default for this is a spacebar glyph, which has the <code class="xref py py-attr docutils literal"><span class="pre">name</span></code> sp.</p>
+<p>We have a line of composite glyphs. If these are all 2-glyph stacks, we have to create 2 instruction lines,
+so that the user can type one, return the carriage, and type the other.</p>
+<p>The most basic approach would just to use the first character in the components for the first line,
+and the 2nd component for the second line. Note that the components are stored sorted.
+This is the &#8216;sorted&#8217; approach.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">When comparing approaches, we are most interested in the total number of instructions produced,
+each instruction being how many to type, and what character to type, ie <img class="math" src="_images/math/0535395ac4a29acfbd8107ba7763aceebb7c07bc.png" alt="2A"/>.</p>
+</div>
+<div class="section" id="sorted">
+<h4>Sorted</h4>
+<p>The sorted method would produce the following:</p>
+<div class="math">
+<p><img src="_images/math/ef00f7799c3584e16a86d00a5ed56583201a7395.png" alt="\ThreeGlyph{A}{B}{C} \uTwoGlyph{A}{B} \Rightarrow \begin{matrix} 2A \\ 2B \\ 1C \end{matrix}"/></p>
+</div><p>The lowest line of the instructions here could have a <img class="math" src="_images/math/4ab01e3b5b0afa8f8893b66046d72b0bc50e62c2.png" alt="sp"/> appended for the trailing spacer, but these are omitted.
+When typing, if the remainder of the line is spaces, we may as well return the carriage and begin typing the next line.</p>
+<p>This appears to work reasonably well, but it is not difficult to find a counter case that shows this is not sufficient:</p>
+<div class="math">
+<p><img src="_images/math/84138c9211fad1e5e64e33128ff24492cc381937.png" alt="\ThreeGlyph{A}{B}{C} \uTwoGlyph{B}{C}
+&amp;\Rightarrow \begin{matrix} 1A &amp; 1B \\ 1B &amp; 1C \\ 1C &amp; \end{matrix}
+
+&amp;\nRightarrow \begin{matrix} 1A \\ 2B \\ 2C \end{matrix}"/></p>
+</div><p>Hopefully you agree the second option there would be much simpler to type than the first, you need switch characters less often.
+The first instruction set contains 5 instructions, compared to the second set which contains just 3.
+Clearly a different algorithm is needed.</p>
+</div>
+<div class="section" id="currently-using">
+<span id="id1"></span><h4>Currently using</h4>
+<p>Perhaps it is sufficient to make passes down the line, taking the first typeable glyph,
+and only switching to a new one when it is not available in a composite?
+This works of the following, which sorted fails to cover.</p>
+<div class="math">
+<p><img src="_images/math/dce430e0578e14e740899e23af34209ba10c0b94.png" alt="\uTwoGlyph{C}{D} \ThreeGlyph{A}{B}{C}
+\Rightarrow \begin{matrix} 2C \\ 1D &amp; 1A \\ 1sp &amp; 1B \end{matrix}"/></p>
+</div><p>However, this fails on the same case we saw sorted fail,</p>
+<div class="math">
+<p><img src="_images/math/2f364cba4a594898c0a3092afdd5e6e05be6783d.png" alt="\ThreeGlyph{A}{B}{C} \uTwoGlyph{B}{C}
+&amp;\Rightarrow \begin{matrix} 1A &amp; 1B \\ 1B &amp; 1C \\ 1C \end{matrix}
+
+&amp;\nRightarrow \begin{matrix} 1A \\ 2B \\ 2C \end{matrix}"/></p>
+</div></div>
+<div class="section" id="most-common">
+<h4>Most common</h4>
+<p>We are aiming to make chains of characters, so perhaps it is best to focus on the most common glyphs, propose:</p>
+<ul class="simple">
+<li>Work out amount of each glyph total in composites.</li>
+<li>Pick the most common we&#8217;ve yet to use, and process that through.</li>
+<li>Any that do not have the current most common, use the least common one from the available components.</li>
+</ul>
+<p>This successfully works solves this problem, which none of the previous manage:</p>
+<div class="math">
+<p><img src="_images/math/9e1f5a2d24a7f5105302ee81bf756ce37b30e90a.png" alt="\ThreeGlyph{A}{B}{C} \uTwoGlyph{B}{C} \uOneGlyph{C}
+\Rightarrow \begin{matrix} 3C \\ 2B \\ 1A \end{matrix}"/></p>
+</div><p>But, once again, a counterexample can be found. I am unsure if an easier counterexample exists,</p>
+<div class="math">
+<p><img src="_images/math/704f2086ae9b1c562fa19650966726f6334ee6d9.png" alt="\ThreeGlyph{A}{C}{D} \uTwoGlyph{A}{B} \uOneGlyph{B} \uTwoGlyph{A}{B} \ThreeGlyph{A}{C}{D}
+&amp;\Rightarrow \begin{matrix} 2A &amp; 1B &amp; 2A \\ 1C &amp; 1B &amp; 1sp &amp; 1B &amp; 1C \\ 1D &amp; 3sp &amp; 1D \end{matrix}
+
+&amp;\nRightarrow \begin{matrix} 2A &amp; 1sp &amp; 2A \\ 1C &amp; 3B &amp; 1C \\ 1D &amp; 3sp &amp; 1D \end{matrix}"/></p>
+</div><p>Here the saving looks small, but this is just 5 composite glyphs. When lines grow to 60 characters, it may well become an issue.
+It looks like this method, with modification might be viable, but keeping track of the list of most common glyphs seems a lot of busywork.</p>
+</div>
+<div class="section" id="left-comparison">
+<h4>Left comparison</h4>
+<p>This is the method that was finally decided upon, it is implemented as the instruction composer in <code class="xref py py-meth docutils literal"><span class="pre">_instructions()</span></code>.</p>
+<p>The left comparison is a modified version of the <a class="reference internal" href="#currently-using"><span class="std std-ref">currently using</span></a> method we covered earlier.
+The main extra consideration we need to add is that we want to consciously place glyphs to extend any current runs we can.
+This method&#8217;s description will be far more in depth, as it is backed by the rigours of implementation.</p>
+<p>Let us work through processing the following:</p>
+<div class="math">
+<p><img src="_images/math/f6c4f9a8f8eeabe4c676b6bd54d8aa56a4d0d134.png" alt="\ThreeGlyph{B}{C}{D} \ThreeGlyph{A}{B}{D} \uOneGlyph{A}"/></p>
+</div><p>The first composite glyph is accepted as is, its arrangement is inconsequential.</p>
+<div class="math">
+<p><img src="_images/math/0d2f5d1dee6702d9724d2d7818e4c313e3e0b98a.png" alt="\ThreeGlyph{B}{C}{D}"/></p>
+</div><p>We now want to place the glyph <img class="math" src="_images/math/3929488f74583000ce75c694948ad0e200c993f6.png" alt="\ThreeGlyph{A}{B}{D}"/>.
+We know our glyph will contain 3 positions, so let us create a glyph made of spacers,
+and keep track of the indexes we have available.</p>
+<div class="math">
+<p><img src="_images/math/48436eb2c05e7ab7975e16b216f483059e464815.png" alt="\ThreeGlyph{B}{C}{D} \ThreeGlyph{sp}{sp}{sp} \quad
+\mathit{indexes} = \begin{pmatrix} 0 \\ 1 \\ 2 \end{pmatrix}"/></p>
+</div><p>We work through it in order.
+Is <img class="math" src="_images/math/9aa8c2530ca6b407b5b3fbab59311d24b112e886.png" alt="A"/> in our previous glyph? No? Then let us set it aside in a deferred list.</p>
+<div class="math">
+<p><img src="_images/math/2b91b328e720e8fb9297748fedb1fcddc30e2d3f.png" alt="\ThreeGlyph{B}{C}{D} \ThreeGlyph{sp}{sp}{sp} \quad
+\mathit{indexes} = \begin{pmatrix} 0 \\ 1 \\ 2 \end{pmatrix} \quad
+\mathit{deferred} = [ A ]"/></p>
+</div><p>Next, is <img class="math" src="_images/math/ffe537b8aaadd7edb12d99f73449d1a47d306d85.png" alt="B"/> in our previous glyph? Yes! Place it in the correct position in our new glyph,
+and mark its index as no longer available.</p>
+<div class="math">
+<p><img src="_images/math/09fd67c1210f2891c6c86e90b5cf7a82d81fb0ac.png" alt="\ThreeGlyph{B}{C}{D} \ThreeGlyph{B}{sp}{sp} \quad
+\mathit{indexes} = \begin{pmatrix} 1 \\ 2 \end{pmatrix} \quad
+\mathit{deferred} = [ A ]"/></p>
+</div><p>Is <img class="math" src="_images/math/57d355689ba91e3a3a0f54a659612e97348facce.png" alt="D"/> in our previous glyph? Yes, so repeat as above.</p>
+<div class="math">
+<p><img src="_images/math/fbb31f57533810407884fd8fcf5ebaec1d591f8a.png" alt="\ThreeGlyph{B}{C}{D} \ThreeGlyph{B}{sp}{D} \quad
+\mathit{indexes} = \begin{pmatrix} 1 \end{pmatrix} \quad
+\mathit{deferred} = [ A ]"/></p>
+</div><p>We have reached the end of the components that we need to place.
+We are now sure that any runs that were being made before, are being continued if possible.
+Now we can fill in the gaps, using the deferred list.
+In this, we work through the available indexes in order.
+This has the side effect of making the last instruction line the most likely to contain spaces.
+In practice this is helpful, as overtyped lines are harder to check when typing.</p>
+<div class="math">
+<p><img src="_images/math/5185ff0daf2704fa101138567d976e3970d37970.png" alt="\ThreeGlyph{B}{C}{D} \ThreeGlyph{B}{A}{D}"/></p>
+</div><p>The next composite glyph we need to place is <img class="math" src="_images/math/0450ce5f5542edbe4f038604c21d1a48c375e91d.png" alt="\OneGlyph{A}"/>.
+This only has one component, but the last one had 3, so we will use three as well.
+In general, the number of component indexes we allow will be equal or more than is used on the line already.</p>
+<div class="math">
+<p><img src="_images/math/1f6f42d1987a9b6b877ce8abbf7158e4b354db36.png" alt="\ThreeGlyph{B}{C}{D} \ThreeGlyph{B}{A}{D} \ThreeGlyph{sp}{sp}{sp} \quad
+\mathit{indexes} = \begin{pmatrix} 0 \\ 1 \\ 2 \end{pmatrix}"/></p>
+</div><p>Is <img class="math" src="_images/math/9aa8c2530ca6b407b5b3fbab59311d24b112e886.png" alt="A"/> in the glyph before? Yes, place it in the correct location, and remove the index.</p>
+<div class="math">
+<p><img src="_images/math/3e6dd6e8fdc6b1e5acb979a9eaaa81ac6797a523.png" alt="\ThreeGlyph{B}{C}{D} \ThreeGlyph{B}{A}{D} \ThreeGlyph{sp}{A}{sp} \quad
+\mathit{indexes} = \begin{pmatrix} 0 \\ 2 \end{pmatrix}"/></p>
+</div><p>We have reached the end of our components, fill in any deferred glyphs, of which we have none, and we are done.
+Pre-filling with the spacer avoids us having to look for and fill in any holes at this stage.</p>
+<div class="math">
+<p><img src="_images/math/e76af2d86e01685daf33b08ed2b08abe91f57609.png" alt="\ThreeGlyph{B}{C}{D} \ThreeGlyph{B}{A}{D} \ThreeGlyph{sp}{A}{sp}
+\Rightarrow
+\begin{matrix} 2B \\ 1C &amp; 2A \\ 2D \end{matrix}"/></p>
+</div><p>The line has finished, these are our instruction lines.
+A line number and letter would be added, and these would be added to the full instructions.</p>
+<p>I believe that this left comparison method successfully minimises the number of instructions,
+and does so in a relatively efficient manner.
+One optimisation I have not made is to balance the number of instructions per line.
+Nor have I considered that glyphs already seen in the line, are easier to find again, especially on an unfamiliar keyboard.</p>
+<p>Consider the following:</p>
+<div class="math">
+<p><img src="_images/math/ae1230b743686737bc08a984c096ed379d2136f2.png" alt="\TwoGlyph{A}{C} \TwoGlyph{B}{C} \TwoGlyph{A}{D} \TwoGlyph{B}{D}
+\Rightarrow \begin{matrix} 1A &amp; 1B &amp; 1A &amp; 1B \\ 2C &amp; 2D \end{matrix}"/></p>
+</div><p>Here the <img class="math" src="_images/math/9aa8c2530ca6b407b5b3fbab59311d24b112e886.png" alt="A"/> s and <img class="math" src="_images/math/ffe537b8aaadd7edb12d99f73449d1a47d306d85.png" alt="B"/> s are kept to one line, but perhaps the following would look nicer, having the lines balanced:</p>
+<div class="math">
+<p><img src="_images/math/f23b4b00a05c7b05709d6144222787cf3f8ae704.png" alt="\begin{matrix} 1A &amp; 1B &amp; 2D \\ 2C &amp; 1A &amp; 1B \end{matrix}"/></p>
+</div><p>It is hard to know which of these is clearer, I would be interested to hear opinions on this post-processing of instructions.</p>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="combinations.html" class="btn btn-neutral float-right" title="Combinations" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="about.html" class="btn btn-neutral" title="About" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Richard Spencer.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: ''
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

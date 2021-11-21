@@ -1,0 +1,362 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Development &mdash; Typo_graphics 0.3.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="author" title="About these documents"
+              href="about.html"/>
+    <link rel="top" title="Typo_graphics 0.3.0 documentation" href="index.html"/>
+        <link rel="next" title="API Reference" href="api.html"/>
+        <link rel="prev" title="Tutorial" href="tutorial.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Typo_graphics
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Development</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#inspiration">Inspiration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#existing-work">Existing work</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#what-makes-typo-graphics-different">What makes Typo_graphics different?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-instruction-format">The instruction format</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="concepts.html">Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="combinations.html">Combinations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="full_reference.html">Full Reference</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Typo_graphics</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Development</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/development.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="development">
+<h1>Development</h1>
+<p>If you want to know more about the development of Typo_graphics, this section is for you.</p>
+<div class="section" id="inspiration">
+<h2>Inspiration</h2>
+<p>This project began when I purchased a Silver Reed SR100 Tabulator typewriter, second hand, for just £1.25.
+I had never owned a typewriter before, and I picked it up out of some latent interest in the mechanics, and of typography.</p>
+<div class="figure align-center" id="id4">
+<a class="reference internal image-reference" href="_images/SR100.png"><img alt="_images/SR100.png" src="_images/SR100.png" style="width: 1731.0px; height: 1309.5px;" /></a>
+<p class="caption"><span class="caption-text">Silver Reed SR100 Typewriter.</span></p>
+</div>
+<p>This typewriter model doesn&#8217;t have a <code class="docutils literal"><span class="pre">1</span></code> key, the <code class="docutils literal"><span class="pre">l</span></code> is used in substitute. Similarly, there is no key for <code class="docutils literal"><span class="pre">!</span></code>.</p>
+<p>Some of the characters that are missing can be made by overtyping, typing a character,
+moving the carriage back, and typing another.
+To type a <code class="docutils literal"><span class="pre">!</span></code>, one must first type <code class="docutils literal"><span class="pre">'</span></code>, backspace, and overtype <code class="docutils literal"><span class="pre">.</span></code>.</p>
+<div class="figure align-center" id="id5">
+<img alt="_images/Exclamation.png" src="_images/Exclamation.png" />
+<p class="caption"><span class="caption-text">Exclamation mark from apostrophe and full stop.</span></p>
+</div>
+<p>This got me interested in what other combinations exist.
+I tried to type out a few such combinations, but with 82 glyphs on the typewriter, attempting to type all would a large task.
+Of those I had typed, I found <code class="docutils literal"><span class="pre">:</span></code> and <code class="docutils literal"><span class="pre">-</span></code> would form a <code class="docutils literal"><span class="pre">÷</span></code>, but in general it was hard to spot anything of much use.</p>
+<div class="figure align-center" id="id6">
+<img alt="_images/Obelus.png" src="_images/Obelus.png" />
+<p class="caption"><span class="caption-text">Obelus from hyphen and colon.</span></p>
+</div>
+<p>Trying to find reference material online for what combinations would form what characters, I found little of relevance.
+What I did find, was instructions to produce a soldier from O, X, &amp;, /, W, and _ using variable line spacing.
+A quick and easy way to make something unusual from a typewriter.</p>
+<div class="figure align-center" id="id7">
+<img alt="_images/Soldiers.png" src="_images/Soldiers.png" />
+<p class="caption"><span class="caption-text">Soldiers, formed by stacking characters using variable line spacing.</span></p>
+</div>
+<p>Further looking into producing this type of images, I came across the book Artyping <a class="reference internal" href="#nelson1939" id="id1">[Nelson1939]</a>.
+In this book Nelson explores ways to create patterns from characters, for bordering letters, and later showcases some typewritten images.
+Soldiers, similar to those above, also feature.</p>
+<p>In looking for how to reproduce these more complex images, I found Bob Neill&#8217;s Book of Typewriter Art <a class="reference internal" href="#neill1982" id="id2">[Neill1982]</a>, which contains page after page of instructions.
+However, a problem arose; all of the instructions heavily use the <code class="docutils literal"><span class="pre">&#64;</span></code> key, one which my SR100 lacks.
+The author suggests that letters may be substituted, but this is not ideal, and the subject matter is often very dated.</p>
+<p>At this time I decided I would build my own program to produce such instructions for my own machine,
+for which I had already devised some of the internal logic.</p>
+</div>
+<div class="section" id="existing-work">
+<h2>Existing work</h2>
+<p>The process of making images from characters is well established in ASCII art.</p>
+<p>In looking for simple ASCII art generators, I found many to be very underwhelming.
+Many of these would depend on a predetermined scale of brightness, such as <code class="docutils literal"><span class="pre">['.',</span> <span class="pre">',',</span> <span class="pre">'+',</span> <span class="pre">'X']</span></code>.
+Not only did this make the code nontransferable to machines without such characters, but I felt it underutilised the characters.
+If two characters have the same average brightness, perhaps <code class="docutils literal"><span class="pre">&quot;</span></code> and <code class="docutils literal"><span class="pre">/</span></code>, the above would make no distinction between them,
+however they would produce drastically different results.</p>
+<p>More advances ASCII art generators <strong>do</strong> appreciate the character forms, but are still lacking.
+ASCII art is limited to single characters per space; no overtyping of characters can be done, unlike on the typewriter,
+where the user is free to return the carriage without feeding the paper.</p>
+<p>It was clear that using such generators was not an acceptable solution, and that something custom would have to be made.</p>
+</div>
+<div class="section" id="what-makes-typo-graphics-different">
+<h2>What makes Typo_graphics different?</h2>
+<p>The core tenets that underpin Typo_graphics:</p>
+<ul class="simple">
+<li>Remain font independent</li>
+<li>Utilise the characters to their full extent</li>
+<li>Use the typewriters ability to overtype characters, where useful to the image.</li>
+</ul>
+<p>Typo_graphics aims to be usable on a wide range of typewriters as possible.
+This flexibility would also allow use with block printing, or monospace fonts, though in the latter case overtyping need be disabled.</p>
+<p>The main output for Typo_graphics is the instruction set generated.
+<a class="reference internal" href="api.html#typo_graphics.Typograph.image_to_text" title="typo_graphics.Typograph.image_to_text"><code class="xref py py-meth docutils literal"><span class="pre">image_to_text()</span></code></a> also produces an output image, which is mainly intended as reference while typing, to place oneself.
+The output, however, is perfectly usable, without the need to type the instructions out.</p>
+</div>
+<div class="section" id="the-instruction-format">
+<span id="instruction-format"></span><h2>The instruction format</h2>
+<p>The instruction format is heavily borrowed from <a class="reference internal" href="#neill1982" id="id3">[Neill1982]</a>.</p>
+<p>Lines of the image are denoted by an integer, starting from 0.
+Within each line, characters are grouped together,
+and a number prepended to each to indicate how many times that characters should be typed in succession.</p>
+<p>Here is an extract from the instructions for the <a class="reference internal" href="tutorial.html#shep-single"><span class="std std-ref">single depth Australian shepherd</span></a>:</p>
+<div class="highlight-text"><div class="highlight"><pre><span></span>00 | 7E 1$ 13E 1$ 1E 1H 16E 1$ 19E
+01 | 7E 1$ 13E 1$ 1E 1S 36E
+02 | 7E 1$ 9E 1T 1S 1Z 1H 1$ 2E 1Q 35E
+03 | 7E 1$ 8E 1P 4Z 1H 17E 3T 1S 1H 16E
+04 | 4E 2$ 1E 2$ 4E 1F 3E 3Z 1E 2Z 1&quot; 2T 4M 4&quot; 9Z 1H 16E
+05 | 3E 1$ 3E 2$ 1E 1&quot; 1G 1. 1- 1. 1Z 1Q 1half 1Q 1E 5Z 3G 1. 2Z 5. 1G 7Z 1T 15E
+06 | 6E 2Z 1G 2Z 1_ 2Z 1Q 1E 1$ 1E 1$ 1H 3E 2Z 2G 1Z 3Q 2Z 15 3. 6Z 2Q 2Z 1H 12E
+07 | 4E 4Z 2Q 1E 1S 1Z 4E 1$ 1E 1S 1Z 2E 1G 3Z 1H 1E 1$ 3E 2Z 2. 1G 2Z 1S 1Q 1E 1M 1E 1$ 1E 2Z 11E
+08 | 2E 3Q 1Z 1P 1T 1Z 2E 1G 1B 1Z 1Q 1H 1E 1$ 1Z 1G 1&quot; 1H 1P 2G 1Z 1Q 1half 2$ 1E 1Q 5Z 2. 1G 1Z 1T 1S 1F 1T 1F 1M 1S 2Z 1H 1$ 8E
+09 | 1$ 2E 1T 1H 1E 1Z 1Q 1p 3Z 1Q 2E 1half 2E 1P 2. 1G 2. 2Q 1half 1&quot; 1N 1C 2$ 2E 2Z 1Q 1Z 1G 3. 1_ 1p 1E 2Z 1_ 3Z 1T 1H 7E
+</pre></div>
+</div>
+<p>If overtyping is used by the image, and therefore a single image line requires two or more typing passes,
+line numbers have letter(s) appended. An example of this can be seen in the instructions for the <a class="reference internal" href="tutorial.html#aus-shep"><span class="std std-ref">Australian shepherd</span></a>.</p>
+<div class="highlight-text"><div class="highlight"><pre><span></span>00a| 23H 1G 1T 16H 1M 5H 1T 12H
+00b| 21l 1j 1l 2Z 15l 1j 1_ 5l 1Z 12l
+01a| 23H 1G 1T 18H 1T 16H
+01b| 7l 1j 13l 1j 1l 2Z 18l 1Z 16l
+02a| 16H 12 1I 1&quot; 1sp 2H 1M 1S 17H 2M 1F 2H 1G 1T 12H
+02b| 7l 1j 8l 1_ 1T 2Z 1I 1j 2_ 16l 1j 3_ 2l 2Z 12l
+03a| 16H 1&quot; 4Z 1&quot; 1H 1M 13H 1T 5&quot; 1T 16H
+03b| 5l 1j 2l 1j 7l 1_ 4sp 1B 1l 1_ 13l 4Z 1G 2Z 16l
+04a| 13H 1&quot; 1? 1T 1&quot; 2sp 1P 12 2Z 11&quot; 10Z 16H
+04b| 3l 1j 3l 3j 2l 13 1P 1H 4Z 2_ 3sp 7T 12sp 1T 16l
+</pre></div>
+</div>
+<p>In contrast to the Neill format, Typo_graphics does not expect the character grid to be square.
+Instead, images are expected to be typed using single line spacing, such that the top of one row of glyphs sits touching the bottom of the previous row.</p>
+<p>In practice, the code works equally well for greater line spacing, by including said space into the <a class="reference internal" href="api.html#typo_graphics.Glyph" title="typo_graphics.Glyph"><code class="xref py py-class docutils literal"><span class="pre">Glyph</span></code></a> images, though the result will likely have a banded look.
+Using a glyph size smaller than the line spacing would also work, though characters that extend past their bounds may interfere with the image.</p>
+<table class="docutils citation" frame="void" id="nelson1939" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[Nelson1939]</a></td><td>Artyping, Julius Nelson, 1939 (viewable <a class="reference external" href="https://archive.org/details/Artyping">https://archive.org/details/Artyping</a> )</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="neill1982" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[Neill1982]</td><td><em>(<a class="fn-backref" href="#id2">1</a>, <a class="fn-backref" href="#id3">2</a>)</em> Bob Neill&#8217;s Book of Typewriter Art (with special computer program), Bob Neill, 1982 (viewable <a class="reference external" href="https://loriemersondotnet.files.wordpress.com/2013/01/typewriterart.pdf">https://loriemersondotnet.files.wordpress.com/2013/01/typewriterart.pdf</a> )</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="api.html" class="btn btn-neutral float-right" title="API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="tutorial.html" class="btn btn-neutral" title="Tutorial" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Richard Spencer.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: ''
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

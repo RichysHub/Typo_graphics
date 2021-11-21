@@ -1,0 +1,1108 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Full Reference &mdash; Typo_graphics 0.3.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="author" title="About these documents"
+              href="about.html"/>
+    <link rel="top" title="Typo_graphics 0.3.0 documentation" href="index.html"/>
+        <link rel="prev" title="Combinations" href="combinations.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Typo_graphics
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="concepts.html">Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="combinations.html">Combinations</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Full Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#typograph-object">Typograph Object</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#typograph-return-object-typedart">Typograph return object, TypedArt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#typograph-internal-object-treeset">Typograph internal object, TreeSet</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#glyph-object">Glyph Object</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Typo_graphics</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Full Reference</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/full_reference.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-typo_graphics">
+<span id="full-reference"></span><h1>Full Reference</h1>
+<div class="section" id="typograph-object">
+<h2>Typograph Object</h2>
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descclassname">typo_graphics.</code><code class="descname">Typograph</code><span class="sig-paren">(</span><em>*</em>, <em>glyph_images=None</em>, <em>samples=(3</em>, <em>3)</em>, <em>glyph_depth=2</em>, <em>typewriter=None</em>, <em>carriage_width=None</em><span class="sig-paren">)</span></dt>
+<dd><p>Class for processing glyphs for the creation of images.</p>
+<p>This class primarily is designed to be used to convert an image into a set of instructions,
+that can be typed on a typewriter to reproduce the image.</p>
+<p>Class methods <a class="reference internal" href="api.html#typo_graphics.Typograph.from_glyph_sheet" title="typo_graphics.Typograph.from_glyph_sheet"><code class="xref py py-meth docutils literal"><span class="pre">from_glyph_sheet()</span></code></a> and
+<a class="reference internal" href="api.html#typo_graphics.Typograph.from_directory" title="typo_graphics.Typograph.from_directory"><code class="xref py py-meth docutils literal"><span class="pre">from_directory()</span></code></a> present other initialisation options.</p>
+<dl class="docutils">
+<dt>Class attribues:</dt>
+<dd><ul class="first last simple">
+<li><code class="xref py py-attr docutils literal"><span class="pre">inbuilt_typewriters</span></code>, list of inbuilt typewriters for which glyphs can be loaded.</li>
+<li><code class="xref py py-attr docutils literal"><span class="pre">glyph_sheet_paths</span></code>, dictionary of paths to inbuilt typewriter glyph sheets.</li>
+</ul>
+</dd>
+</dl>
+<p>Exposes <a class="reference internal" href="api.html#typo_graphics.Typograph.image_to_text" title="typo_graphics.Typograph.image_to_text"><code class="xref py py-meth docutils literal"><span class="pre">image_to_text()</span></code></a> , which can be used to convert any supplied image into glyph format.</p>
+<dl class="docutils">
+<dt>Exposes following instance attributes:</dt>
+<dd><ul class="first last">
+<li><p class="first"><code class="xref py py-attr docutils literal"><span class="pre">glyphs</span></code>, dictionary of typeable glyphs, keyed by glyph names, used in combinations.</p>
+</li>
+<li><p class="first"><code class="xref py py-attr docutils literal"><span class="pre">standalone_glyphs</span></code>, dictionary of typeable glyphs, keyed by glyph names, that are only to be used alone.</p>
+</li>
+<li><p class="first"><code class="xref py py-attr docutils literal"><span class="pre">glyph_depth</span></code>, integer detailing maximum glyphs that are combined together for each combination glyph.</p>
+</li>
+<li><p class="first"><code class="xref py py-attr docutils literal"><span class="pre">sample_x</span></code>, integer of samples across the glyph images.</p>
+</li>
+<li><p class="first"><code class="xref py py-attr docutils literal"><span class="pre">sample_y</span></code>, integer of samples down the glyph images.</p>
+</li>
+<li><p class="first"><code class="xref py py-attr docutils literal"><span class="pre">samples</span></code>, tuple of ints governing how glyphs are down-sampled for matching.</p>
+</li>
+<li><dl class="first docutils">
+<dt><code class="xref py py-attr docutils literal"><span class="pre">tree_sets</span></code>, list of <a class="reference internal" href="#typo_graphics.typograph.TreeSet" title="typo_graphics.typograph.TreeSet"><code class="xref py py-class docutils literal"><span class="pre">TreeSet</span></code></a> objects containing all combination glyphs,</dt>
+<dd><p class="first last">and associated values.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt>
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>*</em>, <em>glyph_images=None</em>, <em>samples=(3</em>, <em>3)</em>, <em>glyph_depth=2</em>, <em>typewriter=None</em>, <em>carriage_width=None</em><span class="sig-paren">)</span></dt>
+<dd><p>Create <a class="reference internal" href="api.html#typo_graphics.Typograph" title="typo_graphics.Typograph"><code class="xref py py-class docutils literal"><span class="pre">Typograph</span></code></a> object, optionally pass glyph images to use.</p>
+<p>Defaults to using glyphs for the SR100 typewriter inbuilt glyph set.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>glyph_images</strong> ({<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">str</span></code></a>: <a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/Image.html#PIL.Image.Image" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-class docutils literal"><span class="pre">Image</span></code></a>}) &#8211; dictionary of images, keyed with glyph names.</li>
+<li><strong>samples</strong> ((<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a>) or <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a>) &#8211; number of samples across and down, used to match glyphs to input images.
+If only <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a> given, uses that value for both directions.</li>
+<li><strong>glyph_depth</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a>) &#8211; maximum number of glyphs to stack into single characters.</li>
+<li><strong>typewriter</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">str</span></code></a>) &#8211; name of typewriter for which output is created. If glyph images are not provided, this name
+is used to look for an inbuilt typewriter&#8217;s glyph set.
+Valid values for which are given in <code class="xref py py-attr docutils literal"><span class="pre">Typograph.inbuilt_typewriters</span></code>.</li>
+<li><strong>carriage_width</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a>) &#8211; maximum width of glyphs typeable on the typewriter carriage.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt>
+<em class="property">classmethod </em><code class="descname">from_glyph_sheet</code><span class="sig-paren">(</span><em>glyph_sheet</em>, <em>number_glyphs=None</em>, <em>glyph_dimensions=None</em>, <em>grid_size=None</em>, <em>glyph_names=None</em>, <em>spacing=None</em>, <em>**kwargs</em><span class="sig-paren">)</span></dt>
+<dd><p>Create <a class="reference internal" href="api.html#typo_graphics.Typograph" title="typo_graphics.Typograph"><code class="xref py py-class docutils literal"><span class="pre">Typograph</span></code></a> object with glyphs as extracted from <cite>glyph_sheet</cite></p>
+<p>Allows for a single <a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/Image.html#PIL.Image.Image" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-class docutils literal"><span class="pre">Image</span></code></a> to be used to provide glyph images.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>glyph_sheet</strong> (<a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/Image.html#PIL.Image.Image" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-class docutils literal"><span class="pre">Image</span></code></a> or <code class="xref py py-class docutils literal"><span class="pre">string</span></code> or open file) &#8211; glyph sheet <a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/Image.html#PIL.Image.Image" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-class docutils literal"><span class="pre">Image</span></code></a>, to be split into glyphs,
+a filename for such image, or an open binary file object.</li>
+<li><strong>number_glyphs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a> or None) &#8211; total number of glyphs present in <cite>glyph_sheet</cite>,
+if omitted, glyph_names must be present, and its length will be used.</li>
+<li><strong>glyph_dimensions</strong> ((<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a>)) &#8211; pixel dimensions of glyphs given as (width, height).</li>
+<li><strong>grid_size</strong> ((<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a>)) &#8211; if given, number of (rows, columns) that glyphs are arranged in.</li>
+<li><strong>glyph_names</strong> ([<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">str</span></code></a>]) &#8211; list of unique glyph names listed left to right, top to bottom.</li>
+<li><strong>spacing</strong> ((<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a>)) &#8211; tuple of integer pixel spacing between adjacent glyphs,
+as number of pixels between glyphs horizontally and vertically.</li>
+<li><strong>kwargs</strong> &#8211; optional keyword arguments as for <a class="reference internal" href="api.html#typo_graphics.Typograph" title="typo_graphics.Typograph"><code class="xref py py-class docutils literal"><span class="pre">Typograph</span></code></a>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">An <a class="reference internal" href="api.html#typo_graphics.Typograph" title="typo_graphics.Typograph"><code class="xref py py-class docutils literal"><span class="pre">Typograph</span></code></a> object using glyphs images extracted from <cite>glyph_sheet</cite></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="api.html#typo_graphics.Typograph" title="typo_graphics.Typograph"><code class="xref py py-class docutils literal"><span class="pre">Typograph</span></code></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.10)"><strong>TypeError</strong></a> &#8211; if <cite>number_glyphs</cite> is not given.</li>
+<li><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.10)"><strong>TypeError</strong></a> &#8211; if neither <cite>grid_size</cite> or <cite>glyph_dimensions</cite> are specified.</li>
+<li><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.10)"><strong>ValueError</strong></a> &#8211; if duplicates in glyph_names</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt>
+<em class="property">static </em><code class="descname">_extract_from_glyph_sheet</code><span class="sig-paren">(</span><em>glyph_sheet</em>, <em>number_glyphs=None</em>, <em>glyph_dimensions=None</em>, <em>grid_size=None</em>, <em>glyph_names=None</em>, <em>spacing=None</em><span class="sig-paren">)</span></dt>
+<dd><p>Given an image, or file for that image, split out individual glyph images from a glyph sheet.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>glyph_sheet</strong> (<a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/Image.html#PIL.Image.Image" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-class docutils literal"><span class="pre">Image</span></code></a> or <code class="xref py py-class docutils literal"><span class="pre">string</span></code> or open file) &#8211; glyph sheet <a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/Image.html#PIL.Image.Image" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-class docutils literal"><span class="pre">Image</span></code></a>, to be split into glyphs,
+a filename for such image, or an open binary file object.</li>
+<li><strong>number_glyphs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a> or None) &#8211; total number of glyphs present in <cite>glyph_sheet</cite>,
+if omitted, glyph_names must be present, and its length will be used.</li>
+<li><strong>glyph_dimensions</strong> ((<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a>)) &#8211; pixel dimensions of glyphs given as (width, height).</li>
+<li><strong>grid_size</strong> ((<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a>)) &#8211; if given, number of (rows, columns) that glyphs are arranged in.</li>
+<li><strong>glyph_names</strong> ([<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">str</span></code></a>]) &#8211; list of unique glyph names listed left to right, top to bottom.</li>
+<li><strong>spacing</strong> ((<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a>)) &#8211; tuple of integer pixel spacing between adjacent glyphs,
+as number of pixels between glyphs horizontally and vertically.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">tuple containing: list of glyph <a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/Image.html#PIL.Image.Image" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-class docutils literal"><span class="pre">Image</span></code></a> objects, string name of typewriter,
+and total width of typewriter carriage.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#FileNotFoundError" title="(in Python v3.10)"><strong>FileNotFoundError</strong></a> &#8211; if image path does not resolve.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt>
+<em class="property">static </em><code class="descname">_parse_glyph_sheet_file</code><span class="sig-paren">(</span><em>glyph_sheet</em>, <em>number_glyphs=None</em>, <em>glyph_dimensions=None</em>, <em>grid_size=None</em>, <em>glyph_names=None</em>, <em>spacing=None</em><span class="sig-paren">)</span></dt>
+<dd><p>Handle opening of file, loading any associated meta file, and extracting meta data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>glyph_sheet</strong> (<a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/Image.html#PIL.Image.Image" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-class docutils literal"><span class="pre">Image</span></code></a> or <code class="xref py py-class docutils literal"><span class="pre">string</span></code> or open file) &#8211; glyph sheet <a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/Image.html#PIL.Image.Image" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-class docutils literal"><span class="pre">Image</span></code></a>, to be split into glyphs,
+a filename for such image, or an open binary file object.</li>
+<li><strong>number_glyphs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a> or None) &#8211; total number of glyphs present in <cite>glyph_sheet</cite>,
+if omitted, glyph_names must be present, and its length will be used.</li>
+<li><strong>glyph_dimensions</strong> ((<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a>)) &#8211; pixel dimensions of glyphs given as (width, height).</li>
+<li><strong>grid_size</strong> ((<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a>)) &#8211; if given, number of (rows, columns) that glyphs are arranged in.</li>
+<li><strong>glyph_names</strong> ([<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">str</span></code></a>]) &#8211; list of unique glyph names listed left to right, top to bottom.</li>
+<li><strong>spacing</strong> ((<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a>)) &#8211; tuple of integer pixel spacing between adjacent glyphs,
+as number of pixels between glyphs horizontally and vertically.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">tuple of <a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/Image.html#PIL.Image.Image" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-class docutils literal"><span class="pre">Image</span></code></a> glyph image, followed by extracted values of number_glyphs,
+glyph_dimensions, grid_size, glyph_names and spacing, if no value was given</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#FileNotFoundError" title="(in Python v3.10)"><strong>FileNotFoundError</strong></a> &#8211; if image path does not resolve.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt>
+<em class="property">classmethod </em><code class="descname">from_directory</code><span class="sig-paren">(</span><em>glyph_directory</em>, <em>**kwargs</em><span class="sig-paren">)</span></dt>
+<dd><p>Create <a class="reference internal" href="api.html#typo_graphics.Typograph" title="typo_graphics.Typograph"><code class="xref py py-class docutils literal"><span class="pre">Typograph</span></code></a> object loading glyph images from a given directory.</p>
+<p>In addition to images, the directory can contain a name_map.json file
+giving alias names for glyphs located in the directory.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>glyph_directory</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">str</span></code></a>) &#8211; A file path for directory containing glyph images.</li>
+<li><strong>kwargs</strong> &#8211; optional keyword arguments as for <a class="reference internal" href="api.html#typo_graphics.Typograph" title="typo_graphics.Typograph"><code class="xref py py-class docutils literal"><span class="pre">Typograph</span></code></a>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">An <a class="reference internal" href="api.html#typo_graphics.Typograph" title="typo_graphics.Typograph"><code class="xref py py-class docutils literal"><span class="pre">Typograph</span></code></a> object using glyphs images found from directory.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="api.html#typo_graphics.Typograph" title="typo_graphics.Typograph"><code class="xref py py-class docutils literal"><span class="pre">Typograph</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt>
+<em class="property">static </em><code class="descname">_get_glyphs_from_directory</code><span class="sig-paren">(</span><em>glyph_directory</em><span class="sig-paren">)</span></dt>
+<dd><p>Fetch glyph images from <cite>glyph_directory</cite> into dictionary keyed with names.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>glyph_directory</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">str</span></code></a>) &#8211; A file path for directory containing glyph images.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">dictionary of images, keyed with glyph names.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">{<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">str</span></code></a>: <a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/Image.html#PIL.Image.Image" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-class docutils literal"><span class="pre">Image</span></code></a>}</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">_calculate_trees</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Calculate tree sets for input glyphs, combined up to <cite>self.glyph_depth</cite></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">list of tree sets.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[<code class="xref py py-class docutils literal"><span class="pre">tree_set</span></code>]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">_combine_glyphs</code><span class="sig-paren">(</span><em>depth</em><span class="sig-paren">)</span></dt>
+<dd><p>Calculate all unique combinations of <cite>depth</cite> number of glyphs.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>depth</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a>) &#8211; number of glyphs to combine into composite glyphs.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">dictionary of combination glyphs, using glyph names as keys.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">dict</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">_average_glyph_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Calculate average pixel values for all glyphs in <cite>self.tree_sets</cite></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">list of average pixel values, no given order.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">float</span></code></a>]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">_glyph_value_extrema</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Extrema of average pixel values for all glyphs.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">tuple of (min, max) pixel values.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">(<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">float</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">float</span></code></a>)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">_recalculate_glyphs</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Update glyph relevant attributes, for use whenever glyphs are changed.</p>
+<p>Updates:
+<code class="xref py py-attr docutils literal"><span class="pre">tree_sets</span></code>
+<code class="xref py py-attr docutils literal"><span class="pre">average_values</span></code>
+<code class="xref py py-attr docutils literal"><span class="pre">value_extrema</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">add_glyph</code><span class="sig-paren">(</span><em>glyph</em>, <em>use_in_combinations=False</em><span class="sig-paren">)</span></dt>
+<dd><p>Add extra glyphs into the available pool.</p>
+<p>New glyphs added in this manner can be excluded from use in combinations, to be used only as standalone glyph.</p>
+<p>Adding a glyph already present in combinations, as a standalone
+will result in removal of glyph from combinations. The reverse of this is also true.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>glyph</strong> (<a class="reference internal" href="api.html#typo_graphics.Glyph" title="typo_graphics.Glyph"><code class="xref py py-class docutils literal"><span class="pre">Glyph</span></code></a>) &#8211; glyph to add.</li>
+<li><strong>use_in_combinations</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">bool</span></code></a>) &#8211; use this glyph in combinations, default False.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">remove_glyph</code><span class="sig-paren">(</span><em>glyph</em>, <em>remove_from='Both'</em><span class="sig-paren">)</span></dt>
+<dd><p>Remove glyph from available pool.</p>
+<p>Glyphs can be explicitly removed from combinations, standalone, or both.</p>
+<p>Glyphs are removed by name, if passed a <a class="reference internal" href="api.html#typo_graphics.Glyph" title="typo_graphics.Glyph"><code class="xref py py-class docutils literal"><span class="pre">Glyph</span></code></a> instance, will use the <code class="xref py py-attr docutils literal"><span class="pre">name</span></code> attribute.</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">&quot;Combinations&quot;</span></code> or <code class="docutils literal"><span class="pre">&quot;C&quot;</span></code> to remove from combinations</li>
+<li><code class="docutils literal"><span class="pre">&quot;Standalone&quot;</span></code> or <code class="docutils literal"><span class="pre">&quot;S&quot;</span></code> to remove from standalone glyphs</li>
+<li><code class="docutils literal"><span class="pre">&quot;Both&quot;</span></code> or <code class="docutils literal"><span class="pre">&quot;B&quot;</span></code> to remove from both</li>
+</ul>
+<p>Returns the glyph instance removed, or None if the glyph was not found.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>glyph</strong> (<a class="reference internal" href="api.html#typo_graphics.Glyph" title="typo_graphics.Glyph"><code class="xref py py-class docutils literal"><span class="pre">Glyph</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">str</span></code></a>) &#8211; glyph to remove.</li>
+<li><strong>remove_from</strong> &#8211; string identifier for where to remove from.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">glyph removed or <code class="xref py py-class docutils literal"><span class="pre">None</span></code>.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="api.html#typo_graphics.Glyph" title="typo_graphics.Glyph"><code class="xref py py-class docutils literal"><span class="pre">Glyph</span></code></a> or <code class="xref py py-class docutils literal"><span class="pre">None</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">_crop_to_max_size</code><span class="sig-paren">(</span><em>image</em>, <em>max_size</em>, <em>resize_mode</em><span class="sig-paren">)</span></dt>
+<dd><p>Return copy of image, cropped to fit within <cite>max_size</cite>.</p>
+<p>Cropping is applied evenly to both sides of image, so as to preserve center.</p>
+<p>Image is cropped so that max_size glyphs fit inside the image, then scaled to max_size(0) * self.samples(0) by
+max_size(1) * self.samples(1) pixels. As such, output image may appear squashed or stretched.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>image</strong> (<a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/Image.html#PIL.Image.Image" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-class docutils literal"><span class="pre">Image</span></code></a>) &#8211; An <a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/Image.html#PIL.Image.Image" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-class docutils literal"><span class="pre">Image</span></code></a> object.</li>
+<li><strong>max_size</strong> ((<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a>)) &#8211; maximum size in glyphs across and down.</li>
+<li><strong>resize_mode</strong> &#8211; any resize mode as able to be used by <a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/Image.html#PIL.Image.Image.resize" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-meth docutils literal"><span class="pre">resize()</span></code></a>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Tuple of an <a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/Image.html#PIL.Image.Image" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-class docutils literal"><span class="pre">Image</span></code></a> object cropped to fit within <cite>max_size</cite>,
+and the <cite>max_size</cite> tuple, to match return signature of <code class="xref py py-meth docutils literal"><span class="pre">_scale_to_max_size()</span></code>.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(<a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/Image.html#PIL.Image.Image" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-class docutils literal"><span class="pre">Image</span></code></a>, (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a>))</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">_scale_to_max_size</code><span class="sig-paren">(</span><em>image</em>, <em>max_size</em>, <em>resize_mode</em><span class="sig-paren">)</span></dt>
+<dd><p>Return copy of image, scaled to fit within <cite>max_size</cite>.</p>
+<p>Values of <code class="docutils literal"><span class="pre">None</span></code> in <cite>max_size</cite> are treated as infinite available space in that dimension.
+If (<code class="docutils literal"><span class="pre">None</span></code>, <code class="docutils literal"><span class="pre">None</span></code>), will match input image size to nearest whole glyph in each dimension.</p>
+<p>Output image ends up being scaled by the number of samples in that given dimension,
+as such it may appear distorted.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>image</strong> (<a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/Image.html#PIL.Image.Image" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-class docutils literal"><span class="pre">Image</span></code></a>) &#8211; An <a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/Image.html#PIL.Image.Image" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-class docutils literal"><span class="pre">Image</span></code></a> object.</li>
+<li><strong>max_size</strong> ((<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a> or <code class="docutils literal"><span class="pre">None</span></code>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a> or <code class="docutils literal"><span class="pre">None</span></code>)) &#8211; maximum size in glyphs across and down.</li>
+<li><strong>resize_mode</strong> &#8211; any resize mode as able to be used by <a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/Image.html#PIL.Image.Image.resize" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-meth docutils literal"><span class="pre">resize()</span></code></a>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Tuple of an <a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/Image.html#PIL.Image.Image" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-class docutils literal"><span class="pre">Image</span></code></a> object scaled to fit within <cite>max_size</cite>,
+and a tuple of actual dimensions in glyphs. This elements of this tuple are, by definition, equal to or smaller
+than those in <cite>max_size</cite>.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(<a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/Image.html#PIL.Image.Image" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-class docutils literal"><span class="pre">Image</span></code></a>, (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a>))</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">_preprocess</code><span class="sig-paren">(</span><em>image</em>, <em>target_size</em>, <em>clip_limit</em>, <em>enhance_contrast</em>, <em>rescale_intensity</em>, <em>background_glyph</em><span class="sig-paren">)</span></dt>
+<dd><p>Preprocess input image to better be reproduced by glyphs.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>image</strong> (<a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/Image.html#PIL.Image.Image" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-class docutils literal"><span class="pre">Image</span></code></a>) &#8211; input <a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/Image.html#PIL.Image.Image" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-class docutils literal"><span class="pre">Image</span></code></a> to be processed.</li>
+<li><strong>target_size</strong> ((<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a>)) &#8211; output size for glyph version of image.
+Given as total number of glyphs to be used across and down.</li>
+<li><strong>clip_limit</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">float</span></code></a>) &#8211; clip limit as used by <a class="reference external" href="http://scikit-image.org/docs/stable/api/skimage.exposure.html#skimage.exposure.equalize_adapthist" title="(in skimage v0.14.1)"><code class="xref py py-func docutils literal"><span class="pre">equalize_adapthist()</span></code></a>.</li>
+<li><strong>enhance_contrast</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">bool</span></code></a>) &#8211; enable or disable use of <a class="reference external" href="http://scikit-image.org/docs/stable/api/skimage.exposure.html#skimage.exposure.equalize_adapthist" title="(in skimage v0.14.1)"><code class="xref py py-func docutils literal"><span class="pre">equalize_adapthist()</span></code></a> on input image.</li>
+<li><strong>rescale_intensity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">float</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a> or <cite>None</cite>) &#8211; control, or disable the effect of <a class="reference external" href="http://scikit-image.org/docs/stable/api/skimage.exposure.html#skimage.exposure.rescale_intensity" title="(in skimage v0.14.1)"><code class="xref py py-func docutils literal"><span class="pre">rescale_intensity()</span></code></a>.
+Values higher than 1 cause values near the extremes, to be pushed into those extremes.
+A value lover than 1 will tend to move all values toward the average glyph value.
+If <cite>None</cite> is passed, the rescaling is skipped. This is preferred over passing unity.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">image after preprocessing has been applied.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/Image.html#PIL.Image.Image" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-class docutils literal"><span class="pre">Image</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">_chunk</code><span class="sig-paren">(</span><em>image_data</em>, <em>target_width</em><span class="sig-paren">)</span></dt>
+<dd><p>Separate <cite>image_data</cite> into chunks, according to <code class="xref py py-attr docutils literal"><span class="pre">sample_x</span></code> and <code class="xref py py-attr docutils literal"><span class="pre">sample_y</span></code>.</p>
+<p>Working from left to right, top to bottom of data representing an input image,
+produces lists of data corresponding to a region of the full image
+that are <code class="xref py py-attr docutils literal"><span class="pre">sample_x</span></code> by <code class="xref py py-attr docutils literal"><span class="pre">sample_y</span></code> in size.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>image_data</strong> ([<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a>]) &#8211; list of image data specifying pixel values in range 0-&gt;255.</li>
+<li><strong>target_width</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a>) &#8211; width of target image as measured in glyphs.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">list of chunks, each of which are a list of integer values from source <cite>image_data</cite>.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a>]]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">_equalize_glyphs</code><span class="sig-paren">(</span><em>image</em><span class="sig-paren">)</span></dt>
+<dd><p>Adjust image histogram with the intention using each glyph equally.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>image</strong> (<a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/Image.html#PIL.Image.Image" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-class docutils literal"><span class="pre">Image</span></code></a>) &#8211; image to manipulate.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">input image adjusted to glyph histogram.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/Image.html#PIL.Image.Image" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-class docutils literal"><span class="pre">Image</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">_find_closest_glyph</code><span class="sig-paren">(</span><em>target</em>, <em>cutoff</em>, <em>background_glyph</em><span class="sig-paren">)</span></dt>
+<dd><p>Determine closest glyph available to <cite>target</cite> data.</p>
+<p><cite>cutoff</cite> value can be used to specify frequency with which glyphs will be
+replaced by simpler glyphs that are not quite as close to target.
+A value of 0.0 will permit no substitutions, always using the best glyph.
+Higher values will allow less similar glyphs to be used, if they comprise of fewer component pieces.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>target</strong> ([<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a>]) &#8211; data of target region of image, given as a list of integers,
+range 0-&gt;255 listed from left to right, top to bottom.</li>
+<li><strong>cutoff</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">float</span></code></a>) &#8211; value used to determine replacement with a
+simpler glyph that is not quite as good a match to <cite>target</cite>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">tuple of best matched <a class="reference internal" href="api.html#typo_graphics.Glyph" title="typo_graphics.Glyph"><code class="xref py py-class docutils literal"><span class="pre">Glyph</span></code></a> found to <cite>target</cite>
+and distance between target and said glyph.
+Distance is given as Euclidian distance in <code class="xref py py-attr docutils literal"><span class="pre">sample_x</span></code> * <code class="xref py py-attr docutils literal"><span class="pre">sample_y</span></code> dimensional value space.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(<a class="reference internal" href="api.html#typo_graphics.Glyph" title="typo_graphics.Glyph"><code class="xref py py-class docutils literal"><span class="pre">Glyph</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">float</span></code></a>)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">_compose_calculation</code><span class="sig-paren">(</span><em>result</em>, <em>target_width</em>, <em>target_height</em><span class="sig-paren">)</span></dt>
+<dd><p>Create calculation demonstration image, composed of glyph <code class="xref py py-attr docutils literal"><span class="pre">fingerprint_display</span></code> images.</p>
+<p>Useful in seeing how glyphs are matched to input image.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>result</strong> ([<a class="reference internal" href="api.html#typo_graphics.Glyph" title="typo_graphics.Glyph"><code class="xref py py-class docutils literal"><span class="pre">Glyph</span></code></a>]) &#8211; list of <a class="reference internal" href="api.html#typo_graphics.Glyph" title="typo_graphics.Glyph"><code class="xref py py-class docutils literal"><span class="pre">Glyph</span></code></a></li>
+<li><strong>target_width</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a>) &#8211; number of <a class="reference internal" href="api.html#typo_graphics.Glyph" title="typo_graphics.Glyph"><code class="xref py py-class docutils literal"><span class="pre">Glyph</span></code></a> across the <cite>result</cite> represents.</li>
+<li><strong>target_height</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a>) &#8211; number of <a class="reference internal" href="api.html#typo_graphics.Glyph" title="typo_graphics.Glyph"><code class="xref py py-class docutils literal"><span class="pre">Glyph</span></code></a> down the <cite>result</cite> represents.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">a <a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/Image.html#PIL.Image.Image" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-class docutils literal"><span class="pre">Image</span></code></a> comprised of glyph <code class="xref py py-attr docutils literal"><span class="pre">fingerprint_display</span></code> images.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/Image.html#PIL.Image.Image" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-class docutils literal"><span class="pre">Image</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">_compose_output</code><span class="sig-paren">(</span><em>result</em>, <em>target_width</em>, <em>target_height</em><span class="sig-paren">)</span></dt>
+<dd><p>Create output image, composed of glyph images.</p>
+<p>Shows the final output of converting an image to a set of glyphs.
+Very helpful to have visible when trying to type out result, for error checking.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>result</strong> ([<a class="reference internal" href="api.html#typo_graphics.Glyph" title="typo_graphics.Glyph"><code class="xref py py-class docutils literal"><span class="pre">Glyph</span></code></a>]) &#8211; list of <a class="reference internal" href="api.html#typo_graphics.Glyph" title="typo_graphics.Glyph"><code class="xref py py-class docutils literal"><span class="pre">Glyph</span></code></a>.</li>
+<li><strong>target_width</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a>) &#8211; number of <a class="reference internal" href="api.html#typo_graphics.Glyph" title="typo_graphics.Glyph"><code class="xref py py-class docutils literal"><span class="pre">Glyph</span></code></a> across the <cite>result</cite> represents.</li>
+<li><strong>target_height</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a>) &#8211; number of <a class="reference internal" href="api.html#typo_graphics.Glyph" title="typo_graphics.Glyph"><code class="xref py py-class docutils literal"><span class="pre">Glyph</span></code></a> down the <cite>result</cite> represents.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">a <a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/Image.html#PIL.Image.Image" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-class docutils literal"><span class="pre">Image</span></code></a> comprised of glyph images,
+representing final output of conversion from image to glyphs.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/Image.html#PIL.Image.Image" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-class docutils literal"><span class="pre">Image</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">_instructions</code><span class="sig-paren">(</span><em>result_glyphs</em>, <em>spacer</em>, <em>target_width</em>, <em>target_height</em>, <em>trailing_spacer=False</em><span class="sig-paren">)</span></dt>
+<dd><p>Create instruction set for the given result glyphs.</p>
+<p>Instructions are optimised to contain the fewest groups when glyphs are combined.</p>
+<p>For every line of the image, a number of lines are created,
+equal to the depth of the most stacked glyph in the line.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>result_glyphs</strong> (<em>[:class`Glyph`]</em>) &#8211; list of glyphs that compost the output, listed top left, across then down.</li>
+<li><strong>spacer</strong> (<a class="reference internal" href="api.html#typo_graphics.Glyph" title="typo_graphics.Glyph"><code class="xref py py-class docutils literal"><span class="pre">Glyph</span></code></a>) &#8211; spacing glyph, relating to a movement of 1 character over, with no glyph printed.</li>
+<li><strong>target_width</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a>) &#8211; width of image, measured in glyphs.</li>
+<li><strong>target_height</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a>) &#8211; height of image, measured in glyphs.</li>
+<li><strong>trailing_spacer</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">bool</span></code></a>) &#8211; enable inclusion of trailing spacer characters.
+This can be helpful for counting back from end of line.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">List of instruction strings.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">str</span></code></a>]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt>
+<em class="property">static </em><code class="descname">_root_mean_square_distance</code><span class="sig-paren">(</span><em>point</em>, <em>tree_set</em><span class="sig-paren">)</span></dt>
+<dd><p>Calculate root mean square distance of a point from points in given tree set.</p>
+<p>Uses centroid to avoid brute force calculation.</p>
+<div class="math">
+<p><img src="_images/math/7c3049402fb7e50487778fe4c907ba6ce62fba6a.png" alt="ext{RMSD} &amp;= \sqrt{\frac{1}{N}\sum_{i=1}^N (x_i - a)^2} \\
+        &amp;= \sqrt{(m - a)^2 + \frac{1}{N}\sum_{i=1}^N (x_i - m)^2}"/></p>
+</div><ul class="simple">
+<li><img class="math" src="_images/math/cfe9c6e649e06e88af61fb2ce7b8b806a56b66c4.png" alt="N"/> is number of points</li>
+<li><img class="math" src="_images/math/01ee7887ee26bfb157a9dd5e4e4e6fc3b25904ac.png" alt="m"/> is centroid of points</li>
+<li><img class="math" src="_images/math/e3cfb69a59237641bb51b900a4c565337bc259ba.png" alt="x_i"/> is a point of the set</li>
+<li><img class="math" src="_images/math/58a8bff51b7f58da36a77dd498d6ca0f1026ceb2.png" alt="a"/> is target point</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>point</strong> (<em>array_like</em>) &#8211; point from which mean square distance is calculated.</li>
+<li><strong>tree_set</strong> (<a class="reference internal" href="#typo_graphics.typograph.TreeSet" title="typo_graphics.typograph.TreeSet"><code class="xref py py-class docutils literal"><span class="pre">TreeSet</span></code></a>) &#8211; <a class="reference internal" href="#typo_graphics.typograph.TreeSet" title="typo_graphics.typograph.TreeSet"><code class="xref py py-class docutils literal"><span class="pre">TreeSet</span></code></a> to be compared against, contains centroid and mean square from centroid.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">root mean square distance of point from points given by <cite>tree_set</cite>.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">float</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt>
+<em class="property">static </em><code class="descname">_iter_all_strings</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Generator of Excel-like lowercase row letters.</p>
+<p>e.g. a, b, c, ... z, aa, ab
+useful for cases in which instructions require multiple lines per character row.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">generator of excel-like string identifiers.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">generator</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">image_to_text</code><span class="sig-paren">(</span><em>image</em>, <em>max_size=(60</em>, <em>60)</em>, <em>cutoff=0</em>, <em>resize_mode=1</em>, <em>clip_limit=0.02</em>, <em>enhance_contrast=True</em>, <em>rescale_intensity=1.5</em>, <em>instruction_spacer=None</em>, <em>background_glyph=None</em>, <em>fit_mode='Scale'</em><span class="sig-paren">)</span></dt>
+<dd><p>Convert image into a glyph version, using the instance&#8217;s glyphs.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>image</strong> (<a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/Image.html#PIL.Image.Image" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-class docutils literal"><span class="pre">Image</span></code></a>) &#8211; input <a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/Image.html#PIL.Image.Image" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-class docutils literal"><span class="pre">Image</span></code></a> to be processed and converted.</li>
+<li><strong>max_size</strong> ((<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a> or <code class="docutils literal"><span class="pre">None</span></code>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a> or <code class="docutils literal"><span class="pre">None</span></code>)) &#8211; maximum size for glyph version of image.
+Given as total number of glyphs able to be used across and down.
+If <cite>fit_mode</cite> is &#8220;Scale&#8221;,
+values of <code class="docutils literal"><span class="pre">None</span></code> in <cite>max_size</cite> are treated as infinite available space in that dimension.
+If (<code class="docutils literal"><span class="pre">None</span></code>, <code class="docutils literal"><span class="pre">None</span></code>), will match input image size to nearest whole glyph in each dimension.</li>
+<li><strong>fit_mode</strong> (<code class="xref py py-class docutils literal"><span class="pre">string</span></code>) &#8211; mode used to adjust image to fit within <cite>max_size</cite>. May be &#8220;Scale&#8221; to scale image to fit,
+or &#8220;Crop&#8221; to minimally crop image, maintaining center.
+&#8220;Crop&#8221; cannot be used with <code class="docutils literal"><span class="pre">None</span></code> values in <cite>max_size</cite>.</li>
+<li><strong>resize_mode</strong> &#8211; any resize mode as able to be used by <a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/Image.html#PIL.Image.Image.resize" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-meth docutils literal"><span class="pre">resize()</span></code></a>.</li>
+<li><strong>clip_limit</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">float</span></code></a>) &#8211; clip limit as used by <a class="reference external" href="http://scikit-image.org/docs/stable/api/skimage.exposure.html#skimage.exposure.equalize_adapthist" title="(in skimage v0.14.1)"><code class="xref py py-func docutils literal"><span class="pre">equalize_adapthist()</span></code></a>.</li>
+<li><strong>enhance_contrast</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">bool</span></code></a>) &#8211; enable or disable use of <a class="reference external" href="http://scikit-image.org/docs/stable/api/skimage.exposure.html#skimage.exposure.equalize_adapthist" title="(in skimage v0.14.1)"><code class="xref py py-func docutils literal"><span class="pre">equalize_adapthist()</span></code></a> on input image.</li>
+<li><strong>rescale_intensity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">float</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a> or <cite>None</cite>) &#8211; control, or disable the effect of <a class="reference external" href="http://scikit-image.org/docs/stable/api/skimage.exposure.html#skimage.exposure.rescale_intensity" title="(in skimage v0.14.1)"><code class="xref py py-func docutils literal"><span class="pre">rescale_intensity()</span></code></a>.
+Values higher than 1 cause values near the extremes, to be pushed into those extremes.
+A value lover than 1 will tend to move all values toward the average glyph value.
+If <cite>None</cite> is passed, the rescaling is skipped. This is preferred over passing unity.
+Defaults to expanding the output range 1.5 times.</li>
+<li><strong>cutoff</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">float</span></code></a>) &#8211; cutoff level for near-enough glyph replacement. A value of 0.0 will permit no replacements.</li>
+<li><strong>instruction_spacer</strong> (<a class="reference internal" href="api.html#typo_graphics.Glyph" title="typo_graphics.Glyph"><code class="xref py py-class docutils literal"><span class="pre">Glyph</span></code></a>) &#8211; glyph to be used to represent moving the typing position one step, without adding ink.</li>
+<li><strong>background_glyph</strong> (<a class="reference internal" href="api.html#typo_graphics.Glyph" title="typo_graphics.Glyph"><code class="xref py py-class docutils literal"><span class="pre">Glyph</span></code></a>) &#8211; glyph to fill background of transparent image with.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">a <a class="reference internal" href="#typo_graphics.typograph.TypedArt" title="typo_graphics.typograph.TypedArt"><code class="xref py py-class docutils literal"><span class="pre">TypedArt</span></code></a> object, containing construction, output and instructions,
+after preprocessing.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#typo_graphics.typograph.TypedArt" title="typo_graphics.typograph.TypedArt"><code class="xref py py-class docutils literal"><span class="pre">TypedArt</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">_convert</code><span class="sig-paren">(</span><em>image</em>, <em>target_size</em>, <em>cutoff</em>, <em>instruction_spacer</em>, <em>background_glyph</em><span class="sig-paren">)</span></dt>
+<dd><p>Raw conversion of image to glyphs, no preprocessing is performed.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>image</strong> (<a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/Image.html#PIL.Image.Image" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-class docutils literal"><span class="pre">Image</span></code></a>) &#8211; input <a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/Image.html#PIL.Image.Image" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-class docutils literal"><span class="pre">Image</span></code></a> to be processed and converted.</li>
+<li><strong>target_size</strong> ((<code class="xref py py-class docutils literal"><span class="pre">int,</span> <span class="pre">:class:`int</span></code>)) &#8211; output size for glyph version of image.
+Given as total number of glyphs to be used across and down.</li>
+<li><strong>cutoff</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">float</span></code></a>) &#8211; cutoff level for near-enough glyph replacement. A value of 0.0 will permit no replacements.</li>
+<li><strong>instruction_spacer</strong> (<a class="reference internal" href="api.html#typo_graphics.Glyph" title="typo_graphics.Glyph"><code class="xref py py-class docutils literal"><span class="pre">Glyph</span></code></a>) &#8211; glyph to be used to represent moving the typing position one step,
+without adding ink.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">a <a class="reference internal" href="#typo_graphics.typograph.TypedArt" title="typo_graphics.typograph.TypedArt"><code class="xref py py-class docutils literal"><span class="pre">TypedArt</span></code></a> object, containing construction, output and instructions.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#typo_graphics.typograph.TypedArt" title="typo_graphics.typograph.TypedArt"><code class="xref py py-class docutils literal"><span class="pre">TypedArt</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<div class="section" id="typograph-return-object-typedart">
+<h3>Typograph return object, TypedArt</h3>
+<dl class="class">
+<dt id="typo_graphics.typograph.TypedArt">
+<em class="property">class </em><code class="descclassname">typo_graphics.typograph.</code><code class="descname">TypedArt</code></dt>
+<dd><p>Named tuple container for output of <a class="reference internal" href="api.html#typo_graphics.Typograph.image_to_text" title="typo_graphics.Typograph.image_to_text"><code class="xref py py-meth docutils literal"><span class="pre">image_to_text()</span></code></a></p>
+<p>May be unpacked, or accessed using member names
+<code class="xref py py-attr docutils literal"><span class="pre">calculation</span></code>,
+<code class="xref py py-attr docutils literal"><span class="pre">output</span></code>,
+<code class="xref py py-attr docutils literal"><span class="pre">instructions</span></code></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>calculation</strong> (<a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/Image.html#PIL.Image.Image" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-class docutils literal"><span class="pre">Image</span></code></a>) &#8211; an <a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/Image.html#PIL.Image.Image" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-class docutils literal"><span class="pre">Image</span></code></a> object, showing the <code class="xref py py-attr docutils literal"><span class="pre">fingerprint_display</span></code> images, 
+composed according to the result</li>
+<li><strong>output</strong> (<a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/Image.html#PIL.Image.Image" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-class docutils literal"><span class="pre">Image</span></code></a>) &#8211; an <a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/Image.html#PIL.Image.Image" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-class docutils literal"><span class="pre">Image</span></code></a> object, showing the composed glyph result</li>
+<li><strong>instructions</strong> (<code class="xref py py-class docutils literal"><span class="pre">string</span></code>) &#8211; string of instruction lines, separated by</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="typograph-internal-object-treeset">
+<h3>Typograph internal object, TreeSet</h3>
+<dl class="class">
+<dt id="typo_graphics.typograph.TreeSet">
+<em class="property">class </em><code class="descclassname">typo_graphics.typograph.</code><code class="descname">TreeSet</code></dt>
+<dd><p>Named tuple container for information regarding sets of glyphs</p>
+<p>May be unpacked, or accessed using member names
+<code class="xref py py-attr docutils literal"><span class="pre">glyph_set</span></code>,
+<code class="xref py py-attr docutils literal"><span class="pre">tree</span></code>,
+<code class="xref py py-attr docutils literal"><span class="pre">centroid</span></code>,
+<code class="xref py py-attr docutils literal"><span class="pre">mean_square_from_centroid</span></code>,
+<code class="xref py py-attr docutils literal"><span class="pre">stack_size</span></code></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>glyph_set</strong> ([<a class="reference internal" href="api.html#typo_graphics.Glyph" title="typo_graphics.Glyph"><code class="xref py py-class docutils literal"><span class="pre">Glyph</span></code></a>]) &#8211; list containing a collection of glyphs</li>
+<li><strong>tree</strong> (<code class="xref py py-class docutils literal"><span class="pre">cKDTree</span></code>) &#8211; a <code class="xref py py-class docutils literal"><span class="pre">cKDTree</span></code> instantiated with the glyphs
+of <code class="xref py py-attr docutils literal"><span class="pre">glyph_set</span></code></li>
+<li><strong>centroid</strong> (<em>array_like</em>) &#8211; position of centroid in <code class="xref py py-attr docutils literal"><span class="pre">sample_x</span></code> * <code class="xref py py-attr docutils literal"><span class="pre">sample_y</span></code> parameter space</li>
+<li><strong>mean_square_from_centroid</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">float</span></code></a>) &#8211; mean square distance of glyphs from centroid</li>
+<li><strong>stack_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a>) &#8211; number of fundamental glyphs used to compose each glyph
+in <code class="xref py py-attr docutils literal"><span class="pre">glyph_set</span></code></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="glyph-object">
+<h2>Glyph Object</h2>
+<dl class="class">
+<dt>
+<em class="property">class </em><code class="descclassname">typo_graphics.</code><code class="descname">Glyph</code><span class="sig-paren">(</span><em>name</em>, <em>image</em>, <em>components=None</em>, <em>samples=(3</em>, <em>3)</em><span class="sig-paren">)</span></dt>
+<dd><p>Represents the ink typed into one monospaced space.</p>
+<p>This can comprise of multiple component glyphs, which are retained in <code class="xref py py-attr docutils literal"><span class="pre">components</span></code>.
+In the case that the glyph is as typed, this will contain simply a reference to self.</p>
+<dl class="docutils">
+<dt>Exposes following instance attributes:</dt>
+<dd><ul class="first last simple">
+<li><code class="xref py py-attr docutils literal"><span class="pre">name</span></code>, the name of the glyph.</li>
+<li><code class="xref py py-attr docutils literal"><span class="pre">image</span></code>, <a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/Image.html#PIL.Image.Image" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-class docutils literal"><span class="pre">Image</span></code></a> image of the glyph.</li>
+<li><code class="xref py py-attr docutils literal"><span class="pre">components</span></code>, the typed keys that compose this glyph.</li>
+<li><code class="xref py py-attr docutils literal"><span class="pre">samples</span></code>, tuple of ints governing how the glyph is down-sampled for matching.</li>
+<li><code class="xref py py-attr docutils literal"><span class="pre">fingerprint</span></code>, scaled <a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/Image.html#PIL.Image.Image" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-class docutils literal"><span class="pre">Image</span></code></a> showing how glyph is internally processed.</li>
+<li><code class="xref py py-attr docutils literal"><span class="pre">fingerprint_display</span></code>, rescaled version of <code class="xref py py-attr docutils literal"><span class="pre">fingerprint</span></code>, to size of original <code class="xref py py-attr docutils literal"><span class="pre">image</span></code>.</li>
+</ul>
+</dd>
+</dl>
+<p>Explicitly supports summation with other glyph objects, which represent typing the two glyph atop one another.</p>
+<dl class="method">
+<dt>
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>name</em>, <em>image</em>, <em>components=None</em>, <em>samples=(3</em>, <em>3)</em><span class="sig-paren">)</span></dt>
+<dd><p>Create glyph object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">str</span></code></a>) &#8211; name of glyph, used both internally and when creating instructions with glyphs.</li>
+<li><strong>image</strong> (<a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/Image.html#PIL.Image.Image" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-class docutils literal"><span class="pre">Image</span></code></a>) &#8211; an <a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/Image.html#PIL.Image.Image" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-class docutils literal"><span class="pre">Image</span></code></a> of the glyph. Likely sourced from scanned typewritten page.</li>
+<li><strong>components</strong> ([<a class="reference internal" href="api.html#typo_graphics.Glyph" title="typo_graphics.Glyph"><code class="xref py py-class docutils literal"><span class="pre">Glyph</span></code></a>]) &#8211; glyphs that are used to create this glyph.
+If not specified, will default to containing this glyph.</li>
+<li><strong>samples</strong> ((<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a>) or <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a>) &#8211; size specified in an integer, integer tuple for the fingerprint to be scaled to.
+Specified as number of pixels across, by number of pixels. Can also pass integer to be used in both dimensions.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">__add__</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span></dt>
+<dd><p>Addition override.</p>
+<p>Addition of glyphs encapsulates overlaying the two glyphs on a typewriter.
+This would be achieved by first typing <cite>glyph1</cite>, moving the carriage back, and typing <cite>glyph2</cite> in the same space.
+Image combination is achieved with <a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/ImageChops.html#PIL.ImageChops.darker" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-func docutils literal"><span class="pre">darker()</span></code></a></p>
+<p>If the <code class="xref py py-attr docutils literal"><span class="pre">samples</span></code> of the two glyphs are not equal, a <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.10)"><code class="xref py py-exc docutils literal"><span class="pre">ValueError</span></code></a> is raised.</p>
+<p>The returned <a class="reference internal" href="api.html#typo_graphics.Glyph" title="typo_graphics.Glyph"><code class="xref py py-class docutils literal"><span class="pre">Glyph</span></code></a>
+Addition of two glyphs returns a new glyph object, combining images with <a class="reference external" href="https://pillow.readthedocs.io/en/latest/reference/ImageChops.html#PIL.ImageChops.darker" title="(in Pillow (PIL Fork) v9.0.0.dev0)"><code class="xref py py-func docutils literal"><span class="pre">darker()</span></code></a>,
+and combining names with a space.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>other</strong> (<a class="reference internal" href="api.html#typo_graphics.Glyph" title="typo_graphics.Glyph"><code class="xref py py-class docutils literal"><span class="pre">Glyph</span></code></a>) &#8211; glyph to add.</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">composite glyph of this, and the <cite>other</cite> glyph.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="api.html#typo_graphics.Glyph" title="typo_graphics.Glyph"><code class="xref py py-class docutils literal"><span class="pre">Glyph</span></code></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.10)"><strong>ValueError</strong></a> &#8211; if <code class="xref py py-attr docutils literal"><span class="pre">samples</span></code> attribute of the two glyphs do not match.</li>
+<li><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.10)"><strong>TypeError</strong></a> &#8211; if addition is attempted with an object <strong>not</strong> of type <a class="reference internal" href="api.html#typo_graphics.Glyph" title="typo_graphics.Glyph"><code class="xref py py-class docutils literal"><span class="pre">Glyph</span></code></a>.</li>
+<li><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.10)"><strong>ValueError</strong></a> &#8211; if <code class="xref py py-attr docutils literal"><span class="pre">Glyph.image.mode</span></code> attribute of the two glyphs do not match.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="combinations.html" class="btn btn-neutral" title="Combinations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Richard Spencer.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: ''
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
