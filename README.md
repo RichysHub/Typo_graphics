@@ -22,7 +22,7 @@ Features
 
 How do I get started?
 ---------------------
-[The Tutorial](https://richyshub.github.io/Typo_graphics) is the best place to get to grips with using Typo_graphics, and to go from input image to seeing your first typed art in as few as 6 lines.
+[The Tutorial](https://richyshub.github.io/Typo_graphics/tutorial) is the best place to get to grips with using Typo_graphics, and to go from input image to seeing your first typed art in as few as 6 lines.
 
 ```
 from PIL import Image
